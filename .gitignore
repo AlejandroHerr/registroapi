@@ -1,0 +1,9 @@
+temp/*
+vendor
+TODO
+public/file.php
+.DS_Store
+.settings
+*.sublime-project
+*.sublime-workspace
+.idea
