@@ -13,10 +13,10 @@ $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     'db.options' => array(
         'driver' => 'pdo_mysql',
-        'host' => '127.0.0.1',
-        'dbname' => 'esn',
-        'user' => 'esnadmin',
-        'password' => 'hojadeplata88',
+        'host' => '',
+        'dbname' => '',
+        'user' => '',
+        'password' => '',
         'charset' => 'utf8'
     )
 ));
