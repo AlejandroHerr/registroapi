@@ -35,6 +35,10 @@ class ApiController implements ControllerProviderInterface {
 		$controllers->post('/socios/',array($this,"postSocio"))
 		->bind('postSocioAction');
 
+		$controllers->put('/socios/{id}/',array($this,"putSocio"))
+		->assert('id', '\d+')
+		->bind('putSocioAction');
+
 		$controllers->get('/socios/{id}/', array($this,"getSocio"))
 		->assert('id', '\d+')
 		->bind('getSocioAction');
@@ -50,7 +54,7 @@ class ApiController implements ControllerProviderInterface {
 	
 	function getSocios(Application $app) {
 		$socios = $this->socioManager->getSocios($app);
-		return $app->json($socios);
+		return $app->json($socios,200);
 	}
 
 	function getSocio(Application $app,$id) {
@@ -67,12 +71,23 @@ class ApiController implements ControllerProviderInterface {
 		return $app->json($error,400);
 	}
 
-	function postSocio(Application $app, Request $request){
-		
+	function postSocio(Application $app, Request $request){	
 		return $this->processForm($app,$request);
 	}
+	function putSocio(Application $app,$id,Request $request){
+		if($this->socioManager->socioExists($app,$id)){
+			return $this->processForm($app,$request,$id);
+		}
+		$error = array( 
+			'error' => array(
+				'code' => '400',
+				'message' => 'Socio no existe'
+			)
+		);
+		return $app->json($error,400);
+	}
 
-	function processForm(Application $app, Request $request){
+	function processForm(Application $app, Request $request,$id=null){
 		$app->register(new FormServiceProvider());
 		$app->register(new ValidatorServiceProvider());
 		$socio = new Socio();
@@ -81,10 +96,12 @@ class ApiController implements ControllerProviderInterface {
 		if ($this->form->isValid()) {
 			if($request->getMethod() == 'POST'){
 				$socio=$this->socioManager->createSocio($socio,$app);
-				return $app->json($socio->toArray(),201);
 			}
+			if($request->getMethod() == 'PUT'){
+				$socio=$this->socioManager->updateSocio($socio,$app,$id);
+			}
+			return $app->json($socio->toArray(),201);
 		}
 		return $app->json($this->form->getErrors(),400);
-
 	}
 }

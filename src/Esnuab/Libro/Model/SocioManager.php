@@ -27,4 +27,17 @@ class SocioManager {
     	return $socio;
 
     }
+    function updateSocio($socio,$app,$id){
+        $socio->setModAt();
+        $socio->setExpiresAt();
+        $app['db']->update('socio',$socio->toArray(),array('id' => $app->escape($id)));
+        return $socio;
+
+    }
+    function socioExists($app,$id){
+        if($app['db']->fetchAssoc('SELECT * FROM socio WHERE id = ?', array($app->escape($id)))){
+            return true;
+        }
+        return false;
+    }
 }
