@@ -12,19 +12,13 @@ class SocioManager {
         return $socios;
     }
     function getSocio($app,$id) {
+        $socio = new Socio();
         $sucio= $app['db']->fetchAssoc('SELECT * FROM socio WHERE id = ?', array($app->escape($id)));
-		if($sucio){
-			$socio = new Socio();
-			$socio->__construct($sucio);
-        	return $socio->serialize();
+		if(!$sucio){
+            return null;
         }
-        $error = array(
-        	'error' =>array(
-        		'code' => '400',
-        		'mensaje' => 'El socio no existe!'
-        ));
-        return new Response(json_encode($error), 400);
-
+        $socio->__construct($sucio);
+        return $socio;
     }
     function createSocio($socio,$app){
     	$socio->setModAt();

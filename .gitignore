@@ -1,4 +1,5 @@
 temp/*
+db.php
 vendor
 TODO
 public/file.php

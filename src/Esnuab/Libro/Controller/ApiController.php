@@ -14,6 +14,7 @@ use Esnuab\Libro\Model\Entity\Socio;
 use Esnuab\Libro\Model\SocioManager;
 use Silex\Provider\FormServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 
 class ApiController implements ControllerProviderInterface {
@@ -44,7 +45,6 @@ class ApiController implements ControllerProviderInterface {
         		$request->request->replace(is_array($data) ? $data : array());
     		}
 		});
-		
 		return $controllers;
 	}
 	
@@ -54,7 +54,17 @@ class ApiController implements ControllerProviderInterface {
 	}
 
 	function getSocio(Application $app,$id) {
-		return $this->socioManager->getSocio($app,$id);
+		$socio = $this->socioManager->getSocio($app,$id);
+		if($socio){
+			return $app->json($socio->toArray(),200);
+		}
+		$error = array( 
+			'error' => array(
+				'code' => '400',
+				'message' => 'Socio no existe'
+			)
+		);
+		return $app->json($error,400);
 	}
 
 	function postSocio(Application $app, Request $request){
@@ -71,11 +81,10 @@ class ApiController implements ControllerProviderInterface {
 		if ($this->form->isValid()) {
 			if($request->getMethod() == 'POST'){
 				$socio=$this->socioManager->createSocio($socio,$app);
-				return $socio->serialize();
+				return $app->json($socio->toArray(),201);
 			}
 		}
-		print_r($this->form->getErrors());
-		return $app->json($this->form);
+		return $app->json($this->form->getErrors(),400);
 
 	}
 }
