@@ -14,17 +14,17 @@ class SocioManager {
     function getSocio($app,$id) {
         $socio = new Socio();
         $sucio= $app['db']->fetchAssoc('SELECT * FROM socio WHERE id = ?', array($app->escape($id)));
-		if(!$sucio){
+        if(!$sucio){
             return null;
         }
         $socio->__construct($sucio);
         return $socio;
     }
     function createSocio($socio,$app){
-    	$socio->setModAt();
-		$socio->setExpiresAt();
-    	$app['db']->insert('socio',$socio->toArray());
-    	return $socio;
+        $socio->setModAt();
+        $socio->setExpiresAt();
+        $app['db']->insert('socio',$socio->toArray());
+        return $socio;
 
     }
     function updateSocio($socio,$app,$id){

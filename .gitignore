@@ -8,3 +8,4 @@ public/file.php
 *.sublime-project
 *.sublime-workspace
 .idea
+src/Esnuab/security_cache/*
