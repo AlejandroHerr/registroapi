@@ -38,10 +38,12 @@ class WsseListener implements ListenerInterface
         $token->digest   = $matches[2];
         $token->nonce    = $matches[3];
         $token->created  = $matches[4];
-
+        echo "hola";
         try {
             $authToken = $this->authenticationManager->authenticate($token);
+            echo "hola2";
             $this->securityContext->setToken($authToken);
+            echo "hola3";
             return;
         } catch (AuthenticationException $failed) {
             // ... you might log something here
