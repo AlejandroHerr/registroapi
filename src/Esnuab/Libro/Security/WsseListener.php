@@ -26,6 +26,9 @@ class WsseListener implements ListenerInterface
 
         $wsseRegex = '/UsernameToken Username="([^"]+)", PasswordDigest="([^"]+)", Nonce="([^"]+)", Created="([^"]+)"/';
         if (!$request->headers->has('x-wsse') || 1 !== preg_match($wsseRegex, $request->headers->get('x-wsse'), $matches)) {
+            $response = new Response();
+            $response->setStatusCode(401);
+            $event->setResponse($response);
             return;
         }
 
@@ -38,9 +41,7 @@ class WsseListener implements ListenerInterface
 
         try {
             $authToken = $this->authenticationManager->authenticate($token);
-            echo "hola2";
             $this->securityContext->setToken($authToken);
-            echo "hola3";
             return;
         } catch (AuthenticationException $failed) {
             // ... you might log something here
@@ -53,16 +54,16 @@ class WsseListener implements ListenerInterface
             // }
             // return;
 
-            // Deny authentication with a '403 Forbidden' HTTP response
+            // Deny authentication with a '401 Forbidden' HTTP response
             $response = new Response();
-            $response->setStatusCode(404);
+            $response->setStatusCode(401);
             $event->setResponse($response);
 
         }
 
         // By default deny authorization
         $response = new Response();
-        $response->setStatusCode(200);
+        $response->setStatusCode(401);
         $event->setResponse($response);
     }
 }

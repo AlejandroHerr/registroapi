@@ -37,7 +37,7 @@ $app['security.authentication_listener.factory.wsse'] = $app->protect(function (
 $app->register(new Silex\Provider\SecurityServiceProvider(), array(
     'security.firewalls' => array(
         'default' => array(
-            'pattern' => "/",
+            'pattern' => "/api",
             'wsse' => true,
             'stateless' => true,
             'users' => $app->share(function () use ($app) {

@@ -9,3 +9,4 @@ public/file.php
 *.sublime-workspace
 .idea
 src/Esnuab/security_cache/*
+web/public/*

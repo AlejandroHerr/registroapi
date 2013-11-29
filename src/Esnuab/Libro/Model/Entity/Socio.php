@@ -11,18 +11,26 @@ class Socio extends Base {
     protected $created_at;
     protected $expires_at;
     protected $mod_at;
+
+    public function getId(){
+        return $this->id;
+    }
+    public function setId($id){
+        $this->id=$id;
+        return $this;
+    }
     public function getNombre() {
         return $this->nombre;
     }
     public function setNombre($nombre) {
-        $this->nombre = $nombre;
+        $this->nombre = ucwords($nombre);
         return $this;
     }
     public function getApellido() {
         return $this->apellido;
     }
     public function setApellido($apellido) {
-        $this->apellido = $apellido;
+        $this->apellido = ucwords($apellido);
         return $this;
     }
     public function getEmail() {
@@ -36,14 +44,14 @@ class Socio extends Base {
         return $this->esncard;
     }
     public function setEsncard($esncard) {
-        $this->esncard = $esncard;
+        $this->esncard = strtoupper($esncard);
         return $this;
     }
     public function getPassport() {
         return $this->passport;
     }
     public function setPassport($passport) {
-        $this->passport = $passport;
+        $this->passport = strtoupper($passport);
         return $this;
     }
     public function getPais() {

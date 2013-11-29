@@ -17,7 +17,10 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), $configDB);
 
 
 $app['socio_manager'] = $app->share(function($app) {
-    return new \Esnuab\Libro\Model\SocioManager($app['db']);
+    return new \Esnuab\Libro\Model\Manager\SocioManager($app['db']);
+});
+$app['historia_manager'] = $app->share(function($app) {
+    return new \Esnuab\Libro\Model\Manager\HistoriaManager($app['db']);
 });
 
 
@@ -36,7 +39,9 @@ $app['socio_manager'] = $app->share(function($app) {
   /****/  /***********/  /****/
  /****/                 /****/
 /***************************/
-require_once 'security.php';
+///if(!$app['debug']){
+  require_once 'security.php';
+//}
 require_once 'routes.php';
 
 

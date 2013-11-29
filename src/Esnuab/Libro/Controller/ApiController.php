@@ -7,11 +7,17 @@ use Silex\Provider\DoctrineServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactoryBuilderInterface;
-use Symfony\Component\Validator\Constraints as Assert;
 
 use Esnuab\Libro\Form\SocioForm;
 use Esnuab\Libro\Model\Entity\Socio;
-use Esnuab\Libro\Model\SocioManager;
+use Esnuab\Libro\Model\Manager\SocioManager;
+
+use Esnuab\Libro\Form\HistoriaForm;
+use Esnuab\Libro\Model\Entity\Historia;
+use Esnuab\Libro\Model\Manager\HistoriaManager;
+
+
+
 use Silex\Provider\FormServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,17 +25,24 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ApiController implements ControllerProviderInterface {
 	protected $socioManager;
+	protected $historiaManager;
 	protected $app;
 	protected $form;
 	
-	function __construct($socioManager) {
+	function __construct($socioManager,$historiaManager) {
+		$this->historiaManager = $historiaManager;
 		$this->socioManager = $socioManager;
 	}
 	
 	public function connect(Application $app) {
 		$controllers = $app['controllers_factory'];
 		
-		$controllers->get('/socios/', array($this,"getSocios"))
+		$controllers->get('/socios/', function() use($app)	{
+			if ($app['security']->isGranted('ROLE_ADMIN')){
+				return $this->getSocios($app);
+			}
+			return $app->json('',403);
+		})
 		->bind('getSociosAction');
 
 		$controllers->post('/socios/',array($this,"postSocio"))
@@ -54,6 +67,7 @@ class ApiController implements ControllerProviderInterface {
 	
 	function getSocios(Application $app) {
 		$socios = $this->socioManager->getSocios($app);
+		$token = $app['security']->getToken();
 		return $app->json($socios,200);
 	}
 
@@ -100,8 +114,17 @@ class ApiController implements ControllerProviderInterface {
 			if($request->getMethod() == 'PUT'){
 				$socio=$this->socioManager->updateSocio($socio,$app,$id);
 			}
+			$this->postHistoria($app,$request->getMethod(),$socio->getId());
 			return $app->json($socio->toArray(),201);
 		}
 		return $app->json($this->form->getErrors(),400);
 	}
+
+	function postHistoria(Application $app, $method,$id){
+		$historia = new Historia();
+		$historia->setTarget($id);
+		$historia->setAction($method);
+		$historia->setUser($app['security']->getToken()->getUser()->getUsername());
+		$this->historiaManager->createHistoria($historia,$app);
+	} 
 }

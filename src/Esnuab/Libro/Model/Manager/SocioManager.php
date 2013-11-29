@@ -1,8 +1,6 @@
 <?php
 
-namespace Esnuab\Libro\Model;
-
-use Symfony\Component\HttpFoundation\Response;
+namespace Esnuab\Libro\Model\Manager;
 
 use Esnuab\Libro\Model\Entity\Socio;
 
@@ -24,6 +22,7 @@ class SocioManager {
         $socio->setModAt();
         $socio->setExpiresAt();
         $app['db']->insert('socio',$socio->toArray());
+        $socio->setId($app['db']->lastInsertId());
         return $socio;
 
     }
@@ -31,6 +30,7 @@ class SocioManager {
         $socio->setModAt();
         $socio->setExpiresAt();
         $app['db']->update('socio',$socio->toArray(),array('id' => $app->escape($id)));
+        $socio->setId($id);
         return $socio;
 
     }
