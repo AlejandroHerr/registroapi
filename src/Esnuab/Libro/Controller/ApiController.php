@@ -6,7 +6,6 @@ use Silex\ControllerProviderInterface;
 use Silex\Provider\DoctrineServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
 use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormFactoryBuilderInterface;
 
 use Esnuab\Libro\Form\SocioForm;
 use Esnuab\Libro\Model\Entity\Socio;
@@ -17,7 +16,6 @@ use Esnuab\Libro\Model\Entity\Historia;
 use Esnuab\Libro\Model\Manager\HistoriaManager;
 
 
-
 use Silex\Provider\FormServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,7 +24,9 @@ use Symfony\Component\HttpFoundation\Response;
 class ApiController implements ControllerProviderInterface {
 	protected $socioManager;
 	protected $historiaManager;
-	protected $app;
+
+	protected $data;
+
 	protected $form;
 	
 	function __construct($socioManager,$historiaManager) {
@@ -37,94 +37,157 @@ class ApiController implements ControllerProviderInterface {
 	public function connect(Application $app) {
 		$controllers = $app['controllers_factory'];
 		
-		$controllers->get('/socios/', function() use($app)	{
-			if ($app['security']->isGranted('ROLE_ADMIN')){
-				return $this->getSocios($app);
+		$controllers->get('/socios', array($this,"getSocios"))
+		->bind('getSociosAction')
+		->before($app['filter.only_admin'])
+		->before(array($this,"getQueryHeaders"));
+		/*->before(function(Request $request) {
+			$this->data = array(
+				'maxResults' => 25,
+				'currentPage' => 1,
+				'orderBy' => 'created_at',
+				'orderDir' => 'DESC'
+			);
+			if($request->headers->get('Query-Options')){
+				$data=json_decode($request->headers->get('Query-Options'),true);
+				foreach ($data as $key => $value) {
+					$this->data[$key]=$value;
+				}
 			}
-			return $app->json('',403);
-		})
-		->bind('getSociosAction');
+		});*/
 
-		$controllers->post('/socios/',array($this,"postSocio"))
-		->bind('postSocioAction');
+		$controllers->post('/socios', array($this,"postSocio"))
+		->bind('postSocioAction')
+		->before($app['filter.only_user'])
+		->before(array($this,"getFormHeaders"));
 
-		$controllers->put('/socios/{id}/',array($this,"putSocio"))
+		$controllers->get('/socios/{id}', array($this,"getSocio"))
 		->assert('id', '\d+')
-		->bind('putSocioAction');
+		->bind('getSocioAction')
+		->before($app['filter.only_admin']);
 
-		$controllers->get('/socios/{id}/', array($this,"getSocio"))
+		$controllers->put('/socios/{id}',array($this,"putSocio"))
 		->assert('id', '\d+')
-		->bind('getSocioAction');
+		->bind('putSocioAction')
+		->before($app['filter.only_superadmin'])
+		->before(array($this,"getFormHeaders"));
 
-		$controllers->before(function(Request $request) {
+		$controllers->delete('/socios/{id}', array($this,"deleteSocio"))
+		->assert('id', '\d+')
+		->bind('deleteSocioAction')
+		->before($app['filter.only_admin']);
+
+		/*$controllers->before(function(Request $request) {
+			$this->data = json_decode($request->getContent(), true);
 			if (0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
-        		$data = json_decode($request->getContent(), true);
-        		$request->request->replace(is_array($data) ? $data : array());
+        		//print_r($request->getContent());
+        		
+        		//$request->request->replace(is_array($data) ? $data : array());
     		}
-		});
+		});*/
+		
 		return $controllers;
 	}
-	
+	//DEFINITIVO	
 	function getSocios(Application $app) {
-		$socios = $this->socioManager->getSocios($app);
-		$token = $app['security']->getToken();
-		return $app->json($socios,200);
+		$totalResults = $this->socioManager->getCount($app);
+		$socios = $this->socioManager->getSocios($app,$this->data);
+		$response = array(
+			'pagination' => array(
+				'totalResults' => $totalResults,
+				'maxResults' => $this->data['maxResults'],
+				'currentPage' => $this->data['currentPage']
+			),
+			'socios' => $socios
+		);
+		return $app->json($response,200);
 	}
 
+	function postSocio(Application $app){
+		if(isset($this->data['esncard'])){
+			if($this->socioManager->existsEsncard($app,$this->data['esncard'])){
+				return $app->json(array('errores' => array("esncard" => "La ESN Card ya existe")),400);
+			}
+		}
+		return $this->processForm($app);
+	}
+	//DEFINITIVO
 	function getSocio(Application $app,$id) {
+		if(!$this->socioManager->existsSocio($app,$id)){
+			return $app->json(array('message'=>'El socio con id '.$id.' no exise.'),404);
+		}
 		$socio = $this->socioManager->getSocio($app,$id);
-		if($socio){
-			return $app->json($socio->toArray(),200);
-		}
-		$error = array( 
-			'error' => array(
-				'code' => '400',
-				'message' => 'Socio no existe'
-			)
-		);
-		return $app->json($error,400);
+		return $app->json($socio->toArray(),200);		
 	}
 
-	function postSocio(Application $app, Request $request){	
-		return $this->processForm($app,$request);
-	}
 	function putSocio(Application $app,$id,Request $request){
-		if($this->socioManager->socioExists($app,$id)){
-			return $this->processForm($app,$request,$id);
+		if($this->socioManager->existsSocio($app,$id)){
+			return $app->json(array('message'=>'El socio con id '.$id.' no exise.'),404);
 		}
-		$error = array( 
-			'error' => array(
-				'code' => '400',
-				'message' => 'Socio no existe'
-			)
-		);
-		return $app->json($error,400);
+		return $this->processForm($app,$request,$id);
+	}
+	//DEFINITIVO
+	function deleteSocio(Application $app,$id){
+		if(!$this->socioManager->existsSocio($app,$id)){
+			return $app->json(array('message'=>'El socio con id '.$id.' no exise.'),404);
+		}
+		$this->socioManager->deleteSocio($app,$id);
+		return $app->json(null,204);
 	}
 
-	function processForm(Application $app, Request $request,$id=null){
+	function processForm(Application $app,$id=null){
 		$app->register(new FormServiceProvider());
 		$app->register(new ValidatorServiceProvider());
 		$socio = new Socio();
 	   	$this->form = $app['form.factory']->create(new SocioForm(),$socio);
-		$this->form->submit($request);
+		$this->form->submit($this->data,true);
 		if ($this->form->isValid()) {
-			if($request->getMethod() == 'POST'){
+			if($app['request']->getMethod() == 'POST'){
+				//comprobar si esn card existe
 				$socio=$this->socioManager->createSocio($socio,$app);
 			}
-			if($request->getMethod() == 'PUT'){
+			if($app['request']->getMethod() == 'PUT'){
+				//comprobar si esn card existe
 				$socio=$this->socioManager->updateSocio($socio,$app,$id);
 			}
-			$this->postHistoria($app,$request->getMethod(),$socio->getId());
+			//$this->postHistoria($app,$request->getMethod(),$socio->getId());
 			return $app->json($socio->toArray(),201);
 		}
-		return $app->json($this->form->getErrors(),400);
+		/**************************************************/
+
+		return $app->json(array('errores' => $this->form->getErrorsAsArray()),400);
 	}
 
-	function postHistoria(Application $app, $method,$id){
-		$historia = new Historia();
-		$historia->setTarget($id);
-		$historia->setAction($method);
-		$historia->setUser($app['security']->getToken()->getUser()->getUsername());
-		$this->historiaManager->createHistoria($historia,$app);
-	} 
+	function parseOptions(Application $app, Request $request){
+		$this->data = array(
+			'maxResults' => 25,
+			'currentPage' => 1,
+			'orderBy' => 'created_at',
+			'orderDir' => 'DESC'
+		);
+		if($app['request']->headers->get('Query-Options')){
+			$data=json_decode($app['request']->headers->get('Query-Options'),true);
+			foreach ($data as $key => $value) {
+				$this->data[$key]=$value;
+			}
+		}
+	}
+
+	function getFormHeaders(Request $request) {
+		$this->data = json_decode($request->getContent(), true);
+	}
+	function getQueryHeaders(Request $request) {
+		$this->data = array(
+			'maxResults' => 25,
+			'currentPage' => 1,
+			'orderBy' => 'created_at',
+			'orderDir' => 'DESC'
+		);
+		if($request->headers->get('Query-Options')){
+			$data=json_decode($request->headers->get('Query-Options'),true);
+			foreach ($data as $key => $value) {
+				$this->data[$key]=$value;
+			}
+		}
+	}
 }

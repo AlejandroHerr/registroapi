@@ -14,26 +14,33 @@ class SocioForm extends AbstractType {
 
         $builder
         	->add('nombre','text',array(
-                'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 2, 'max' => 50)))
+                'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 2, 'max' => 50))),
+                'invalid_message' => 'La dsf está mal'
             ))
             ->add('apellido', 'text',array(
-                'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 2, 'max' => 50)))
+                'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 2, 'max' => 50))),
+                'invalid_message' => 'La dsf está mal'
             ))
             ->add('email', 'text',array(
-                'constraints' => new Assert\Email()
+                'constraints' => array(new Assert\NotBlank(),new Assert\Email()),
+                'invalid_message' => 'La dsf está mal'
             ))
             ->add('esncard', 'text',array(
-                'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 10, 'max' => 15)))
+                'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 10, 'max' => 15))),
+                'invalid_message' => 'La dsf está mal'
             ))
             ->add('passport','text',array(
-                'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 5, 'max' => 22)))
+                'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 5, 'max' => 22))),
+                'invalid_message' => 'La dsf está mal'
             ))
             ->add('pais','text',array(
-                'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 2, 'max' => 2)))
+                'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 2, 'max' => 2))),
+                'invalid_message' => 'La dsf está mal'
             ))
             ->add('created_at','date',array(
                 'input' => 'string',
-                'constraints' => array(new Assert\NotBlank(), new Assert\Date())
+                'widget' => 'single_text',
+                'constraints' => array(new Assert\NotBlank())
             ))
         ;    
     }

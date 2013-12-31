@@ -26,10 +26,18 @@ class WsseListener implements ListenerInterface
 
         $wsseRegex = '/UsernameToken Username="([^"]+)", PasswordDigest="([^"]+)", Nonce="([^"]+)", Created="([^"]+)"/';
         if (!$request->headers->has('x-wsse') || 1 !== preg_match($wsseRegex, $request->headers->get('x-wsse'), $matches)) {
-            $response = new Response();
-            $response->setStatusCode(401);
-            $event->setResponse($response);
-            return;
+            $response = new Response(
+                json_encode(array(
+                    'error' => '401',
+                    'message' => 'Not authenticated'
+                )),
+                401,
+                ['Content-Type' => 'application/json']
+            );
+            //$event->setResponse($response);
+            //return;
+            throw new Exception("Error Processing Request");
+            return;   
         }
 
         $token = new WsseUserToken();
@@ -38,12 +46,9 @@ class WsseListener implements ListenerInterface
         $token->digest   = $matches[2];
         $token->nonce    = $matches[3];
         $token->created  = $matches[4];
-        echo "hola";
         try {
             $authToken = $this->authenticationManager->authenticate($token);
-            echo "hola2";
             $this->securityContext->setToken($authToken);
-            echo "hola3";
             return;
         } catch (AuthenticationException $failed) {
             // ... you might log something here
@@ -60,7 +65,6 @@ class WsseListener implements ListenerInterface
             $response = new Response();
             $response->setStatusCode(401);
             $event->setResponse($response);
-
         }
 
         // By default deny authorization

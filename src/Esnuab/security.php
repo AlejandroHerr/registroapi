@@ -1,8 +1,16 @@
 <?php
 
-/*$app['users'] = $app->share(function () use ($app) {
-    return new \Esnuab\Libro\Security\UserProvider($app['db']);
-});*/
+
+$app['security.role_hierarchy'] = array(
+    'ROLE_USER' => array('ROLE_USER'),
+    'ROLE_ADMIN' => array('ROLE_USER', 'ROLE_ALLOWED_TO_SWITCH'),
+    'ROLE_SUPERADMIN' => array('ROLE_ADMIN'),
+    'ROLE_COLABORADOR' => array('ROLE_USER'),
+    'ROLE_JUNTA' => array('ROLE_ADMIN'),
+    'ROLE_SECRETARIO' => array('ROLE_SUPERADMIN'),
+    'ROLE_PRESIDENTE' => array('ROLE_SUPERADMIN'),
+
+);
 
 $app['security.encoder.digest'] = $app->share(function ($app) {
     // use the sha1 algorithm
@@ -43,8 +51,16 @@ $app->register(new Silex\Provider\SecurityServiceProvider(), array(
             'users' => $app->share(function () use ($app) {
                 return new \Esnuab\Libro\Security\UserProvider($app['db']);
             }),
-
-            // ...
         ),
     ),
 ));
+
+$app['security.role_hierarchy'] = array(
+    'ROLE_USER' => array('ROLE_USER'),
+    'ROLE_ADMIN' => array('ROLE_USER', 'ROLE_ALLOWED_TO_SWITCH'),
+    'ROLE_SUPERADMIN' => array('ROLE_ADMIN'),
+    'ROLE_COLABORADOR' => array('ROLE_USER'),
+    'ROLE_JUNTA' => array('ROLE_ADMIN'),
+    'ROLE_SECRETARIO' => array('ROLE_SUPERADMIN'),
+    'ROLE_PRESIDENTE' => array('ROLE_SUPERADMIN'),
+);

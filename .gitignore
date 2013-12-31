@@ -1,7 +1,6 @@
 temp/*
 db.php
 vendor
-TODO
 public/file.php
 .DS_Store
 .settings
@@ -9,5 +8,9 @@ public/file.php
 *.sublime-workspace
 .idea
 src/Esnuab/security_cache/*
-web/public/app/lib/angular/*
+app/*
+.tresorit/*
+*.ini
+todo
+.htaccess
 
