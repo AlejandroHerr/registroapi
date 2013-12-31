@@ -1,0 +1,30 @@
+<div id='error'>
+	<h3>{{error.code}}</h3>
+	<p>{{error.descripcion}}</p>
+</div>
+<table>
+	<tr>
+		<th>id</th>
+		<th>Nombre</th>
+		<th>Apellido</th>
+		<th>ESN CARD N</th>
+		<th>Id</th>
+		<th>Pais</th>
+		<th>e-mail</th>
+		<th>creado</th>
+		<th>modificado</th>
+		<th>expira</th>
+	</tr>
+	<tr ng-model="socio">
+		<td>{{socio.id}}</td>
+		<td>{{socio.nombre}}</td>
+		<td>{{socio.apellido}}</td>
+		<td>{{socio.esncard}}</td>
+		<td>{{socio.passport}}</td>
+		<td>{{socio.pais}}</td>
+		<td>{{socio.email}}</td>
+		<td>{{socio.created_at}}</td>
+		<td>{{socio.mod_at}}</td>
+		<td>{{socio.expires_at}}</td>
+	</tr>
+</table>

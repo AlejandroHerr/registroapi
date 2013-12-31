@@ -8,9 +8,9 @@ public/file.php
 *.sublime-workspace
 .idea
 src/Esnuab/security_cache/*
-app/*
 .tresorit/*
 *.ini
 todo
 .htaccess
+app/lib/
 
