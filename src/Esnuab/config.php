@@ -1,8 +1,6 @@
 <?php
-//define('ROOT',dirname(dirname(__DIR__)));
-
-
 $loader = require ROOT . "/vendor/autoload.php";
+
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\HttpFoundation\Request;
 

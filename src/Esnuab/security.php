@@ -1,6 +1,6 @@
 <?php
 
-
+/*
 $app['security.role_hierarchy'] = array(
     'ROLE_USER' => array('ROLE_USER'),
     'ROLE_ADMIN' => array('ROLE_USER', 'ROLE_ALLOWED_TO_SWITCH'),
@@ -10,7 +10,7 @@ $app['security.role_hierarchy'] = array(
     'ROLE_SECRETARIO' => array('ROLE_SUPERADMIN'),
     'ROLE_PRESIDENTE' => array('ROLE_SUPERADMIN'),
 
-);
+);*/
 
 $app['security.encoder.digest'] = $app->share(function ($app) {
     // use the sha1 algorithm
@@ -54,7 +54,6 @@ $app->register(new Silex\Provider\SecurityServiceProvider(), array(
         ),
     ),
 ));
-
 $app['security.role_hierarchy'] = array(
     'ROLE_USER' => array('ROLE_USER'),
     'ROLE_ADMIN' => array('ROLE_USER', 'ROLE_ALLOWED_TO_SWITCH'),

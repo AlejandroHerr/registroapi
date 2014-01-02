@@ -26,17 +26,6 @@ class WsseListener implements ListenerInterface
 
         $wsseRegex = '/UsernameToken Username="([^"]+)", PasswordDigest="([^"]+)", Nonce="([^"]+)", Created="([^"]+)"/';
         if (!$request->headers->has('x-wsse') || 1 !== preg_match($wsseRegex, $request->headers->get('x-wsse'), $matches)) {
-            $response = new Response(
-                json_encode(array(
-                    'error' => '401',
-                    'message' => 'Not authenticated'
-                )),
-                401,
-                ['Content-Type' => 'application/json']
-            );
-            //$event->setResponse($response);
-            //return;
-            throw new Exception("Error Processing Request");
             return;   
         }
 

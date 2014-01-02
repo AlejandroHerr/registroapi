@@ -1,5 +1,6 @@
 <?php
-define('ROOT',dirname(__DIR__));
+define('ROOT',dirname(dirname(__FILE__)));
+date_default_timezone_set('UTC');
 $app = require_once ROOT.'/src/Esnuab/config.php';
 $app->run();
 
