@@ -5,14 +5,14 @@ namespace Esnuab\Libro\Model\Manager;
 use Esnuab\Libro\Model\Entity\Socio;
 
 class SocioManager {
-	function getSocios($app,$queryOptions) {
-		$queryOptions['min'] = ($queryOptions['currentPage']-1)*$queryOptions['maxResults'];
-		foreach ($queryOptions as &$value) {
-			$value = $app->escape($value);
-		}
-		$query='ORDER BY '.$queryOptions['orderBy'].' '.$queryOptions['orderDir'].', id '.$queryOptions['orderDir'];
-		$query=$query.' LIMIT '.$queryOptions['min'].','.$queryOptions['maxResults'];
-		$socios = $app['db']->fetchAll('SELECT * FROM socio '.$query);
+	function getSocios($app,$params) {
+		$offset=($params['currentPage']-1)*$params['maxResults'];
+		
+		$query = 'SELECT * from socio '.
+			'ORDER BY '.$params['orderBy'].' '.$params['orderDir'].
+			' LIMIT '.$offset.','.$params['maxResults']
+		;
+		$socios=$app['db']->fetchAll($query);
 		return $socios;
 	}
 	function getSocio($app,$id) {
@@ -38,20 +38,18 @@ class SocioManager {
 	function deleteSocio($app,$id){
 		$app['db']->delete('socio',array('id' => $app->escape($id)));
 	}
-	function existsSocio($app,$id){
-		if($app['db']->fetchAssoc('SELECT * FROM socio WHERE id = ?', array($app->escape($id)))){
+
+	function existsSocio($app,$value,$field='id',$excludeId=true,$id=null){
+		$query= 'SELECT * FROM socio WHERE '.$field.' = "'.$app->escape($value).'"';
+		if(!$excludeId){
+			$query = $query . " AND id != ".$app->escape($id); 
+		}
+		if($app['db']->fetchAssoc($query)){
 			return true;
 		}
 		return false;
 	}
-
-	function existsEsncard($app,$esncard,$id='a'){
-		if($app['db']->fetchAssoc('SELECT id FROM socio WHERE esncard = ? AND id != ?',array($app->escape($esncard),$app->escape($id)))){
-			return true;
-		}
-		return false;
-
-	}
+	
 
 	function getCount($app){
 		$count=$app['db']->fetchAssoc('SELECT COUNT(id) AS total FROM socio');

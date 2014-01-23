@@ -8,7 +8,8 @@
     	"symfony/translation": "~2.3",
     	"symfony/locale": "~2.3",
         "symfony/security": "~2.3",
-        "monolog/monolog": ">=1.0.0"
+        "monolog/monolog": ">=1.0.0",
+        "swiftmailer/swiftmailer": ">=4.1.2,<4.2-dev"
     },
     "autoload": {
         "psr-0": {

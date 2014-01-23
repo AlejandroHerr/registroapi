@@ -13,4 +13,5 @@ src/Esnuab/security_cache/*
 todo
 .htaccess
 app/lib/
+sftp-config.json
 
