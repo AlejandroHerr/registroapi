@@ -1,67 +1,83 @@
 <?php
 namespace Esnuab\Libro\Security;
-
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
+use Doctrine\DBAL\Connection;
 use Esnuab\Libro\Security\WsseUserToken;
-
-class WsseListener implements ListenerInterface
-{
+class WsseListener implements ListenerInterface {
 	protected $securityContext;
 	protected $authenticationManager;
-
-	public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager)
-	{
+	public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager, Connection $conn) {
 		$this->securityContext = $securityContext;
 		$this->authenticationManager = $authenticationManager;
+		$this->conn = $conn;
 	}
-
-	public function handle(GetResponseEvent $event)
-	{
+	public function handle(GetResponseEvent $event) {
 		$request = $event->getRequest();
-
-		$wsseRegex = '/UsernameToken Username="([^"]+)", PasswordDigest="([^"]+)", Nonce="([^"]+)", Created="([^"]+)"/';
-		if (!$request->headers->has('x-wsse') || 1 !== preg_match($wsseRegex, $request->headers->get('x-wsse'), $matches)) {
-			$response = new JsonResponse();
-			$response->setStatusCode(401);
+		if ($this->isIpBlocked($request)) {
+			$response = new JsonResponse(array(
+				'error' => 'Too many login attempts in the last 30 minutes. Waith 30 min.'
+			), 401);
 			$event->setResponse($response);
 			return;
 		}
-
+		$wsseRegex = '/UsernameToken Username="([^"]+)", PasswordDigest="([^"]+)", Nonce="([^"]+)", Created="([^"]+)"/';
+		if (!$request->headers->has('x-wsse') || 1 !== preg_match($wsseRegex, $request->headers->get('x-wsse'), $matches)) {
+			$response = new JsonResponse(array(
+				'error' => 'Wrong headers.'
+			), 401);
+			$event->setResponse($response);
+			return;
+		}
 		$token = new WsseUserToken();
 		$token->setUser($matches[1]);
-
-		$token->digest   = $matches[2];
-		$token->nonce    = $matches[3];
-		$token->created  = $matches[4];
+		$token->digest = $matches[2];
+		$token->nonce = $matches[3];
+		$token->created = $matches[4];
 		try {
 			$authToken = $this->authenticationManager->authenticate($token);
 			$this->securityContext->setToken($authToken);
 			return;
-		} catch (AuthenticationException $failed) {
-			// ... you might log something here
-
-			// To deny the authentication clear the token. This will redirect to the login page.
-			// Make sure to only clear your token, not those of other authentication listeners.
-			// $token = $this->securityContext->getToken();
-			// if ($token instanceof WsseUserToken && $this->providerKey === $token->getProviderKey()) {
-			//     $this->securityContext->setToken(null);
-			// }
-			// return;
-
-			// Deny authentication with a '401 Forbidden' HTTP response
-			$response = new JsonResponse();
-			$response->setStatusCode(401);
-			$event->setResponse($response);
 		}
-
-		// By default deny authorization
+		catch (AuthenticationException $failed) {
+			$this->reportIp($request);
+			$response = new JsonResponse(array(
+				'error' => 'Wrong credentials.'
+			), 401);
+			$event->setResponse($response);
+			return;
+		}
 		$response = new JsonResponse();
 		$response->setStatusCode(401);
 		$event->setResponse($response);
+	}
+	protected function isIpBlocked(Request $request) {
+		$ip = $request->getClientIp();
+		$ip = str_replace('.', 'p', $ip);
+		$timeLimit = time() - 30 * 60;
+		$sql = "SELECT COUNT(id) AS total FROM login_attempts WHERE ip = ? AND timestamp >= ?";
+		$stmt = $this->conn->prepare($sql);
+		$stmt->bindValue(1, $ip);
+		$stmt->bindValue(2, $timeLimit);
+		$stmt->execute();
+		$count = $stmt->fetch($query);
+		if ($count['total'] < 10) {
+			return false;
+		}
+		return true;
+	}
+	protected function reportIp(Request $request) {
+		$ip = $request->getClientIp();
+		$ip = str_replace('.', 'p', $ip);
+		$time = time();
+		$this->conn->insert('login_attempts', array(
+			'ip' => $ip,
+			'timestamp' => $time
+		));
 	}
 }
