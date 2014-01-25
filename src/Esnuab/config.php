@@ -13,7 +13,7 @@ $app = new Silex\Application();
 
 $app['debug'] = true;
 
-$app['db.config'] = require_once 'db.php';
+$app['db.config'] = require_once 'config/db.php';
 
 $app->register(new Silex\Provider\DoctrineServiceProvider(),$app['db.config']);
 
@@ -74,5 +74,5 @@ $app->finish(function (Request $request, JsonResponse $jsonResponse) use ($app) 
 });*/
 
 /*$app->register(new Silex\Provider\SwiftmailerServiceProvider());
-$app['swiftmailer.options'] = require_once 'mailer.php';*/
+$app['swiftmailer.options'] = require_once 'config/mailer.php';*/
 return $app;

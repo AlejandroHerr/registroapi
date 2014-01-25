@@ -1,7 +1,6 @@
 temp/*
-db.php
+src/Esnuab/config/*.php
 vendor
-public/file.php
 .DS_Store
 .settings
 *.sublime-project
