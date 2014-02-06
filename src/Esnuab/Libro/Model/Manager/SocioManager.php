@@ -2,10 +2,11 @@
 
 namespace Esnuab\Libro\Model\Manager;
 
+use Silex\Application;
 use Esnuab\Libro\Model\Entity\Socio;
 
 class SocioManager {
-	function getSocios($app,$params) {
+	function getSocios(Application $app,$params) {
 		$offset=($params['currentPage']-1)*$params['maxResults'];
 		
 		$query = 'SELECT * from socio '.
@@ -19,7 +20,7 @@ class SocioManager {
 		$socio = $app['db']->fetchAssoc('SELECT * FROM socio WHERE id = ?', array($app->escape($id)));
 		return new Socio($socio);
 	}
-	function createSocio($socio,$app){
+	function createSocio(Socio $socio,$app){
 		$socio->setModAt();
 		$socio->setExpiresAt();
 		$app['db']->insert('socio',$socio->toArray());
