@@ -11,6 +11,12 @@ use Silex\Provider\SwiftmailerServiceProvider;
 
 $app = new Silex\Application();
 
+// list($usec, $sec) = explode(" ", microtime());
+// $time0 = ((float)$usec + (float)$sec);
+	 
+
+// $t7=$time0;
+
 $app['debug'] = true;
 
 $app['db.config'] = require_once 'config/db.php';
@@ -48,31 +54,74 @@ foreach (array('user','admin','superadmin') as $role) {
 //*********************
 //**     ROUTING     **
 //*********************
-$app->GET("/hola",function(){
-	return "hola";
-});
+
 require_once 'routes.php';
 
-$app['transaction_logger'] = $app->share(function() use ($app){
-	return new Esnuab\Services\TransactionLogger\TransactionLogger();
-});
-/*
-$app->finish(function (Request $request, JsonResponse $jsonResponse) use ($app) {
-	if(in_array($request->getMethod(),array('POST','PUT','DELETE')) && in_array($jsonResponse->getStatusCode(),array(201,204))){
-		$app['transaction_logger']->setRequest($request);
-		if($request->getMethod() == 'DELETE'){
-			$app['transaction_logger']->setTargetByUri();
-		}
-		if(in_array($request->getMethod(),array('POST','PUT'))){
-			$app['transaction_logger']->setData($jsonResponse->getContent());
-			$app['transaction_logger']->setTargetByResponse();
-		}
-		$app['transaction_logger']->setUser($app['security']->getToken()->getUsername());
-		$app['transaction_logger']->buildLog();
-		$app['transaction_logger']->recordLog($app['db']);
-	}
-});*/
+$app['monolog.logfile']=function(){
+	$date = \DateTime::createFromFormat('U',time());
+	$file = ROOT.'/var/logs/app_'.$date->format('Y-m-d').'.log';
+	return $file;
+};
+$app->register(new Silex\Provider\MonologServiceProvider());
 
-/*$app->register(new Silex\Provider\SwiftmailerServiceProvider());
-$app['swiftmailer.options'] = require_once 'config/mailer.php';*/
+$app['monolog.factory'] = $app->protect(function ($name) use ($app) {
+	$log = new $app['monolog.logger.class']($name);
+	//$log->pushHandler($app['monolog.handler']);
+
+	return $log;
+});
+$app['monolog.tiempo'] = $app->share(function($app){
+	$log = new $app['monolog.logger.class']('tiempo');
+	return $log;
+});
+
+$app['monolog.access'] = $app->share(function() use ($app){
+		$log = new $app['monolog.logger.class']('access');
+		$handler = new Esnuab\Services\DbalLog\Handler\DbalHandler($app['db']);
+		$handler->setFormatter(new Esnuab\Services\DbalLog\Formatter\AuditFormatter());
+		$handler->pushProcessor(new Esnuab\Services\DbalLog\Processor\RequestProcessor($app));
+		$handler->pushProcessor(new Esnuab\Services\DbalLog\Processor\UserProcessor($app));
+		$log->pushHandler($handler);
+		return $log;
+	});
+$app->before(function() use ($app){
+
+	
+	//$app['monolog.access']->addInfo('hola');
+});
+$app->after(function() use ($app){ 
+	
+	$app['monolog.access']->addInfo('perrro',array('hola'=>'jaajaja'));
+});
+
+// 	$app['monolog']->addInfo($t7,array("tiempo0"));
+// $app->before(function() use ($app){
+// 	list($usec, $sec) = explode(" ", microtime());
+// 	$time0 = ((float)$usec + (float)$sec);
+// 	$t1=$time0;
+// 	$app['monolog']->addInfo($t1,array("principio app"));
+// }, Silex\Application::EARLY_EVENT);
+// $app->finish(function(Request $request,JsonResponse $jsonresponse) use ($app){
+// 	list($usec, $sec) = explode(" ", microtime());
+// 	$time0 = ((float)$usec + (float)$sec);
+// 	$t1=$time0;
+// 	$app['monolog']->addInfo($t1,array("pre fin app"));
+// 	$code = $jsonresponse->getStatusCode();
+// 	switch ($code) {
+// 		case 401:
+// 			$app['monolog.access']->addNotice('No autenticado');
+// 			break;
+// 		case 403:
+// 			$app['monolog.access']->addNotice('Sin autorizacion');
+// 			break;
+// 		default:
+// 			$app['monolog.access']->addInfo('Acceso Correcto',array('user' => $app['security']->getToken()->getUsername()));
+// 			break;
+// 	}
+// 	list($usec, $sec) = explode(" ", microtime());
+// 	$time0 = ((float)$usec + (float)$sec);
+// 	$t1=$time0;
+// 	$app['monolog']->addInfo($t1,array("fin app"));
+// });
+
 return $app;

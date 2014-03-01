@@ -7,7 +7,7 @@ $app['security.authentication_listener.factory.wsse'] = $app->protect(function($
         return new \Esnuab\Libro\Security\WsseProvider($app['security.user_provider.default'], __DIR__ . '/security_cache');
     });
     $app['security.authentication_listener.' . $name . '.wsse'] = $app->share(function() use ($app, $name) {
-        return new \Esnuab\Libro\Security\WsseListener($app['security'], $app['security.authentication_provider.' . $name . '.wsse'], $app['db']);
+        return new \Esnuab\Libro\Security\WsseListener($app['security'], $app['security.authentication_provider.' . $name . '.wsse'], $app['db'],$app['monolog.access']);
     });
     return array(
         'security.authentication_provider.' . $name . '.wsse',

@@ -8,14 +8,16 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Doctrine\DBAL\Connection;
+use Psr\Log\LoggerInterface;
 use Esnuab\Libro\Security\WsseUserToken;
 class WsseListener implements ListenerInterface {
 	protected $securityContext;
 	protected $authenticationManager;
-	public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager, Connection $conn) {
+	public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager, Connection $conn, LoggerInterface $logger = null) {
 		$this->securityContext = $securityContext;
 		$this->authenticationManager = $authenticationManager;
 		$this->conn = $conn;
+		$this->logger = $logger;
 	}
 	public function handle(GetResponseEvent $event) {
 		$request = $event->getRequest();
@@ -42,10 +44,16 @@ class WsseListener implements ListenerInterface {
 		try {
 			$authToken = $this->authenticationManager->authenticate($token);
 			$this->securityContext->setToken($authToken);
+			if (null !== $this->logger) {
+				$this->logger->addInfo('hola');
+			}
 			return;
 		}
 		catch (AuthenticationException $failed) {
 			$this->reportIp($request);
+			if (null !== $this->logger) {
+				$this->logger->addInfo('hola');
+			}
 			$response = new JsonResponse(array(
 				'error' => 'Wrong credentials.'
 			), 401);
