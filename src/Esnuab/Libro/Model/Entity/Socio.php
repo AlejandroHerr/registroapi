@@ -81,9 +81,15 @@ class Socio extends Base {
     public function getModAt() {
         return $this->mod_at;
     }
-    public function setModAt() {
-        $time         = new \DateTime(date('Y-m-d H:i:s', time()));
+    public function setModAt(){
+        $time = new \DateTime(date('Y-m-d H:i:s', time()));
         $this->mod_at = $time->format('Y-m-d');
+        return $this;
+    }
+    public function setExpired()
+    {
+    	$time = new \DateTime(date('Y-m-d H:i:s', time()));
+        $this->expires_at = $time->format('Y-m-d');
         return $this;
     }
 }
