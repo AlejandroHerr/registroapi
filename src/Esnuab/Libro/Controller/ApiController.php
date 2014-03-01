@@ -3,22 +3,24 @@ namespace Esnuab\Libro\Controller;
 
 use Silex\Application;
 use Silex\ControllerProviderInterface;
-
 use Esnuab\Libro\Model\Entity\Socio;
 use Esnuab\Libro\Model\Manager\SocioManager;
 use Esnuab\Libro\Form\SocioForm;
-
 use Silex\Provider\FormServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
-
 use Symfony\Component\HttpFoundation\Request;
 
-class ApiController implements ControllerProviderInterface {
+class ApiController implements ControllerProviderInterface
+{
 	protected $socioManager;
-	function __construct($socioManager) {
+	protected $transactionLogger;
+	function __construct($socioManager,$transactionLogger=null)
+	{
+		$this->transactionLogger = $transactionLogger;
 		$this->socioManager = $socioManager;
 	}
-	public function connect(Application $app) {
+	public function connect(Application $app)
+	{
 		$controllers = $app['controllers_factory'];
 
 		$controllers->get('/socios', array($this,"getSocios"))
@@ -41,7 +43,8 @@ class ApiController implements ControllerProviderInterface {
 		return $controllers;
 	}
 
-	function getSocios(Application $app) {
+	function getSocios(Application $app)
+	{
 		$totalResults = $this->socioManager->getCount($app);
 		$socios = $this->socioManager->getSocios($app, $this->queryParams);
 		$response = array(
@@ -54,30 +57,35 @@ class ApiController implements ControllerProviderInterface {
 		);
 		return $app->json($response, 200);
 	}
-	function postSocio(Application $app) {
+	function postSocio(Application $app)
+	{
 		return $this->processForm($app);
 	}
-	function getSocio(Application $app, $id) {
+	function getSocio(Application $app, $id)
+	{
 		if (!$this->socioManager->existsSocio($app, $id)) {
 			return $app->json(array('message' => 'El socio con id ' . $id . ' no existe.'), 404);
 		}
 		$socio = $this->socioManager->getSocio($app, $id);
 		return $app->json($socio->toArray(), 200);
 	}
-	function putSocio(Application $app, $id, Request $request) {
+	function putSocio(Application $app, $id, Request $request)
+	{
 		if ($this->socioManager->existsSocio($app, $id)) {
 			return $app->json(array('message' => 'El socio con id ' . $id . ' no existe.'), 404);
 		}
 		return $this->processForm($app, $request, $id);
 	}
-	function deleteSocio(Application $app, $id) {
+	function deleteSocio(Application $app, $id)
+	{
 		if (!$this->socioManager->existsSocio($app, $id)) {
 			return $app->json(array('message' => 'El socio con id ' . $id . ' no exise.'), 404);
 		}
 		$this->socioManager->deleteSocio($app, $id);
 		return $app->json(null, 204);
 	}
-	function processForm(Application $app, $id = null) {
+	function processForm(Application $app, $id = null)
+	{
 		$app->register(new FormServiceProvider());
 		$app->register(new ValidatorServiceProvider());
 		$socio = new Socio();
@@ -100,6 +108,9 @@ class ApiController implements ControllerProviderInterface {
 					), 400);
 				}
 				$socio = $this->socioManager->createSocio($socio, $app);
+				if (null !== $this->transactionLogger) {
+					$this->transactionLogger-addNotice('Socio creado',array('datos'=>$socio->toArray()));
+				}
 			}
 			if ($app['request']->getMethod() == 'PUT') {
 				if ($this->socioManager->existsSocio($app, $socio->getEsncard(), 'esncard', false, $id)) {
@@ -117,6 +128,9 @@ class ApiController implements ControllerProviderInterface {
 					), 400);
 				}
 				$socio = $this->socioManager->updateSocio($socio, $app, $id);
+				if (null !== $this->transactionLogger) {
+					$this->transactionLogger-addNotice('Socio actualizado',array('datos'=>$socio->toArray()));
+				}
 			}
 			return $app->json($socio->toArray(), 201);
 		}
@@ -124,10 +138,12 @@ class ApiController implements ControllerProviderInterface {
 			'errores' => $this->form->getErrorsAsArray()
 		), 400);
 	}
-	function getFormHeaders(Request $request) {
+	function getFormHeaders(Request $request)
+	{
 		$this->data = json_decode($request->getContent(), true);
 	}
-	function getQueryHeaders(Request $request) {
+	function getQueryHeaders(Request $request)
+	{
 		$this->queryParams = $request->query->all();
 		if (!array_key_exists('maxResults', $this->queryParams)) {
 			$this->queryParams['maxResults'] = 25;
