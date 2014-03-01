@@ -1,5 +1,6 @@
 <?php
 namespace Esnuab\Libro\Security;
+
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -10,7 +11,9 @@ use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterfac
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
 use Esnuab\Libro\Security\WsseUserToken;
-class WsseListener implements ListenerInterface {
+
+class WsseListener implements ListenerInterface
+{
 	protected $securityContext;
 	protected $authenticationManager;
 	public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager, Connection $conn, LoggerInterface $logger = null) {
@@ -19,9 +22,13 @@ class WsseListener implements ListenerInterface {
 		$this->conn = $conn;
 		$this->logger = $logger;
 	}
-	public function handle(GetResponseEvent $event) {
+	public function handle(GetResponseEvent $event)
+	{
 		$request = $event->getRequest();
 		if ($this->isIpBlocked($request)) {
+			if (null !== $this->logger) {
+				$this->logger->addNotice('IP bloqueada / Acceso no autorizado');
+			}
 			$response = new JsonResponse(array(
 				'error' => 'Too many login attempts in the last 30 minutes. Waith 30 min.'
 			), 401);
@@ -45,14 +52,14 @@ class WsseListener implements ListenerInterface {
 			$authToken = $this->authenticationManager->authenticate($token);
 			$this->securityContext->setToken($authToken);
 			if (null !== $this->logger) {
-				$this->logger->addInfo('hola');
+				$this->logger->addInfo('Acceso autorizado');
 			}
 			return;
 		}
 		catch (AuthenticationException $failed) {
 			$this->reportIp($request);
 			if (null !== $this->logger) {
-				$this->logger->addInfo('hola');
+				$this->logger->addNotice('Acceso no autorizado');
 			}
 			$response = new JsonResponse(array(
 				'error' => 'Wrong credentials.'
@@ -64,7 +71,8 @@ class WsseListener implements ListenerInterface {
 		$response->setStatusCode(401);
 		$event->setResponse($response);
 	}
-	protected function isIpBlocked(Request $request) {
+	protected function isIpBlocked(Request $request)
+	{
 		$ip = $request->getClientIp();
 		$ip = str_replace('.', 'p', $ip);
 		$timeLimit = time() - 30 * 60;
@@ -79,7 +87,8 @@ class WsseListener implements ListenerInterface {
 		}
 		return true;
 	}
-	protected function reportIp(Request $request) {
+	protected function reportIp(Request $request)
+	{
 		$ip = $request->getClientIp();
 		$ip = str_replace('.', 'p', $ip);
 		$time = time();
