@@ -5,8 +5,10 @@ namespace Esnuab\Libro\Model\Manager;
 use Silex\Application;
 use Esnuab\Libro\Model\Entity\Socio;
 
-class SocioManager {
-	function getSocios(Application $app,$params) {
+class SocioManager
+{
+	function getSocios(Application $app,$params)
+	{
 		$offset=($params['currentPage']-1)*$params['maxResults'];
 		
 		$query = 'SELECT * from socio '.
@@ -16,19 +18,23 @@ class SocioManager {
 		$socios=$app['db']->fetchAll($query);
 		return $socios;
 	}
-	function getSocio($app,$id) {
+	function getSocio($app,$id)
+	{
 		$socio = $app['db']->fetchAssoc('SELECT * FROM socio WHERE id = ?', array($app->escape($id)));
 		return new Socio($socio);
 	}
-	function createSocio(Socio $socio,$app){
+	function createSocio(Socio $socio,$app)
+	{
 		$socio->setModAt();
 		$socio->setExpiresAt();
 		$app['db']->insert('socio',$socio->toArray());
 		$socio->setId($app['db']->lastInsertId());
+		$app['db']->insert('socio_confirmation',array('userId' => $socio->getId()));
 		return $socio;
 
 	}
-	function updateSocio($socio,$app,$id){
+	function updateSocio($socio,$app,$id)
+	{
 		$socio->setModAt();
 		$socio->setExpiresAt();
 		$app['db']->update('socio',$socio->toArray(),array('id' => $app->escape($id)));
@@ -36,11 +42,13 @@ class SocioManager {
 		return $socio;
 
 	}
-	function deleteSocio($app,$id){
+	function deleteSocio($app,$id)
+	{
 		$app['db']->delete('socio',array('id' => $app->escape($id)));
 	}
 
-	function existsSocio($app,$value,$field='id',$excludeId=true,$id=null){
+	function existsSocio($app,$value,$field='id',$excludeId=true,$id=null)
+	{
 		$query= 'SELECT * FROM socio WHERE '.$field.' = "'.$app->escape($value).'"';
 		if(!$excludeId){
 			$query = $query . " AND id != ".$app->escape($id); 
@@ -50,9 +58,8 @@ class SocioManager {
 		}
 		return false;
 	}
-	
-
-	function getCount($app){
+	function getCount($app)
+	{
 		$count=$app['db']->fetchAssoc('SELECT COUNT(id) AS total FROM socio');
 		return $count['total'];
 	}
