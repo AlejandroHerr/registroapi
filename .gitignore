@@ -11,6 +11,5 @@ src/Esnuab/security_cache/*
 *.ini
 todo
 .htaccess
-app/lib/
 sftp-config.json
 
