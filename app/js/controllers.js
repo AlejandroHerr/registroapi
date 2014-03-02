@@ -7,10 +7,11 @@
 				event.preventDefault();
 				credenciales.setUser($scope.username);
 				credenciales.setPass($scope.password);		
-				if (credenciales.isLogged()){
-					$location.url("/app");
-				}
+				/*if (credenciales.isLogged()){*/
+				$location.url("/");
+				/*}*/
 			};
+			//$scope.fuera='hola';
 		}
 
 	]);
@@ -225,3 +226,20 @@
 
 				//en caso afirmativo el tiene que ir a close, sino a dismiss
 	}];
+
+/*	libroControllers.controller('OuterController',['credenciales','scope',function(credenciales,$scope){
+		$scope.fuera='hola';
+	}]);
+*/
+	libroControllers.controller('OuterController',['$scope','credenciales',
+		function ($scope, credenciales) {
+			$scope.logged=credenciales.isLogged();
+			$scope.$watch(
+        		function(){ return credenciales.isLogged() },
+
+        		function(newVal) {
+          			$scope.logged = newVal;
+        		}
+      		)
+			
+		}]);

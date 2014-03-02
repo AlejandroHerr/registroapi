@@ -8,8 +8,11 @@
 		<link rel="stylesheet" href="/app/css/bootstrap-custom-theme.css">
 	</head>
 	<body>
-		<?php include "partials/navbar.html";?>
+		<div ng-controller="OuterController">
+			<?php include "partials/navbar.html";?>
+		</div>
 		<div class="jumbotron">
+			
     		<div ng-view class="view-frame"></div>
   		</div>
 
