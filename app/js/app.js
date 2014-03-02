@@ -6,8 +6,7 @@ var libroApp = angular.module('libroApp', [
 	'ngCookies',
 	'ui.bootstrap',
 	'libroControllers',
-	'libroServices',
-	'xeditable'
+	'libroServices'
 ]).
 config(['$locationProvider',
 	function ($location) {
