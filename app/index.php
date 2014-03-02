@@ -8,14 +8,13 @@
 		<link rel="stylesheet" href="/app/css/bootstrap-custom-theme.css">
 	</head>
 	<body>
-		<div ng-controller="OuterController">
-			<?php include "partials/navbar.html";?>
-		</div>
-		<div class="jumbotron">
-			
-    		<div ng-view class="view-frame"></div>
-  		</div>
-
+		<div class='container'>
+			<div ng-controller="OuterController">
+				<?php include "partials/navbar.html";?>
+			</div>
+			<div ng-view class="view-frame"></div>
+	  	</div>
+		<!-- SCRIPTS -->
   		<script src="/app/lib/angular.js-1.2.13/angular.min.js"></script>
 	  	<script src="/app/lib/angular.js-1.2.13/angular-resource.min.js"></script>
 	  	<script src="/app/lib/angular.js-1.2.13/angular-route.min.js"></script>
