@@ -1,21 +1,22 @@
 	'use strict';
 	/* Controllers */
 	var libroControllers = angular.module('libroControllers', []);
-	libroControllers.controller('LoginCtrl', ['$cookies', '$scope', '$location',
-		function ($cookies, $scope, $location) {
-
+	libroControllers.controller('LoginCtrl', ['credenciales', '$scope', '$location',
+		function (credenciales, $scope, $location) {
 			$scope.logIn = function () {
 				event.preventDefault();
-				$cookies.username = $scope.username;
-				$cookies.password = $scope.password;
-				$location.url("/");
+				credenciales.setUser($scope.username);
+				credenciales.setPass($scope.password);		
+				if (credenciales.isLogged()){
+					$location.url("/app");
+				}
 			};
 		}
+
 	]);
-	libroControllers.controller('LogoutCtrl', ['$cookies', '$scope', '$location',
-		function ($cookies, $scope, $location) {
-			$cookies.username = "";
-			$cookies.password = "";
+	libroControllers.controller('LogoutCtrl', ['credenciales', '$scope', '$location',
+		function (credenciales, $scope, $location) {
+			credenciales.logOut();
 			$location.url('/app/login');
 		}
 	]);

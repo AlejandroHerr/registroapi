@@ -13,6 +13,35 @@ libroServices.service('galletitas', ['$cookies', 'xwsse',
 			return xwsse.calc($cookies.username, $cookies.password);
 		}
 }]);
+libroServices.service('credenciales', ['xwsse',
+	function (xwsse) {
+		var username = '';
+		var password = '';
+		return{
+			getUser: function() {
+				return this.username;
+			},
+			setUser: function(user) {
+				this.username = user;
+			},
+			getPass: function() {
+				return this.password;
+			},
+			setPass: function(pass) {
+				this.password = pass;
+			},
+			isLogged: function(){
+				if(!this.username || !this.password) {
+					return false;
+				}
+				return true;
+			},
+			logOut: function(){
+				this.username='';
+				this.password='';
+			}
+		};
+}]);
 libroServices.service('base64', function () {
 	this.base64EncodeChars =
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
