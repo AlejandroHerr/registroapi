@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-'use strict';
-=======
 /**
  * @license AngularJS v1.2.13
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -81,7 +78,6 @@ function minErr(module) {
     return new Error(message);
   };
 }
->>>>>>> JavaScript libraries updated.
 
 /* We need to tell jshint what variables are being exported */
 /* global
@@ -1442,8 +1438,6 @@ function getBlockElements(nodes) {
 
   return jqLite(elements);
 }
-<<<<<<< HEAD
-=======
 
 /**
  * @ngdoc interface
@@ -20878,4 +20872,3 @@ var styleDirective = valueFn({
 })(window, document);
 
 !angular.$$csp() && angular.element(document).find('head').prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide{display:none !important;}ng\\:form{display:block;}.ng-animate-block-transitions{transition:0s all!important;-webkit-transition:0s all!important;}</style>');
->>>>>>> JavaScript libraries updated.
