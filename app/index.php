@@ -22,7 +22,7 @@
 	  	<script src="/app/js/services.js"></script>
 	  	<script src="/app/js/services_security.js"></script>
 	  	<script src="/app/js/services_api.js"></script>
-	  	<script src="/app/lib/ui-bootstrap-tpls-0.10.0.js"></script>
+	  	<script src="/app/lib/ui-bootstrap-tpls-0.10.0.min.js"></script>
 		<script src="/app/lib/jquery-1.11.0.min.js"></script>
 	</body>
 </html>	
