@@ -39,6 +39,9 @@ libroServices.service('credenciales', ['xwsse',
 			logOut: function(){
 				this.username='';
 				this.password='';
+			},
+			getXWSSE: function () {
+				return xwsse.calc(this.username,this.password);
 			}
 		};
 }]);
