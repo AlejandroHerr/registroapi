@@ -56,10 +56,10 @@
 				}
 			};
 			$scope.delete = function (socio) {
-				var modalInstance = $modal.open({
-					templateUrl: '/app/partials/modal/delete.html',
-					controller: DeleteModalInstanceCtrl,
-					resolve: {
+					var modalInstance = $modal.open({
+						templateUrl: '/app/partials/modal/delete.html',
+						controller: DeleteModalInstanceCtrl,
+						resolve: {
 						socio: function () {
 							return socio;
 						}
