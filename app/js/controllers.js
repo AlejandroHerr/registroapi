@@ -1,5 +1,4 @@
 	'use strict';
-	/* Controllers */
 	var libroControllers = angular.module('libroControllers', []);
 	libroControllers.controller('LoginCtrl', ['credenciales', '$scope', '$location',
 		function (credenciales, $scope, $location) {
@@ -7,13 +6,11 @@
 				event.preventDefault();
 				credenciales.setUser($scope.username);
 				credenciales.setPass($scope.password);		
-				/*if (credenciales.isLogged()){*/
-				$location.url("/");
-				/*}*/
+				if (credenciales.isLogged()){
+					$location.url("/app/socios");
+				}
 			};
-			//$scope.fuera='hola';
 		}
-
 	]);
 	libroControllers.controller('LogoutCtrl', ['credenciales', '$scope', '$location',
 		function (credenciales, $scope, $location) {
@@ -21,10 +18,10 @@
 			$location.url('/app/login');
 		}
 	]);
-	libroControllers.controller('SociosCtrl', ['ApiCall', '$modal', 'optiones',
-		'galletitas', '$http', '$scope', '$location',
-		function (ApiCall, $modal, optiones, galletitas, $http, $scope, $location) {
-			if(!galletitas.isLogged()) {
+	libroControllers.controller('SociosCtrl', ['ApiCall', '$modal', 'queryOptions',
+		'credenciales', '$http', '$scope', '$location',
+		function (ApiCall, $modal, queryOptions, credenciales, $http, $scope, $location) {
+			if(!credenciales.isLogged()) {
 				$location.url("/app/login");
 				return;
 			}
@@ -33,7 +30,7 @@
 				$scope.loadSocios($scope.options.currentPage);
 			};
 			$scope.reset = function () {
-				$scope.options = optiones.reset();
+				$scope.options = queryOptions.reset();
 				$scope.loadSocios($scope.options.currentPage);
 			};
 			$scope.changePage = function (page) {
@@ -43,7 +40,7 @@
 			$scope.loadSocios = function (page) {
 				if(flag) {
 					flag = false;
-					var data = ApiCall.getSocios(page, galletitas.getXWSSE(),
+					var data = ApiCall.getSocios(page, credenciales.getXWSSE(),
 						$scope.options)
 						.then(function (d) {
 							if(d.status == 200) {
@@ -75,7 +72,7 @@
 			$scope.edit = function (socio) {
 				console.log(socio);
 			}
-			$scope.options = optiones.get();
+			$scope.options = queryOptions.get();
 			$scope.maxSize = 100;
 			$scope.isCollapsed = true;
 			$scope.toCollapse = function () {
