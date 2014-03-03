@@ -12,7 +12,9 @@
 			<div ng-controller="OuterController">
 				<?php include "partials/navbar.html";?>
 			</div>
-			<div ng-view class="view-frame"></div>
+			<div id='view-container'>
+				<div ng-view class="view-frame"></div>
+			</div>
 	  	</div>
 		<!-- SCRIPTS -->
   		<script src="/app/lib/angular.js-1.2.13/angular.min.js"></script>
