@@ -23,6 +23,7 @@
 	  	<script src="/app/lib/angular.js-1.2.13/angular-cookies.min.js"></script>
 		<script src="/app/js/app.js"></script>
 	  	<script src="/app/js/controllers.js"></script>
+	  	<script src="/app/js/controllers_bootstrap.js"></script>
 	  	<script src="/app/js/services.js"></script>
 	  	<script src="/app/js/services_security.js"></script>
 	  	<script src="/app/js/services_api.js"></script>
