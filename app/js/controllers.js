@@ -22,7 +22,7 @@
 		'credenciales', '$http', '$scope', '$location',
 		function (ApiCall, $modal, queryOptions, credenciales, $http, $scope, $location) {
 			if(!credenciales.isLogged()) {
-				$location.url("/app/login");
+				$location.url("/app/logout");
 				return;
 			}
 			var flag = true;
@@ -39,27 +39,46 @@
 			}
 			$scope.loadSocios = function (page) {
 				if(flag) {
+					$scope.isLoading=true;
 					flag = false;
 					var data = ApiCall.getSocios(page, credenciales.getXWSSE(),
 						$scope.options)
 						.then(function (d) {
-							if(d.status == 200) {
-								$scope.socios = d.data.socios;
-								$scope.totalItems = d.data.pagination.totalResults;
-								$scope.options.currentPage = parseInt(d.data.pagination.currentPage);
-								$scope.currentPage = d.data.pagination.currentPage;
-								$scope.maxResults = d.data.pagination.maxResults;
-								flag = true;
-							}
-							//Añadir 401 y 403 y un default.
+							$scope.socios = d.data.socios;
+							$scope.totalItems = d.data.pagination.totalResults;
+							$scope.options.currentPage = parseInt(d.data.pagination.currentPage);
+							$scope.currentPage = d.data.pagination.currentPage;
+							$scope.maxResults = d.data.pagination.maxResults;
+							flag = true;
+							$scope.isLoading=false;
+						},function(d){
+							flag = true;
+							$scope.isLoading=false;
+							var modalInstance = $modal.open({
+								templateUrl: '/app/partials/modal/40x.html',
+								controller: ErrorModalInstanceCtrl,
+								resolve: {
+									error: function () {
+										return d;
+									}
+								}
+							});
+							modalInstance.result.then(function(){},function(){
+								if(d.status == 403){
+									//levatelo a alg'un lado
+								}else{
+									$location.url("/app/logout");
+								}
+							});
+
 						})
 				}
 			};
 			$scope.delete = function (socio) {
-					var modalInstance = $modal.open({
-						templateUrl: '/app/partials/modal/delete.html',
-						controller: DeleteModalInstanceCtrl,
-						resolve: {
+				var modalInstance = $modal.open({
+					templateUrl: '/app/partials/modal/delete.html',
+					controller: DeleteModalInstanceCtrl,
+					resolve: {
 						socio: function () {
 							return socio;
 						}
@@ -75,6 +94,7 @@
 			$scope.options = queryOptions.get();
 			$scope.maxSize = 100;
 			$scope.isCollapsed = true;
+			$scope.isLoading=false;
 			$scope.toCollapse = function () {
 				$scope.isCollapsed = !$scope.isCollapsed;
 			}
@@ -83,30 +103,13 @@
 	]);
 	
 	libroControllers.controller('SocioCtrl', ['$routeParams', '$cookies', '$http',
-		'$scope', 'xwsse', '$location',
-		function ($routeParams, $cookies, $http, $scope, xwsse, $location) {
-			if(!$cookies.username || !$cookies.password) {
-				$location.url("/app/login");
+		'$scope', 'credenciales', '$location',
+		function ($routeParams, $cookies, $http, $scope, credenciales, $location) {
+			if(!credenciales.isLogged()) {
+				$location.url("/app/logout");
 				return;
 			}
-			var passwordDigest = xwsse.calc($cookies.username, $cookies.password);
-			$http.defaults.headers.get = {
-				'X-WSSE': passwordDigest,
-			};
-			$http({
-				method: 'GET',
-				url: '/api/socios/' + $routeParams.socioId
-			}).
-			success(function (data) {
-				$scope.socio = data;
-			})
-				.
-			error(function (data, status) {
-				$scope.error = {
-					code: status,
-					descripcion: ""
-				}
-			});
+			//$routeParams.socioId
 	}]);
 	libroControllers.controller('NuevoSocioCtrl', ['ApiCall', '$modal', 'optiones',
 		'galletitas', '$http', '$scope', '$location',
