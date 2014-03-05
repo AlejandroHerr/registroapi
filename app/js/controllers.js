@@ -25,8 +25,7 @@
 				$location.url("/app/logout");
 				return;
 			}
-			var flag = true;
-			$scope.actualizar = function () {
+			$scope.refresh = function () {
 				$scope.loadSocios($scope.options.currentPage);
 			};
 			$scope.reset = function () {
@@ -89,8 +88,9 @@
 				});
 			}
 			$scope.edit = function (socio) {
-				console.log(socio);
+				$location.url("/app/socio/"+socio+"/edit");
 			}
+			var flag = true;
 			$scope.options = queryOptions.get();
 			$scope.maxSize = 100;
 			$scope.isCollapsed = true;
