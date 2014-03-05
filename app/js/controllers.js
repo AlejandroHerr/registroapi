@@ -109,7 +109,7 @@
 				$location.url("/app/logout");
 				return;
 			}
-			//$routeParams.socioId
+			var id = $routeParams.socioId
 	}]);
 	libroControllers.controller('NuevoSocioCtrl', ['ApiCall', '$modal', 'optiones',
 		'galletitas', '$http', '$scope', '$location',
