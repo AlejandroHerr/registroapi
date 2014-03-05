@@ -5,13 +5,13 @@ libroApp.factory('ApiCall', ['$http',
 			getSocios: function (page, passwordDigest, options) {
 				$http.defaults.headers.get = {
 					'X-WSSE': passwordDigest,
-					'Current-Page': page,
-					'Max-Results': 10,
+					//'Current-Page': page,
+					//'Max-Results': 10,
 					'Query-Options': angular.toJson(options)
 				};
 				var promise = $http({
 					method: 'GET',
-					url: '/api/socios'
+					url: '/api/socios?maxResults='+options.maxResults+'&currentPage='+page+'&orderDir='+options.orderDir+'&orderBy='+options.orderBy
 				}).then(function (response) {
 					return response;
 				});

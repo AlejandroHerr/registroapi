@@ -6,8 +6,7 @@ var libroApp = angular.module('libroApp', [
 	'ngCookies',
 	'ui.bootstrap',
 	'libroControllers',
-	'libroServices',
-	'xeditable'
+	'libroServices'
 ]).
 config(['$locationProvider',
 	function ($location) {
@@ -41,6 +40,3 @@ libroApp.config(['$routeProvider',
 		});
 	}
 ]);
-libroApp.run(function(editableOptions) {
-  editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
-});
