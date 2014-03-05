@@ -1,6 +1,19 @@
 #view-container{
   margin:75px auto 0 auto;
 }
+.loader{
+  z-index: 1031;
+  position: fixed;
+  display: block;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: auto;
+  overflow-y: scroll;
+  opacity: 0.7;
+  background: url('img/loader2.gif') no-repeat #000 center;
+}
 /*ANGULAR BOOTSTRAP*/
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
 /*LOGIN FORM*/
