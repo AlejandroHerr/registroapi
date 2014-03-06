@@ -47,7 +47,7 @@ var DeleteModalInstanceCtrl = ['ApiCall', 'credenciales', '$scope', '$modalInsta
 ];
 var ErrorModalInstanceCtrl = ['$scope', '$modalInstance', 'error',
 	function ($scope, $modalInstance, error) {
-		$.error = error;
+		$scope.error = error;
 		if(error.status == 401) {
 			$scope.name = 'No autorizado';
 			$scope.msg =
