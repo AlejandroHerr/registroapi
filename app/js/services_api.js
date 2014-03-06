@@ -4,14 +4,23 @@ libroApp.factory('ApiCall', ['$http',
 		var ApiCall = {
 			getSocios: function (page, passwordDigest, options) {
 				$http.defaults.headers.get = {
-					'X-WSSE': passwordDigest,
-					//'Current-Page': page,
-					//'Max-Results': 10,
-					'Query-Options': angular.toJson(options)
+					'X-WSSE': passwordDigest
 				};
 				var promise = $http({
 					method: 'GET',
 					url: '/api/socios?maxResults='+options.maxResults+'&currentPage='+page+'&orderDir='+options.orderDir+'&orderBy='+options.orderBy
+				}).then(function (response) {
+					return response;
+				});
+				return promise;
+			},
+			getSocio: function (id, passwordDigest) {
+				$http.defaults.headers.get = {
+					'X-WSSE': passwordDigest,
+				};
+				var promise = $http({
+					method: 'GET',
+					url: '/api/socios/' + id
 				}).then(function (response) {
 					return response;
 				});
@@ -23,6 +32,19 @@ libroApp.factory('ApiCall', ['$http',
 				};
 				var promise = $http({
 					method: 'POST',
+					url: '/api/socios',
+					data: data
+				}).then(function (response) {
+					return response;
+				});
+				return promise;
+			},
+			purSocio: function (data,passwordDigest) {
+				$http.defaults.headers.put = {
+					'X-WSSE': passwordDigest,
+				};
+				var promise = $http({
+					method: 'PUT',
 					url: '/api/socios',
 					data: data
 				}).then(function (response) {
