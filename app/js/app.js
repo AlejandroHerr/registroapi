@@ -6,7 +6,8 @@ var libroApp = angular.module('libroApp', [
 	'ngCookies',
 	'ui.bootstrap',
 	'libroControllers',
-	'libroServices'
+	'libroServices',
+	'xeditable'
 ]).
 config(['$locationProvider',
 	function ($location) {
@@ -27,7 +28,7 @@ libroApp.config(['$routeProvider',
 			templateUrl: '/app/partials/socios.html',
 			controller: 'SociosCtrl'
 		}).
-		when('/app/socios/:socioId', {
+		when('/app/socio/:socioId/:mode', {
 			templateUrl: '/app/partials/socio.html',
 			controller: 'SocioCtrl'
 		}).

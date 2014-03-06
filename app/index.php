@@ -6,6 +6,7 @@
 		<link rel="stylesheet" href="/app/css/bootstrap.css">
 		<link rel="stylesheet" href="/app/css/bootstrap-theme.css">
 		<link rel="stylesheet" href="/app/css/bootstrap-custom-theme.css">
+		<link rel="stylesheet" href="/app/css/xeditable.css">
 	</head>
 	<body>
 		<div class='container'>
@@ -21,6 +22,7 @@
 	  	<script src="/app/lib/angular.js-1.2.13/angular-resource.min.js"></script>
 	  	<script src="/app/lib/angular.js-1.2.13/angular-route.min.js"></script>
 	  	<script src="/app/lib/angular.js-1.2.13/angular-cookies.min.js"></script>
+	  	<script src="/app/lib/xeditable.min.js"></script>
 		<script src="/app/js/app.js"></script>
 	  	<script src="/app/js/controllers.js"></script>
 	  	<script src="/app/js/controllers_bootstrap.js"></script>
