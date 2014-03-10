@@ -5,7 +5,7 @@ var DeleteModalInstanceCtrl = ['ApiCall', 'credenciales', '$scope', '$modalInsta
 		$scope.alerts = [{
 			type: 'warning',
 			msg: '¡Esta acción no se puede deshacer!'
-		}, ];
+		}];
 		$scope.addAlert = function (Type, Msg) {
 			$scope.alerts.push({
 				type: Type,

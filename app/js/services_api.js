@@ -16,7 +16,7 @@ libroApp.factory('ApiCall', ['$http',
 			},
 			getSocio: function (id, passwordDigest) {
 				$http.defaults.headers.get = {
-					'X-WSSE': passwordDigest,
+					'X-WSSE': passwordDigest
 				};
 				var promise = $http({
 					method: 'GET',
@@ -28,7 +28,7 @@ libroApp.factory('ApiCall', ['$http',
 			},
 			postSocio: function (data,passwordDigest) {
 				$http.defaults.headers.post = {
-					'X-WSSE': passwordDigest,
+					'X-WSSE': passwordDigest
 				};
 				var promise = $http({
 					method: 'POST',
@@ -41,7 +41,7 @@ libroApp.factory('ApiCall', ['$http',
 			},
 			putSocio: function (data,id,passwordDigest) {
 				$http.defaults.headers.put = {
-					'X-WSSE': passwordDigest,
+					'X-WSSE': passwordDigest
 				};
 				var promise = $http({
 					method: 'PUT',
@@ -54,7 +54,7 @@ libroApp.factory('ApiCall', ['$http',
 			},
 			deleteSocio: function (passwordDigest,id) {
 				$http.defaults.headers.delete = {
-					'X-WSSE': passwordDigest,
+					'X-WSSE': passwordDigest
 				};
 				var promise = $http({
 					method: 'DELETE',
