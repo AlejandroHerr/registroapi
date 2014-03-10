@@ -19,8 +19,8 @@
 		}
 	]);
 	libroControllers.controller('SociosCtrl', ['ApiCall', '$modal', 'queryOptions',
-		'credenciales', '$http', '$scope', '$location',
-		function (ApiCall, $modal, queryOptions, credenciales, $http, $scope, $location) {
+		'credenciales', '$scope', '$location',
+		function (ApiCall, $modal, queryOptions, credenciales, $scope, $location) {
 			if(!credenciales.isLogged()) {
 				$location.url("/app/logout");
 				return;
@@ -102,14 +102,69 @@
 		}
 	]);
 	
-	libroControllers.controller('SocioCtrl', ['$routeParams', '$cookies', '$http',
-		'$scope', 'credenciales', '$location',
-		function ($routeParams, $cookies, $http, $scope, credenciales, $location) {
+	libroControllers.controller('SocioCtrl', ['$routeParams', 'ApiCall',
+		'$scope', 'credenciales', '$location','$http','$filter',
+		function ($routeParams, ApiCall, $scope, credenciales, $location,$http,$filter) {
 			if(!credenciales.isLogged()) {
 				$location.url("/app/logout");
 				return;
 			}
 			var id = $routeParams.socioId
+			$scope.getPais = function() {
+				if($scope.paises.length) {
+				    var selected = $filter('filter')($scope.paises, {alpha2: $scope.socio.pais});
+				    return selected.length ? selected[0].name : 'Not set';
+				} else {
+				    return $scope.socio.pais;
+				}
+			};
+			$scope.loadSocio = function (id) {
+				var data = ApiCall.getSocio(id, credenciales.getXWSSE())
+					.then(function (d) {
+						$scope.socio = d.data;
+						$scope.pais = $scope.getPais();
+					},function(d){
+						var modalInstance = $modal.open({
+							templateUrl: '/app/partials/modal/40x.html',
+							controller: ErrorModalInstanceCtrl,
+							resolve: {
+								error: function () {
+									return d;
+								}
+							}
+						});
+						modalInstance.result.then(function(){},function(){
+							if(d.status == 403){
+								//levatelo a alg'un lado
+							}else{
+								$location.url("/app/logout");
+							}
+						});
+					});
+			};
+			$scope.paises = [];
+			$scope.paises.length ? null : $http.get('/app/resources/countries.json').success(function(data) {
+				$scope.paises = data.countries;
+				$scope.loadSocio(id);
+		    });
+			$scope.saveUser = function() {
+				var putData = {
+					'nombre':this.socio.nombre,
+					'apellido':this.socio.apellido,
+					'esncard':this.socio.esncard,
+					'pais':this.socio.pais,
+					'passport':this.socio.passport,
+					'email':this.socio.email,
+					'created_at':this.socio.created_at
+				}
+			    var data = ApiCall.putSocio(putData,this.socio.id, credenciales.getXWSSE())
+			    	.then(function (d){
+			    		$scope.loadSocio(id);
+			    	},function (d){
+			    		//do something when it fails
+			    	}
+			    );
+			};					
 	}]);
 	libroControllers.controller('NuevoSocioCtrl', ['ApiCall', '$modal', 'optiones',
 		'galletitas', '$http', '$scope', '$location',
