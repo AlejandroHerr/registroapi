@@ -39,13 +39,13 @@ libroApp.factory('ApiCall', ['$http',
 				});
 				return promise;
 			},
-			purSocio: function (data,passwordDigest) {
+			putSocio: function (data,id,passwordDigest) {
 				$http.defaults.headers.put = {
 					'X-WSSE': passwordDigest,
 				};
 				var promise = $http({
 					method: 'PUT',
-					url: '/api/socios',
+					url: '/api/socios/' + id,
 					data: data
 				}).then(function (response) {
 					return response;
