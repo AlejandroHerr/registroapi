@@ -74,7 +74,7 @@
 						})
 				}
 			};
-			$scope.delete = function (socio) {
+			$scope.remove = function (socio) {
 				var modalInstance = $modal.open({
 					templateUrl: '/app/partials/modal/delete.html',
 					controller: DeleteModalInstanceCtrl,
