@@ -11,8 +11,11 @@ var libroApp = angular.module('libroApp', [
 ]).
 config(['$locationProvider',
 	function ($location) {
-		$location.html5Mode(true); //now there won't be a hashbang within URLs for browers that support HTML5 history
+		$location.html5Mode(true); 
 }]);
+libroApp.run(function(editableOptions) {
+  editableOptions.theme = 'bs3';
+});
 libroApp.config(['$routeProvider',
 	function ($routeProvider) {
 		$routeProvider.
