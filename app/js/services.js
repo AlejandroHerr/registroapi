@@ -34,3 +34,17 @@ libroServices.service('queryOptions', function () {
 		}
 	};
 });
+libroServices.service('loader', [function () {
+		var loadingState = false;
+		return{
+			isLoading: function() {
+				return this.loadingState;
+			},
+			setLoading: function() {
+				this.loadingState = true;
+			},
+			unsetLoading: function() {
+				this.loadingState = false;
+			}
+		};
+}]);
