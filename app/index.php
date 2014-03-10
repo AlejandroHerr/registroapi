@@ -12,6 +12,7 @@
 		<div class='container'>
 			<div ng-controller="OuterController">
 				<?php include "partials/navbar.html";?>
+				<div class='loader hide' ng-class="{show: isLoading}"></div>
 			</div>
 			<div id='view-container'>
 				<div ng-view class="view-frame"></div>
