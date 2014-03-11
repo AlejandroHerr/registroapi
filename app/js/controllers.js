@@ -180,13 +180,14 @@
 				$scope.loadSocio(id);
 		    });							
 	}]);
-	libroControllers.controller('NuevoSocioCtrl', ['ApiCall', '$modal', 'optiones',
+	libroControllers.controller('NuevoSocioCtrl', ['loader','ApiCall', '$modal', 'credenciales',
 		'galletitas', '$http', '$scope', '$location',
-		function (ApiCall, $modal, optiones, galletitas, $http, $scope, $location) {
-			if(!galletitas.isLogged()) {
-				$location.url("/app/login");
+		function (loader,ApiCall, $modal, credenciales, galletitas, $http, $scope, $location) {
+			if(!credenciales.isLogged()) {
+				$location.url("/app/logout");
 				return;
 			}
+			loader.setLoading();
 			$http.get('/app/resources/countries.json').success(function (response) {
 				$scope.countries = response.countries;
 			});
@@ -220,16 +221,17 @@
 					};
 				});
 			}
+			loader.unsetLoading();
 	}]);
-	var RegistrarModalInstanceCtrl = ['ApiCall', 'galletitas', '$scope',
+	var RegistrarModalInstanceCtrl = ['ApiCall', 'credenciales', '$scope',
 		'$modalInstance', 'socio',
-		function (ApiCall, galletitas, $scope, $modalInstance, socio) {
+		function (ApiCall, credenciales, $scope, $modalInstance, socio) {
 			$scope.successFlag = false;
 			$scope.failFlag = false;
 			$scope.progress = "50";
 			$scope.status = "progress-bar-warning";
 			$scope.isCollapsed = false;
-			var data = ApiCall.postSocio(socio, galletitas.getXWSSE())
+			var data = ApiCall.postSocio(socio, credenciales.getXWSSE())
 				.then(function (d) {
 					$scope.successFlag = true;
 					$scope.progress = "100";
