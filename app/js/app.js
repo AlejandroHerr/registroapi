@@ -1,9 +1,7 @@
 'use strict';
 /* App Module */
-angular.module('app', ['ngCookies']);
 var libroApp = angular.module('libroApp', [
 	'ngRoute',
-	'ngCookies',
 	'ui.bootstrap',
 	'libroControllers',
 	'libroServices',

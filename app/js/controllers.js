@@ -181,8 +181,8 @@
 		    });							
 	}]);
 	libroControllers.controller('NuevoSocioCtrl', ['loader','ApiCall', '$modal', 'credenciales',
-		'galletitas', '$http', '$scope', '$location',
-		function (loader,ApiCall, $modal, credenciales, galletitas, $http, $scope, $location) {
+		'$http', '$scope', '$location',
+		function (loader,ApiCall, $modal, credenciales, $http, $scope, $location) {
 			if(!credenciales.isLogged()) {
 				$location.url("/app/logout");
 				return;
