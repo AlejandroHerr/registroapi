@@ -22,7 +22,6 @@
   		<script src="/app/lib/angular.js-1.2.13/angular.min.js"></script>
 	  	<script src="/app/lib/angular.js-1.2.13/angular-resource.min.js"></script>
 	  	<script src="/app/lib/angular.js-1.2.13/angular-route.min.js"></script>
-	  	<script src="/app/lib/angular.js-1.2.13/angular-cookies.min.js"></script>
 	  	<script src="/app/lib/xeditable.min.js"></script>
 		<script src="/app/js/app.js"></script>
 	  	<script src="/app/js/controllers.js"></script>
