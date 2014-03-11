@@ -111,7 +111,6 @@
 				return;
 			}
 			loader.setLoading();
-			var id = $routeParams.socioId
 			$scope.getPais = function() {
 				if($scope.paises.length) {
 				    var selected = $filter('filter')($scope.paises, {alpha2: $scope.socio.pais});
@@ -146,11 +145,14 @@
 						});
 					});
 			};
-			$scope.paises = [];
-			$scope.paises.length ? null : $http.get('/app/resources/countries.json').success(function(data) {
-				$scope.paises = data.countries;
-				$scope.loadSocio(id);
-		    });
+			$scope.checkLength = function(data,min,max){
+				if (data.length < min) {
+			      return "El tamano mínimo son 2 caracteres!";
+			    }
+			    if (data.length > max) {
+			      return "El tamano máximo son 50 caracteres!";
+			    }
+			}
 			$scope.saveUser = function() {
 				loader.setLoading();
 				var putData = {
@@ -170,7 +172,13 @@
 			    		//do something when it fails
 			    	}
 			    );
-			};					
+			};	
+			var id = $routeParams.socioId
+			$scope.paises = [];
+			$http.get('/app/resources/countries.json').success(function(data) {
+				$scope.paises = data.countries;
+				$scope.loadSocio(id);
+		    });							
 	}]);
 	libroControllers.controller('NuevoSocioCtrl', ['ApiCall', '$modal', 'optiones',
 		'galletitas', '$http', '$scope', '$location',

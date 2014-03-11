@@ -4,23 +4,23 @@
     </div> 
     <div>
       <span class="title">Nombre:</span>
-      <span editable-text="socio.nombre" e-name="nombre"  e-required>{{ socio.nombre || 'empty' }}</span>
+      <span editable-text="socio.nombre" e-name="nombre" onbeforesave="checkLength($data,2,50)" e-required>{{ socio.nombre || 'empty' }}</span>
     </div>
     <div>
       <span class="title">Apellido:</span>
-      <span editable-text="socio.apellido" e-name="apellido"  e-required>{{ socio.apellido || 'empty' }}</span>
+      <span editable-text="socio.apellido" e-name="apellido" onbeforesave="checkLength($data,2,50)" e-required>{{ socio.apellido || 'empty' }}</span>
     </div> 
     <div>
       <span class="title">ESNCard:</span>
-      <span editable-text="socio.esncard" e-name="esncard"  e-required>{{ socio.esncard || 'empty' }}</span></span>
+      <span editable-text="socio.esncard" e-name="esncard" onbeforesave="checkLength($data,10,15)" e-required>{{ socio.esncard || 'empty' }}</span></span>
     </div> 
     <div>
       <span class="title">Email:</span>
-      <span editable-text="socio.email" e-name="email"  e-required>{{ socio.email || 'empty' }}</span></span>
+      <span editable-text="socio.email" e-name="email" e-required>{{ socio.email || 'empty' }}</span></span>
     </div>
     <div>
       <span class="title">Pasaporte:</span>
-      <span editable-text="socio.passport" e-name="passport"  e-required>{{ socio.passport || 'empty' }}</span></span>
+      <span editable-text="socio.passport" e-name="passport" onbeforesave="checkLength($data,5,20)" e-required>{{ socio.passport || 'empty' }}</span></span>
     </div> 
     <div>
       <span class="title">Pa&iacute;s:</span>
