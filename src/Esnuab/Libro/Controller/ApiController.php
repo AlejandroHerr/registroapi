@@ -109,7 +109,7 @@ class ApiController implements ControllerProviderInterface
 				}
 				$socio = $this->socioManager->createSocio($socio, $app);
 				if (null !== $this->transactionLogger) {
-					$this->transactionLogger-addNotice('Socio creado',array('datos'=>$socio->toArray()));
+					$this->transactionLogger->addNotice('Socio creado',array('datos'=>$socio->toArray()));
 				}
 			}
 			if ($app['request']->getMethod() == 'PUT') {
