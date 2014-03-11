@@ -71,10 +71,10 @@ class ApiController implements ControllerProviderInterface
 	}
 	function putSocio(Application $app, $id, Request $request)
 	{
-		if ($this->socioManager->existsSocio($app, $id)) {
+		if (!$this->socioManager->existsSocio($app, $id)) {
 			return $app->json(array('message' => 'El socio con id ' . $id . ' no existe.'), 404);
 		}
-		return $this->processForm($app, $request, $id);
+		return $this->processForm($app, $id);
 	}
 	function deleteSocio(Application $app, $id)
 	{
@@ -109,7 +109,7 @@ class ApiController implements ControllerProviderInterface
 				}
 				$socio = $this->socioManager->createSocio($socio, $app);
 				if (null !== $this->transactionLogger) {
-					$this->transactionLogger-addNotice('Socio creado',array('datos'=>$socio->toArray()));
+					$this->transactionLogger->addNotice('Socio creado',array('datos'=>$socio->toArray()));
 				}
 			}
 			if ($app['request']->getMethod() == 'PUT') {
@@ -129,14 +129,12 @@ class ApiController implements ControllerProviderInterface
 				}
 				$socio = $this->socioManager->updateSocio($socio, $app, $id);
 				if (null !== $this->transactionLogger) {
-					$this->transactionLogger-addNotice('Socio actualizado',array('datos'=>$socio->toArray()));
+					$this->transactionLogger->addNotice('Socio actualizado',array('datos'=>$socio->toArray()));
 				}
 			}
 			return $app->json($socio->toArray(), 201);
 		}
-		return $app->json(array(
-			'errores' => $this->form->getErrorsAsArray()
-		), 400);
+		return $app->json(array('errores' => $this->getArray($this->form)), 400);
 	}
 	function getFormHeaders(Request $request)
 	{
@@ -178,4 +176,29 @@ class ApiController implements ControllerProviderInterface
 			$this->queryParams['orderBy'] = 'created_at';
 		}
 	}
+	function getArray(\Symfony\Component\Form\Form $form)
+    {
+        return $this->getErrors($form);
+    }
+
+    function getErrors($form)
+    {
+        $errors = array();
+
+        if ($form instanceof \Symfony\Component\Form\Form) {
+
+            foreach ($form->getErrors() as $error) {
+
+                $errors[] = $error->getMessage();
+            }
+
+            foreach ($form->all() as $key => $child) {
+                if ($err = $this->getErrors($child)) {
+                    $errors[$key] = $err;
+                }
+            }
+        }
+
+        return $errors;
+    }
 }

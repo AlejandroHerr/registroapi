@@ -5,7 +5,7 @@ var DeleteModalInstanceCtrl = ['ApiCall', 'credenciales', '$scope', '$modalInsta
 		$scope.alerts = [{
 			type: 'warning',
 			msg: '¡Esta acción no se puede deshacer!'
-		}, ];
+		}];
 		$scope.addAlert = function (Type, Msg) {
 			$scope.alerts.push({
 				type: Type,
@@ -47,7 +47,7 @@ var DeleteModalInstanceCtrl = ['ApiCall', 'credenciales', '$scope', '$modalInsta
 ];
 var ErrorModalInstanceCtrl = ['$scope', '$modalInstance', 'error',
 	function ($scope, $modalInstance, error) {
-		$.error = error;
+		$scope.error = error;
 		if(error.status == 401) {
 			$scope.name = 'No autorizado';
 			$scope.msg =
@@ -55,11 +55,11 @@ var ErrorModalInstanceCtrl = ['$scope', '$modalInstance', 'error',
 		} else if(error.status == 403) {
 			$scope.name = 'Acceso prohibido';
 			$scope.msg =
-				'Parece ser que no tienes acceso para entrar en esta secci&oacute;. Pide acceso en la pr&oacute; asamblea general.';
+				'Parece ser que no tienes acceso para entrar en esta sección. Pide acceso en la próxima asamblea general.';
 		} else {
 			$scope.name = 'Error no previsto';
 			$scope.msg =
-				'Ha ocurrido un error raro que Alejandro I el Hermoso no tuvo en cuenta, as&iacute; que no te podemos dar m&aacute;s detalles.';
+				'Ha ocurrido un error raro que Alejandro I el Hermoso no tuvo en cuenta, así; que no te podemos dar más detalles.';
 		}
 		$scope.salir = function () {
 			$modalInstance.dismiss();

@@ -1,30 +1,51 @@
-<div id='error'>
-	<h3>{{error.code}}</h3>
-	<p>{{error.descripcion}}</p>
-</div>
-<table>
-	<tr>
-		<th>id</th>
-		<th>Nombre</th>
-		<th>Apellido</th>
-		<th>ESN CARD N</th>
-		<th>Id</th>
-		<th>Pais</th>
-		<th>e-mail</th>
-		<th>creado</th>
-		<th>modificado</th>
-		<th>expira</th>
-	</tr>
-	<tr ng-model="socio">
-		<td>{{socio.id}}</td>
-		<td>{{socio.nombre}}</td>
-		<td>{{socio.apellido}}</td>
-		<td>{{socio.esncard}}</td>
-		<td>{{socio.passport}}</td>
-		<td>{{socio.pais}}</td>
-		<td>{{socio.email}}</td>
-		<td>{{socio.created_at}}</td>
-		<td>{{socio.mod_at}}</td>
-		<td>{{socio.expires_at}}</td>
-	</tr>
-</table>
+<form editable-form name="editableForm" onaftersave="saveUser()">
+    <div>
+      <span class="title">ID n&uacute;mero {{ socio.id }}</span></span>
+    </div> 
+    <div>
+      <span class="title">Nombre:</span>
+      <span editable-text="socio.nombre" e-name="nombre" onbeforesave="checkLength($data,2,50)" e-required>{{ socio.nombre || 'empty' }}</span>
+    </div>
+    <div>
+      <span class="title">Apellido:</span>
+      <span editable-text="socio.apellido" e-name="apellido" onbeforesave="checkLength($data,2,50)" e-required>{{ socio.apellido || 'empty' }}</span>
+    </div> 
+    <div>
+      <span class="title">ESNCard:</span>
+      <span editable-text="socio.esncard" e-name="esncard" onbeforesave="checkLength($data,10,15)" e-required>{{ socio.esncard || 'empty' }}</span></span>
+    </div> 
+    <div>
+      <span class="title">Email:</span>
+      <span editable-text="socio.email" e-name="email" e-required>{{ socio.email || 'empty' }}</span></span>
+    </div>
+    <div>
+      <span class="title">Pasaporte:</span>
+      <span editable-text="socio.passport" e-name="passport" onbeforesave="checkLength($data,5,20)" e-required>{{ socio.passport || 'empty' }}</span></span>
+    </div> 
+    <div>
+      <span class="title">Pa&iacute;s:</span>
+      <span editable-select="socio.pais" e-name="pais" e-ng-options="p.alpha2 as p.name for p in paises">
+       {{ pais }}
+     </span>
+    </div>
+     <div>
+      <span class="title">Fecha de Alta: {{ socio.created_at }}</span></span>
+    </div> 
+    <div>
+      <span class="title">&Uacute;ltima modificaci&oacute;n el {{ socio.mod_at }}</span></span>
+    </div> 
+
+    <div class="buttons">
+      <button type="button" class="btn btn-default" ng-click="editableForm.$show()" ng-show="!editableForm.$visible">
+        Edit
+      </button>
+      <span ng-show="editableForm.$visible">
+        <button type="submit" class="btn btn-primary" ng-disabled="editableForm.$waiting">
+          Save
+        </button>
+        <button type="button" class="btn btn-default" ng-disabled="editableForm.$waiting" ng-click="editableForm.$cancel()">
+          Cancel
+        </button>
+     </span>
+    </div>
+  </form>  

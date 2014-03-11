@@ -1,12 +1,13 @@
 	'use strict';
 	var libroControllers = angular.module('libroControllers', []);
-	libroControllers.controller('LoginCtrl', ['credenciales', '$scope', '$location',
-		function (credenciales, $scope, $location) {
+	libroControllers.controller('LoginCtrl', ['credenciales', '$scope', '$location','loader',
+		function (credenciales, $scope, $location,loader) {
 			$scope.logIn = function () {
 				event.preventDefault();
 				credenciales.setUser($scope.username);
 				credenciales.setPass($scope.password);		
 				if (credenciales.isLogged()){
+					loader.setLoading();
 					$location.url("/app/socios");
 				}
 			};
@@ -19,8 +20,8 @@
 		}
 	]);
 	libroControllers.controller('SociosCtrl', ['ApiCall', '$modal', 'queryOptions',
-		'credenciales', '$http', '$scope', '$location',
-		function (ApiCall, $modal, queryOptions, credenciales, $http, $scope, $location) {
+		'credenciales', '$scope', '$location','loader',
+		function (ApiCall, $modal, queryOptions, credenciales, $scope, $location,loader) {
 			if(!credenciales.isLogged()) {
 				$location.url("/app/logout");
 				return;
@@ -38,7 +39,7 @@
 			}
 			$scope.loadSocios = function (page) {
 				if(flag) {
-					$scope.isLoading=true;
+					loader.setLoading();
 					flag = false;
 					var data = ApiCall.getSocios(page, credenciales.getXWSSE(),
 						$scope.options)
@@ -49,10 +50,10 @@
 							$scope.currentPage = d.data.pagination.currentPage;
 							$scope.maxResults = d.data.pagination.maxResults;
 							flag = true;
-							$scope.isLoading=false;
+							loader.unsetLoading();
 						},function(d){
 							flag = true;
-							$scope.isLoading=false;
+							loader.unsetLoading();
 							var modalInstance = $modal.open({
 								templateUrl: '/app/partials/modal/40x.html',
 								controller: ErrorModalInstanceCtrl,
@@ -73,7 +74,7 @@
 						})
 				}
 			};
-			$scope.delete = function (socio) {
+			$scope.remove = function (socio) {
 				var modalInstance = $modal.open({
 					templateUrl: '/app/partials/modal/delete.html',
 					controller: DeleteModalInstanceCtrl,
@@ -88,13 +89,13 @@
 				});
 			}
 			$scope.edit = function (socio) {
+				loader.setLoading();
 				$location.url("/app/socio/"+socio+"/edit");
 			}
 			var flag = true;
 			$scope.options = queryOptions.get();
 			$scope.maxSize = 100;
 			$scope.isCollapsed = true;
-			$scope.isLoading=false;
 			$scope.toCollapse = function () {
 				$scope.isCollapsed = !$scope.isCollapsed;
 			}
@@ -102,22 +103,91 @@
 		}
 	]);
 	
-	libroControllers.controller('SocioCtrl', ['$routeParams', '$cookies', '$http',
-		'$scope', 'credenciales', '$location',
-		function ($routeParams, $cookies, $http, $scope, credenciales, $location) {
+	libroControllers.controller('SocioCtrl', ['$routeParams', 'ApiCall',
+		'$scope', 'credenciales', '$location','$http','$filter','loader',
+		function ($routeParams, ApiCall, $scope, credenciales, $location,$http,$filter,loader) {
 			if(!credenciales.isLogged()) {
 				$location.url("/app/logout");
 				return;
 			}
-			//$routeParams.socioId
+			loader.setLoading();
+			$scope.getPais = function() {
+				if($scope.paises.length) {
+				    var selected = $filter('filter')($scope.paises, {alpha2: $scope.socio.pais});
+				    return selected.length ? selected[0].name : 'Not set';
+				} else {
+				    return $scope.socio.pais;
+				}
+			};
+			$scope.loadSocio = function (id) {
+				var data = ApiCall.getSocio(id, credenciales.getXWSSE())
+					.then(function (d) {
+						$scope.socio = d.data;
+						$scope.pais = $scope.getPais();
+						loader.unsetLoading();
+					},function(d){
+						loader.unsetLoading();
+						var modalInstance = $modal.open({
+							templateUrl: '/app/partials/modal/40x.html',
+							controller: ErrorModalInstanceCtrl,
+							resolve: {
+								error: function () {
+									return d;
+								}
+							}
+						});
+						modalInstance.result.then(function(){},function(){
+							if(d.status == 403){
+								//levatelo a alg'un lado
+							}else{
+								$location.url("/app/logout");
+							}
+						});
+					});
+			};
+			$scope.checkLength = function(data,min,max){
+				if (data.length < min) {
+			      return "El tamano mínimo son 2 caracteres!";
+			    }
+			    if (data.length > max) {
+			      return "El tamano máximo son 50 caracteres!";
+			    }
+			}
+			$scope.saveUser = function() {
+				loader.setLoading();
+				var putData = {
+					'nombre':this.socio.nombre,
+					'apellido':this.socio.apellido,
+					'esncard':this.socio.esncard,
+					'pais':this.socio.pais,
+					'passport':this.socio.passport,
+					'email':this.socio.email,
+					'created_at':this.socio.created_at
+				}
+			    var data = ApiCall.putSocio(putData,this.socio.id, credenciales.getXWSSE())
+			    	.then(function (d){
+			    		$scope.loadSocio(id);
+			    	},function (d){
+   						loader.unsetLoading();
+			    		//do something when it fails
+			    	}
+			    );
+			};	
+			var id = $routeParams.socioId
+			$scope.paises = [];
+			$http.get('/app/resources/countries.json').success(function(data) {
+				$scope.paises = data.countries;
+				$scope.loadSocio(id);
+		    });							
 	}]);
-	libroControllers.controller('NuevoSocioCtrl', ['ApiCall', '$modal', 'optiones',
-		'galletitas', '$http', '$scope', '$location',
-		function (ApiCall, $modal, optiones, galletitas, $http, $scope, $location) {
-			if(!galletitas.isLogged()) {
-				$location.url("/app/login");
+	libroControllers.controller('NuevoSocioCtrl', ['loader','ApiCall', '$modal', 'credenciales',
+		'$http', '$scope', '$location',
+		function (loader,ApiCall, $modal, credenciales, $http, $scope, $location) {
+			if(!credenciales.isLogged()) {
+				$location.url("/app/logout");
 				return;
 			}
+			loader.setLoading();
 			$http.get('/app/resources/countries.json').success(function (response) {
 				$scope.countries = response.countries;
 			});
@@ -151,16 +221,17 @@
 					};
 				});
 			}
+			loader.unsetLoading();
 	}]);
-	var RegistrarModalInstanceCtrl = ['ApiCall', 'galletitas', '$scope',
+	var RegistrarModalInstanceCtrl = ['ApiCall', 'credenciales', '$scope',
 		'$modalInstance', 'socio',
-		function (ApiCall, galletitas, $scope, $modalInstance, socio) {
+		function (ApiCall, credenciales, $scope, $modalInstance, socio) {
 			$scope.successFlag = false;
 			$scope.failFlag = false;
 			$scope.progress = "50";
 			$scope.status = "progress-bar-warning";
 			$scope.isCollapsed = false;
-			var data = ApiCall.postSocio(socio, galletitas.getXWSSE())
+			var data = ApiCall.postSocio(socio, credenciales.getXWSSE())
 				.then(function (d) {
 					$scope.successFlag = true;
 					$scope.progress = "100";
@@ -186,8 +257,8 @@
 		$scope.fuera='hola';
 	}]);
 */
-	libroControllers.controller('OuterController',['$scope','credenciales',
-		function ($scope, credenciales) {
+	libroControllers.controller('OuterController',['$scope','credenciales','loader',
+		function ($scope, credenciales,loader) {
 			$scope.logged=credenciales.isLogged();
 			$scope.$watch(
         		function(){ return credenciales.isLogged() },
@@ -196,5 +267,13 @@
           			$scope.logged = newVal;
         		}
       		)
+      		$scope.$watch(
+        		function(){ return loader.isLoading() },
+
+        		function(newVal) {
+          			$scope.isLoading = newVal;
+        		}
+      		)
 			
-		}]);
+		}]
+	);

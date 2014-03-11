@@ -1,18 +1,3 @@
-libroServices.service('galletitas', ['$cookies', 'xwsse',
-	function ($cookies, xwsse) {
-		this.isLogged = function () {
-			if(!$cookies.username || !$cookies.password) {
-				return false;
-			}
-			return true;
-		}
-		this.get = function (str) {
-			return $cookies[str];
-		}
-		this.getXWSSE = function () {
-			return xwsse.calc($cookies.username, $cookies.password);
-		}
-}]);
 libroServices.service('credenciales', ['xwsse',
 	function (xwsse) {
 		var username = '';

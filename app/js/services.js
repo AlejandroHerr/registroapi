@@ -1,32 +1,6 @@
 'use strict';
 /* Services */
 var libroServices = angular.module('libroServices', ['ngResource']);
-libroServices.service('optiones', function () {
-	this.config = {
-		orderBy: 'created_at',
-		orderDir: 'DESC',
-		currentPage: 1,
-		maxResults: 25
-	}
-	this.get = function () {
-		return this.config;
-	}
-	this.getValue = function (value) {
-		return this.config[value];
-	}
-	this.set = function (values) {
-		this.config = values;
-		return this;
-	}
-	this.reset = function () {
-		return {
-			orderBy: 'created_at',
-			orderDir: 'DESC',
-			currentPage: 1,
-			maxResults: 25
-		};
-	}
-});
 libroServices.service('queryOptions', function () {
 	var config;
 	config = {
@@ -60,3 +34,17 @@ libroServices.service('queryOptions', function () {
 		}
 	};
 });
+libroServices.service('loader', [function () {
+		var loadingState = false;
+		return{
+			isLoading: function() {
+				return this.loadingState;
+			},
+			setLoading: function() {
+				this.loadingState = true;
+			},
+			unsetLoading: function() {
+				this.loadingState = false;
+			}
+		};
+}]);

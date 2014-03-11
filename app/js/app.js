@@ -1,17 +1,19 @@
 'use strict';
 /* App Module */
-angular.module('app', ['ngCookies']);
 var libroApp = angular.module('libroApp', [
 	'ngRoute',
-	'ngCookies',
 	'ui.bootstrap',
 	'libroControllers',
-	'libroServices'
+	'libroServices',
+	'xeditable'
 ]).
 config(['$locationProvider',
 	function ($location) {
-		$location.html5Mode(true); //now there won't be a hashbang within URLs for browers that support HTML5 history
+		$location.html5Mode(true); 
 }]);
+libroApp.run(function(editableOptions) {
+  editableOptions.theme = 'bs3';
+});
 libroApp.config(['$routeProvider',
 	function ($routeProvider) {
 		$routeProvider.
@@ -27,7 +29,7 @@ libroApp.config(['$routeProvider',
 			templateUrl: '/app/partials/socios.html',
 			controller: 'SociosCtrl'
 		}).
-		when('/app/socios/:socioId', {
+		when('/app/socio/:socioId/:mode', {
 			templateUrl: '/app/partials/socio.html',
 			controller: 'SocioCtrl'
 		}).

@@ -60,3 +60,20 @@
 .table-hover > tbody > tr:hover > th {
   background-color: #A5B5E9;
 }
+/*XEDITABLE FORM*/
+.title{
+  display: inline-block;
+  font-weight: bold;
+  padding-top: 5px;
+  vertical-align: top;
+  min-width: 90px;
+}
+.editable {
+  display: inline-block;
+  padding-top: 5px;
+  vertical-align: top;
+}
+/*NUEVO SOCIO FORM*/
+.error{
+  color: #BB1616;
+}
