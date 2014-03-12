@@ -28,6 +28,12 @@
        {{ pais }}
      </span>
     </div>
+    <div>
+      <span class="title">Idioma:</span>
+      <span editable-select="socio.language" e-name="language" e-ng-options="l.value as l.value for l in languages">
+       {{ (languages | filter:{value: socio.language})[0].value || 'Not set' }}
+     </span>
+    </div>
      <div>
       <span class="title">Fecha de Alta: {{ socio.created_at }}</span></span>
     </div> 

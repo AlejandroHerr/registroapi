@@ -34,7 +34,8 @@ class SocioManager
 			'email' => $socio->getEmail(),
 			'name' => $socio->getNombre(). ' ' . $socio->getApellido(),
 			'expires_at' => $socio->getExpiresAt(),
-			'esncard' => $socio->getEsncard()
+			'esncard' => $socio->getEsncard(),
+			'language' => $socio->getLanguage()
 		));
 		return $socio;
 

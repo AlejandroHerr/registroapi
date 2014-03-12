@@ -162,7 +162,8 @@
 					'pais':this.socio.pais,
 					'passport':this.socio.passport,
 					'email':this.socio.email,
-					'created_at':this.socio.created_at
+					'created_at':this.socio.created_at,
+					'language':this.socio.language
 				}
 			    var data = ApiCall.putSocio(putData,this.socio.id, credenciales.getXWSSE())
 			    	.then(function (d){
@@ -175,6 +176,10 @@
 			};	
 			var id = $routeParams.socioId
 			$scope.paises = [];
+			$scope.languages = [
+			    {value: 'English'},
+			    {value: 'Español'}
+			 ];
 			$http.get('/app/resources/countries.json').success(function(data) {
 				$scope.paises = data.countries;
 				$scope.loadSocio(id);
@@ -191,6 +196,10 @@
 			$http.get('/app/resources/countries.json').success(function (response) {
 				$scope.countries = response.countries;
 			});
+			$scope.languages = [
+			    {value: 'English'},
+			    {value: 'Español'}
+			 ]; 
 			$scope.socio = {
 				'created_at': new Date().toJSON().slice(0, 10)
 			}
@@ -217,7 +226,8 @@
 						'created_at': new Date().toJSON().slice(0, 10),
 						'passport': '',
 						'pais': '',
-						'email': ''
+						'email': '',
+						'language': ''
 					};
 				});
 			}
