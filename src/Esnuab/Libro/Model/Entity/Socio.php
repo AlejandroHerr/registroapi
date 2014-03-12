@@ -14,6 +14,7 @@ class Socio extends Base
     protected $created_at;
     protected $expires_at;
     protected $mod_at;
+    protected $language;
 
     public function getId()
     {
@@ -111,6 +112,16 @@ class Socio extends Base
     {
     	$time = new \DateTime(date('Y-m-d H:i:s', time()));
         $this->expires_at = $time->format('Y-m-d');
+        return $this;
+    }
+    public function getLanguage()
+    {
+        return $this->language;
+    }
+    public function setLanguage($language)
+    {
+        $this->language = $language;
+
         return $this;
     }
 }
