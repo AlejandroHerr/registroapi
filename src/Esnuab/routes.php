@@ -1,4 +1,7 @@
 <?php
-use Esnuab\Libro\Controller\ApiControllerProvider;
 
-$app->mount('/api', new Esnuab\Libro\Controller\ApiController($app['socio_manager'],$app['monolog.transaction']));
+use Esnuab\Libro\Controller\ApiController;
+use Esnuab\Libro\Controller\CronController;
+
+$app->mount('/api', new ApiController($app['socio_manager'],$app['monolog.transaction']));
+$app->mount('/cron', new CronController($app['confirmation_manager'],$app['mandrill']));
