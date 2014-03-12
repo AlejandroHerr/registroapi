@@ -29,7 +29,13 @@ class SocioManager
 		$socio->setExpiresAt();
 		$app['db']->insert('socio',$socio->toArray());
 		$socio->setId($app['db']->lastInsertId());
-		$app['db']->insert('socio_confirmation',array('userId' => $socio->getId()));
+		$app['db']->insert('socio_confirmation',array(
+			'userId' => $socio->getId(),
+			'email' => $socio->getEmail(),
+			'name' => $socio->getNombre(). ' ' . $socio->getApellido(),
+			'expires_at' => $socio->getExpiresAt(),
+			'esncard' => $socio->getEsncard()
+		));
 		return $socio;
 
 	}
