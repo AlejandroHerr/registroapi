@@ -12,6 +12,13 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(),$app['db.config']);
 $app['socio_manager'] = $app->share(function($app) {
 	return new \Esnuab\Libro\Model\Manager\SocioManager($app['db']);
 });
+$app['confirmation_manager'] = $app->share(function($app) {
+	return new \Esnuab\Libro\Model\Manager\ConfirmationManager($app['db']);
+});
+$app['mandrill_apikey'] = require_once 'config/mandrill.php';
+$app['mandrill'] = $app->share(function($app) {
+	return new Mandrill($app['mandrill_apikey']);
+});
 
 //MONOLOG
 $app->register(new Silex\Provider\MonologServiceProvider());
