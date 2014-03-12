@@ -37,6 +37,10 @@ class SocioForm extends AbstractType {
                 'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 2, 'max' => 2))),
                 'invalid_message' => 'La dsf está mal'
             ))
+            ->add('language','text',array(
+                'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 7, 'max' => 7))),
+                'invalid_message' => 'La dsf está mal'
+            ))
             ->add('created_at','date',array(
                 'input' => 'string',
                 'widget' => 'single_text',

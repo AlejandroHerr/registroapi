@@ -124,6 +124,16 @@
 				</option>
 			</select>
 		</div>
+	</div>
+	<div class="form-group" ng-class="{'ng-invalid': nuevoSocio.language.$invalid===true,'ng-valid': nuevoSocio.language.$valid===true,'ng-pristine': nuevoSocio.language.$dirty===false}">
+		<label for="language" class="col-sm-2 col-sm-offset-2 col-xs-12 control-label">Idioma</label>
+		<div class="col-sm-4 col-xs-12">
+			<select ng-model="socio.language" class='form-control' name='language' required>
+				<option ng-repeat="language in languages" value="{{language.value}}">
+					{{language.value}}
+				</option>
+			</select>
+		</div>
 	</div>	
 	
 	<div class="form-group">
