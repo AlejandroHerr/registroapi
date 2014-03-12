@@ -1,3 +1,4 @@
+/*LOADER*/
 #view-container{
   margin:75px auto 0 auto;
 }
@@ -76,4 +77,28 @@
 /*NUEVO SOCIO FORM*/
 .error{
   color: #BB1616;
+}
+/*FOOTER*/
+/*FOOTER*/
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 40px;
+}
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 40px;
+  background: url('img/footer_bck.png') repeat-y #333 right;
+}
+#footer p{
+  font-family: Calibri;
+  color: #ccc;
+  text-align: right;
+  margin-bottom: 0px;
 }

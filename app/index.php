@@ -18,6 +18,11 @@
 				<div ng-view class="view-frame"></div>
 			</div>
 	  	</div>
+	  	<div id='footer'>
+	  		<div class='container'>
+	  			<p>Proudly handcoded in the ESN UAB's basement<br>Code Hard, Party Harder!</p> 
+	  		</div>
+	  	</div>
 		<!-- SCRIPTS -->
   		<script src="/app/lib/angular.js-1.2.13/angular.min.js"></script>
 	  	<script src="/app/lib/angular.js-1.2.13/angular-resource.min.js"></script>
