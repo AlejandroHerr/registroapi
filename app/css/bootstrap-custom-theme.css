@@ -102,3 +102,11 @@ body {
   text-align: right;
   margin-bottom: 0px;
 }
+/*NAVBAR*/
+.navbar-default{
+  background-image: -webkit-linear-gradient(top, #222 0%, #f333 100%);
+  background-image: linear-gradient(to bottom, #222 0%, #333 100%);
+}
+.navbar-default .navbar-nav > li > a {
+  color: #ccc;
+}
