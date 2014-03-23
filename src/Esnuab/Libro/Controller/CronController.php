@@ -20,9 +20,15 @@ class CronController implements ControllerProviderInterface
 		$controllers->get('/limpiar',array($this,"deleteConfirmed"));
 		return $controllers;
 	}
-	function confirmSocios(Application $app){
-		$subjects = $this->confirmationManager->getUnconfirmed($app);
-		$mergeVars = $this->confirmationManager->getMergeVars($subjects);
+	function confirmSocios(Application $app)
+	{
+		$this->confirmationManager->loadUnconfirmed($app);
+		$results = $this->sendConfirmation($this->confirmationManager->getUnconfirmed(),$this->confirmationManager->getMergeVars());
+		$this->confirmationManager->processResult($app,$results);
+		return new Response('',200);
+	}
+	function sendConfirmation($subjects,$mergeVars)
+	{
 		$message = array(
 	        'html' => '<b>hola *|NAME|*,</b><br>tu ESNCard, n&uacute;mero *|ESNCARD|*, es v&aacute;lida hasta el *|EXPIREDATE|* <br><br> Un saludo,<br>el equipo deErasmus Student Network Universitat Autonoma de Barcelona',
 	        'text' => 'Example text content',
@@ -35,33 +41,6 @@ class CronController implements ControllerProviderInterface
 	    $async = false;
 	    $ip_pool = 'Main Pool';
 	    $send_at = strtotime ('YYYY-MM-DD HH:MM:SS');
-	    $result = $this->mandrill->messages->send($message, $async, $ip_pool, $send_at);
-	    $notConfirmed=$this->getNotConfirmed($result);
-	    $this->confirmationManager->recordConfirmations($app,$subjects,$notConfirmed);
-	    return $app->redirect('/cron/limpiar');
-	}
-	function getNotConfirmed($result)
-	{
-		$notConfirmed = array();
-		foreach ($result as $value) {
-			if($value['status']=='invalid'){
-				$notConfirmed[]=array(
-					'email' => $value['email'],
-					'error' => 'invalid'
-				);
-			}
-			if($value['status']=='rejected'){
-				$notConfirmed[]=array(
-					'email' => $value['email'],
-					'error' => $value['reject_reason']
-				);
-			}
-		}
-		return $notConfirmed;
-	}
-	function deleteConfirmed(Application $app)
-	{
-		$this->confirmationManager->deleteConfirmed($app);
-		return new Response('',201);
+	    return $this->mandrill->messages->send($message, $async, $ip_pool, $send_at);
 	}
 }

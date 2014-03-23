@@ -5,18 +5,20 @@ namespace Esnuab\Libro\Model\Manager;
 use Silex\Application;
 
 class ConfirmationManager
-{
-	function getUnconfirmed(Application $app)
+{	
+	protected $unconfirmed;
+	protected $mergeVars;
+	function loadUnconfirmed(Application $app)
 	{
 		$query = 'SELECT id,userId,name,email,expires_at,esncard from socio_confirmation WHERE confirmed = 0';
-		$unconfirmed=$app['db']->fetchAll($query);
-		return $this->addSubjectType($unconfirmed);
+		$this->unconfirmed=$app['db']->fetchAll($query);
+		$this->setUnconfirmed()->setMergeVars();
+		return $this;
 	}
-	function getMergeVars($subjects)
+	function setMergeVars()
 	{
-		$mergeVars=array();
-		foreach ($subjects as $value) {
-			$mergeVars[]=array(
+		foreach ($this->unconfirmed as $value) {
+			$this->mergeVars[]=array(
 				'rcpt' => $value['email'],
 				'vars' => array(
 					array(
@@ -34,44 +36,60 @@ class ConfirmationManager
 				)
 			);
 		}
-		return $mergeVars;
+		return $this;
 	}
-	function addSubjectType($unconfirmed)
+	function setUnconfirmed()
 	{
-		foreach ($unconfirmed as &$value) {
+		foreach ($this->unconfirmed as &$value) {
 			$value['type'] = 'bcc';
 		}
-		return $unconfirmed;
+		return $this;
 	}
-	function recordConfirmations(Application $app,$confirmed,$notConfirmed)
+	function processResult(Application $app,$results)
+	{	
+		$notConfirmed = array_filter($results, array($this,'filterResult'));
+		$confirmed = array_filter($results, array($this,'filterResultInverse'));
+		array_walk($notConfirmed,array($this,'setStatus'));
+		$this->trackNotConfirmations($app,$notConfirmed);
+		$this->trackConfirmations($app,$confirmed);
+
+	}
+	function setStatus(&$result)
 	{
-		$notConfirmedEmails=array();
-		foreach ($notConfirmed as $value) {
-			$notConfirmedEmails[]=$value['email'];
+		if($result['reject_reason']){
+			$result['status'] = $result['status'] . ':' . $result['reject_reason'];
 		}
-		foreach ($confirmed as $key => &$value) {
-			if(in_array($value['email'], $notConfirmedEmails)){
-				unset($confirmed[$key]);
-			}
-		}
-		$this->confirm($app,$confirmed);
-		$this->trackError($app,$notConfirmed);
+		$result['error']=$result['status'];
+		unset($result['status']);
+		unset($result['_id']);
+		unset($result['reject_reason']);
 	}
-	function confirm(Application $app,$confirmed)
+	function filterResult($result)
+	{
+		return ($result['status']=='rejected' || $result['status']=='invalid');
+	}
+	function filterResultInverse($result)
+	{
+		return (!($result['status']=='rejected' || $result['status']=='invalid'));
+	}
+	function trackNotConfirmations(Application $app,$notConfirmed)
+	{
+		foreach ($notConfirmed as $value) {
+			$app['db']->update('socio_confirmation', array('error_flag' => 1,'error'=>$value['error']), array('email' => $value['email']));
+		}
+	}
+	function trackConfirmations(Application $app,$confirmed)
 	{
 		foreach ($confirmed as $value) {
 			$app['db']->update('socio_confirmation', array('confirmed' => 1), array('email' => $value['email']));
 		}
 	}
-	function trackError(Application $app,$unconfirmed)
-	{
-		foreach ($unconfirmed as $value) {
-			$app['db']->update('socio_confirmation', array('error_flag' => 1,'error'=>$value['error']), array('email' => $value['email']));
-		}
-	}
-	function deleteConfirmed(Application $app)
-	{
-		$query = 'SELECT id,userId,name,email,expires_at,esncard from socio_confirmation WHERE confirmed = 0';
-		$app['db']->delete('socio_confirmation',array('confirmed' => 1));
-	}
+    public function getUnconfirmed()
+    {
+        return $this->unconfirmed;
+    }
+    public function getMergeVars()
+    {
+        return $this->mergeVars;
+    }
 }
