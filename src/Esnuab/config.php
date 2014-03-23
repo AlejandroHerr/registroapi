@@ -15,11 +15,14 @@ $app['socio_manager'] = $app->share(function($app) {
 $app['confirmation_manager'] = $app->share(function($app) {
 	return new \Esnuab\Libro\Model\Manager\ConfirmationManager($app['db']);
 });
-$app['mandrill_apikey'] = require_once 'config/mandrill.php';
+$app['mandrill.apikey'] = require_once 'config/mandrill.php';
 $app['mandrill'] = $app->share(function($app) {
-	return new Mandrill($app['mandrill_apikey']);
+	return new Mandrill($app['mandrill.apikey']);
 });
-
+list($app['mailchimp.apikey'],$app['mailchimp.listid']) = require_once 'config/mailchimp.php';
+$app['mailchimp'] = $app->share(function($app) {
+	return new Mailchimp($app['mailchimp.apikey']);
+});
 //MONOLOG
 $app->register(new Silex\Provider\MonologServiceProvider());
 $app['monolog.logfile']=function(){
