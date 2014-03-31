@@ -178,7 +178,7 @@
 			$scope.paises = [];
 			$scope.languages = [
 			    {value: 'English'},
-			    {value: 'Español'}
+			    {value: 'Espanyol'}
 			 ];
 			$http.get('/app/resources/countries.json').success(function(data) {
 				$scope.paises = data.countries;
@@ -198,7 +198,7 @@
 			});
 			$scope.languages = [
 			    {value: 'English'},
-			    {value: 'Español'}
+			    {value: 'Espanyol'}
 			 ]; 
 			$scope.socio = {
 				'created_at': new Date().toJSON().slice(0, 10)

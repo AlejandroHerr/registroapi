@@ -160,7 +160,7 @@ class ConfirmationManager
     		'merge_vars' => array(
     			'MERGE1' => strrev($long_name[1]), 
     			'MERGE2' => strrev($long_name[0]), 
-    			'MERGE3' => (($user['language']=='Español') ? 'Español' : 'English')
+    			'MERGE3' => (($user['language']=='Espanyol') ? 'Español' : 'English')
     			)
     		);
 
