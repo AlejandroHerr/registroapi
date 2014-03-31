@@ -21,7 +21,7 @@ $app['mandrill'] = $app->share(function($app) {
 });
 list($app['mailchimp.apikey'],$app['mailchimp.listid']) = require_once 'config/mailchimp.php';
 $app['mailchimp'] = $app->share(function($app) {
-	return new Mailchimp($app['mailchimp.apikey']);
+	return new Drewm\MailChimp($app['mailchimp.apikey']);
 });
 //MONOLOG
 $app->register(new Silex\Provider\MonologServiceProvider());
