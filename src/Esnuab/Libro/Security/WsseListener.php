@@ -81,7 +81,7 @@ class WsseListener implements ListenerInterface
 		$stmt->bindValue(1, $ip);
 		$stmt->bindValue(2, $timeLimit);
 		$stmt->execute();
-		$count = $stmt->fetch($query);
+		$count = $stmt->fetch();
 		if ($count['total'] < 10) {
 			return false;
 		}

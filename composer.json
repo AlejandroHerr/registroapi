@@ -9,11 +9,12 @@
     	"symfony/locale": "~2.3",
         "symfony/security": "~2.3",
         "monolog/monolog": ">=1.0.0",
-        "mandrill/mandrill": "1.0.*"
+        "mandrill/mandrill": "1.0.*",
+        "drewm/mailchimp-api": "dev-master"
     },
     "autoload": {
         "psr-0": {
             "Esnuab": "src/"
         }
     }
-}
+}   

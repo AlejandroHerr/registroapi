@@ -5,18 +5,81 @@ namespace Esnuab\Libro\Model\Manager;
 use Silex\Application;
 
 class ConfirmationManager
-{
-	function getUnconfirmed(Application $app)
+{	
+	protected $unconfirmed;
+	protected $confirmed;
+	protected $mergeVars;
+
+	public function deleteConfirmed(Application $app)
 	{
-		$query = 'SELECT id,userId,name,email,expires_at,esncard from socio_confirmation WHERE confirmed = 0';
-		$unconfirmed=$app['db']->fetchAll($query);
-		return $this->addSubjectType($unconfirmed);
+		$app['db']->delete(
+			'socio_confirmation',
+			array(
+				'confirmed' => 1,
+				'error_flag' => 0
+			)
+		);
 	}
-	function getMergeVars($subjects)
+	public function getUnconfirmed()
+    {
+        return $this->unconfirmed;
+    }
+    public function getMergeVars()
+    {
+        return $this->mergeVars;
+    }
+	public function loadUnconfirmed(Application $app)
 	{
-		$mergeVars=array();
-		foreach ($subjects as $value) {
-			$mergeVars[]=array(
+		$query = 'SELECT id,userId,name,email,expires_at,esncard,language from socio_confirmation WHERE confirmed = 0';
+		$this->unconfirmed=$app['db']->fetchAll($query);
+		$this->setUnconfirmed()->setMergeVars();
+		return $this;
+	}
+	public function prepareSubscriptions()
+    {
+    	array_walk(
+    		$this->confirmed,
+    		array($this,'getEmails')
+    	);
+    	$this->unconfirmed=array_filter(
+    		$this->unconfirmed,
+    		array($this,'isInConfirmed')
+    	);	
+		$batch=array_map(
+			array($this,'mapBatch'),
+			$this->unconfirmed
+		);
+		return $batch;
+    }
+	public function processResult(Application $app, $results)
+	{	
+		$notConfirmed = array_filter(
+			$results,
+			array($this,'filterResult')
+		);
+		$this->confirmed = array_filter(
+			$results,
+			array($this,'filterResultInverse')
+		);
+		array_walk(
+			$notConfirmed,
+			array($this,'setStatus')
+		);
+		$this->trackNotConfirmations(
+			$app,
+			$notConfirmed
+		);
+		unset($notConfirmed);
+		$this->trackConfirmations(
+			$app,
+			$this->confirmed
+		);
+	}
+
+    protected function setMergeVars()
+	{
+		foreach ($this->unconfirmed as $value) {
+			$this->mergeVars[]=array(
 				'rcpt' => $value['email'],
 				'vars' => array(
 					array(
@@ -34,44 +97,82 @@ class ConfirmationManager
 				)
 			);
 		}
-		return $mergeVars;
+		return $this;
 	}
-	function addSubjectType($unconfirmed)
+	protected function setUnconfirmed()
 	{
-		foreach ($unconfirmed as &$value) {
+		foreach ($this->unconfirmed as &$value) {
 			$value['type'] = 'bcc';
 		}
-		return $unconfirmed;
+		return $this;
 	}
-	function recordConfirmations(Application $app,$confirmed,$notConfirmed)
-	{
-		$notConfirmedEmails=array();
-		foreach ($notConfirmed as $value) {
-			$notConfirmedEmails[]=$value['email'];
-		}
-		foreach ($confirmed as $key => &$value) {
-			if(in_array($value['email'], $notConfirmedEmails)){
-				unset($confirmed[$key]);
-			}
-		}
-		$this->confirm($app,$confirmed);
-		$this->trackError($app,$notConfirmed);
-	}
-	function confirm(Application $app,$confirmed)
+	protected function trackConfirmations(Application $app,$confirmed)
 	{
 		foreach ($confirmed as $value) {
-			$app['db']->update('socio_confirmation', array('confirmed' => 1), array('email' => $value['email']));
+			$app['db']->update(
+				'socio_confirmation',
+				array('confirmed' => 1),
+				array('email' => $value['email'])
+			);
 		}
 	}
-	function trackError(Application $app,$unconfirmed)
+	protected function trackNotConfirmations(Application $app, $notConfirmed)
 	{
-		foreach ($unconfirmed as $value) {
-			$app['db']->update('socio_confirmation', array('error_flag' => 1,'error'=>$value['error']), array('email' => $value['email']));
+		foreach ($notConfirmed as $value) {
+			$app['db']->update(
+				'socio_confirmation',
+				array(
+					'error_flag' => 1,
+					'error'=>$value['error']
+				),
+				array(
+					'email' => $value['email']
+				)
+			);
 		}
 	}
-	function deleteConfirmed(Application $app)
+
+	private function filterResult($result)
 	{
-		$query = 'SELECT id,userId,name,email,expires_at,esncard from socio_confirmation WHERE confirmed = 0';
-		$app['db']->delete('socio_confirmation',array('confirmed' => 1));
+		return ($result['status']=='rejected' || $result['status']=='invalid');
 	}
+	private function filterResultInverse($result)
+	{
+		return (!($result['status']=='rejected' || $result['status']=='invalid'));
+	}
+	private function getEmails(&$confirmed)
+    {
+    	$confirmed=$confirmed['email'];
+    }
+    private function isInConfirmed($users)
+    {
+    	return (in_array($users['email'], $this->confirmed));
+    }
+    private function mapBatch($user)
+    {
+    	$long_name=strrev($user['name']);
+    	$long_name=explode(' ', $long_name,2);
+    	return array(
+    		'email' => array(
+    			'email' => $user['email']
+    			),
+    		'email_type'=>'html',
+    		'merge_vars' => array(
+    			'MERGE1' => strrev($long_name[1]), 
+    			'MERGE2' => strrev($long_name[0]), 
+    			'MERGE3' => (($user['language']=='Español') ? 'Español' : 'English')
+    			)
+    		);
+
+    }
+    private function setStatus(&$result)
+	{
+		if($result['reject_reason']){
+			$result['status'] = $result['status'] . ':' . $result['reject_reason'];
+		}
+		$result['error']=$result['status'];
+		unset($result['status']);
+		unset($result['_id']);
+		unset($result['reject_reason']);
+	}	
 }
