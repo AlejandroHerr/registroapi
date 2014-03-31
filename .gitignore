@@ -10,6 +10,6 @@ src/Esnuab/security_cache/*
 .tresorit/*
 *.ini
 todo
-.htaccess
+var/logs/*.log
 sftp-config.json
 
