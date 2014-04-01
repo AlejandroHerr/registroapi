@@ -2,9 +2,10 @@
 $app['security.encoder.digest'] = $app->share(function($app) {
     return new MessageDigestPasswordEncoder('sha1', false, 1);
 });
+$app['security.cache']= ROOT . '/var/security_cache';
 $app['security.authentication_listener.factory.wsse'] = $app->protect(function($name, $options) use ($app) {
     $app['security.authentication_provider.' . $name . '.wsse'] = $app->share(function() use ($app) {
-        return new \Esnuab\Libro\Security\WsseProvider($app['security.user_provider.default'], __DIR__ . '/security_cache');
+        return new \Esnuab\Libro\Security\WsseProvider($app['security.user_provider.default'], $app['security.cache']);
     });
     $app['security.authentication_listener.' . $name . '.wsse'] = $app->share(function() use ($app, $name) {
         return new \Esnuab\Libro\Security\WsseListener($app['security'], $app['security.authentication_provider.' . $name . '.wsse'], $app['db'],$app['monolog.access']);
@@ -19,7 +20,7 @@ $app['security.authentication_listener.factory.wsse'] = $app->protect(function($
 $app->register(new Silex\Provider\SecurityServiceProvider(), array(
     'security.firewalls' => array(
         'default' => array(
-            'pattern' => "/api",
+            'pattern' => "/",
             'wsse' => true,
             'stateless' => true,
             'users' => $app->share(function() use ($app) {

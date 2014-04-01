@@ -1,6 +1,6 @@
 <?php
 
-namespace Esnuab\Libro\Model\Manager;
+namespace Esnuab\Cron\Model\Manager;
 
 use Silex\Application;
 

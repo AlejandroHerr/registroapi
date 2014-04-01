@@ -1,6 +1,6 @@
 <?php
 
-namespace Esnuab\Services\AuditLog\Formatter;
+namespace Esnuab\AuditLog\Formatter;
 
 use Monolog\Formatter\FormatterInterface;
 

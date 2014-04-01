@@ -1,5 +1,4 @@
 <?php
-$loader = require ROOT . "/vendor/autoload.php";
 
 use Symfony\Component\HttpFoundation\Request;
 
@@ -7,21 +6,10 @@ $app = new Silex\Application();
 $app['debug'] = true;
 
 //DB
-$app['db.config'] = require_once 'config/db.php';
+$app['db.config'] = require_once ROOT . '/config/db.php';
 $app->register(new Silex\Provider\DoctrineServiceProvider(),$app['db.config']);
 $app['socio_manager'] = $app->share(function($app) {
 	return new \Esnuab\Libro\Model\Manager\SocioManager($app['db']);
-});
-$app['confirmation_manager'] = $app->share(function($app) {
-	return new \Esnuab\Libro\Model\Manager\ConfirmationManager($app['db']);
-});
-$app['mandrill.apikey'] = require_once 'config/mandrill.php';
-$app['mandrill'] = $app->share(function($app) {
-	return new Mandrill($app['mandrill.apikey']);
-});
-list($app['mailchimp.apikey'],$app['mailchimp.listid']) = require_once 'config/mailchimp.php';
-$app['mailchimp'] = $app->share(function($app) {
-	return new Drewm\MailChimp($app['mailchimp.apikey']);
 });
 //MONOLOG
 $app->register(new Silex\Provider\MonologServiceProvider());
@@ -37,10 +25,10 @@ $app['monolog.factory'] = $app->protect(function ($name) use ($app) {
 foreach (array('access','transaction') as $channel) {
 	$app['monolog.'.$channel] = $app->share(function() use ($app,$channel){
 			$log = new $app['monolog.logger.class']($channel);
-			$handler = new Esnuab\Services\AuditLog\Handler\DbalHandler($app['db']);
-			$handler->setFormatter(new Esnuab\Services\AuditLog\Formatter\AuditFormatter());
-			$handler->pushProcessor(new Esnuab\Services\AuditLog\Processor\RequestProcessor($app));
-			$handler->pushProcessor(new Esnuab\Services\AuditLog\Processor\UserProcessor($app));
+			$handler = new Esnuab\AuditLog\Handler\DbalHandler($app['db']);
+			$handler->setFormatter(new Esnuab\AuditLog\Formatter\AuditFormatter());
+			$handler->pushProcessor(new Esnuab\AuditLog\Processor\RequestProcessor($app));
+			$handler->pushProcessor(new Esnuab\AuditLog\Processor\UserProcessor($app));
 			$log->pushHandler($handler);
 			return $log;
 		});

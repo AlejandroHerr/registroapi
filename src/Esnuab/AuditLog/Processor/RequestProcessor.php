@@ -1,6 +1,6 @@
 <?php
 
-namespace Esnuab\Services\AuditLog\Processor;
+namespace Esnuab\AuditLog\Processor;
 
 use Silex\Application;
 

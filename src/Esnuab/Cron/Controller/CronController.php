@@ -1,5 +1,5 @@
 <?php
-namespace Esnuab\Libro\Controller;
+namespace Esnuab\Cron\Controller;
 
 use Silex\Application;
 use Silex\ControllerProviderInterface;
@@ -38,7 +38,7 @@ class CronController implements ControllerProviderInterface
 		$this->confirmationManager->loadUnconfirmed($app);
 		$results = $this->sendConfirmation($this->confirmationManager->getUnconfirmed(),$this->confirmationManager->getMergeVars());
 		$this->confirmationManager->processResult($app,$results);
-		$subRequest = Request::create('/cron/suscribir', 'GET');
+		$subRequest = Request::create('/suscribir', 'GET');
     	return $app->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
 	}
 	function sendConfirmation($subjects,$mergeVars)
@@ -67,7 +67,7 @@ class CronController implements ControllerProviderInterface
                 'update_existing'   => true,
                 'replace_interests' => false,
             ));
-		$subRequest = Request::create('/cron/limpiar', 'GET');
+		$subRequest = Request::create('/limpiar', 'GET');
     	return $app->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
 	}
 }

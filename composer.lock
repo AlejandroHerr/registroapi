@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "5ab125a25274e10b93c622992f5d3a40",
+    "hash": "375ef115f54b49b09cceb7e3df2c9c7c",
     "packages": [
         {
             "name": "doctrine/common",
@@ -211,16 +211,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.7.0",
+            "version": "1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "6225b22de9dcf36546be3a0b2fa8e3d986153f57"
+                "reference": "392ef35fd470638e08d0160d6b1cbab63cb23174"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/6225b22de9dcf36546be3a0b2fa8e3d986153f57",
-                "reference": "6225b22de9dcf36546be3a0b2fa8e3d986153f57",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/392ef35fd470638e08d0160d6b1cbab63cb23174",
+                "reference": "392ef35fd470638e08d0160d6b1cbab63cb23174",
                 "shasum": ""
             },
             "require": {
@@ -228,11 +228,11 @@
                 "psr/log": "~1.0"
             },
             "require-dev": {
-                "aws/aws-sdk-php": "~2.4.8",
-                "doctrine/couchdb": "dev-master",
-                "mlehner/gelf-php": "1.0.*",
+                "aws/aws-sdk-php": "~2.4, >2.4.8",
+                "doctrine/couchdb": "~1.0@dev",
+                "graylog2/gelf-php": "~1.0",
                 "phpunit/phpunit": "~3.7.0",
-                "raven/raven": "0.5.*",
+                "raven/raven": "~0.5",
                 "ruflin/elastica": "0.90.*"
             },
             "suggest": {
@@ -240,19 +240,20 @@
                 "doctrine/couchdb": "Allow sending log messages to a CouchDB server",
                 "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
                 "ext-mongo": "Allow sending log messages to a MongoDB server",
-                "mlehner/gelf-php": "Allow sending log messages to a GrayLog2 server",
+                "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
                 "raven/raven": "Allow sending log messages to a Sentry server",
+                "rollbar/rollbar": "Allow sending log messages to Rollbar",
                 "ruflin/elastica": "Allow sending log messages to an Elastic Search server"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.7.x-dev"
+                    "dev-master": "1.8.x-dev"
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Monolog": "src/"
+                "psr-4": {
+                    "Monolog\\": "src/Monolog"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -274,7 +275,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2013-11-14 19:48:31"
+            "time": "2014-03-23 19:50:26"
         },
         {
             "name": "pimple/pimple",
@@ -364,59 +365,59 @@
         },
         {
             "name": "silex/silex",
-            "version": "v1.1.2",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/silexphp/Silex.git",
-                "reference": "47cc7d6545450ef8a91f50c04e8c7b3b04fceae9"
+                "reference": "aed7cb81eef9ba1082204027a0e3b60440a212e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silexphp/Silex/zipball/47cc7d6545450ef8a91f50c04e8c7b3b04fceae9",
-                "reference": "47cc7d6545450ef8a91f50c04e8c7b3b04fceae9",
+                "url": "https://api.github.com/repos/silexphp/Silex/zipball/aed7cb81eef9ba1082204027a0e3b60440a212e0",
+                "reference": "aed7cb81eef9ba1082204027a0e3b60440a212e0",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3",
                 "pimple/pimple": "~1.0",
-                "symfony/event-dispatcher": ">=2.3,<2.5-dev",
-                "symfony/http-foundation": ">=2.3,<2.5-dev",
-                "symfony/http-kernel": ">=2.3,<2.5-dev",
-                "symfony/routing": ">=2.3,<2.5-dev"
+                "symfony/event-dispatcher": ">=2.3,<2.6-dev",
+                "symfony/http-foundation": ">=2.3,<2.6-dev",
+                "symfony/http-kernel": ">=2.3,<2.6-dev",
+                "symfony/routing": ">=2.3,<2.6-dev"
             },
             "require-dev": {
-                "doctrine/dbal": ">=2.2.0,<2.4.0-dev",
+                "doctrine/dbal": "~2.2",
                 "monolog/monolog": "~1.4,>=1.4.1",
                 "phpunit/phpunit": "~3.7",
                 "swiftmailer/swiftmailer": "5.*",
-                "symfony/browser-kit": ">=2.3,<2.5-dev",
-                "symfony/config": ">=2.3,<2.5-dev",
-                "symfony/css-selector": ">=2.3,<2.5-dev",
-                "symfony/debug": ">=2.3,<2.5-dev",
-                "symfony/dom-crawler": ">=2.3,<2.5-dev",
-                "symfony/finder": ">=2.3,<2.5-dev",
-                "symfony/form": ">=2.3,<2.5-dev",
-                "symfony/locale": ">=2.3,<2.5-dev",
-                "symfony/monolog-bridge": ">=2.3,<2.5-dev",
-                "symfony/options-resolver": ">=2.3,<2.5-dev",
-                "symfony/process": ">=2.3,<2.5-dev",
-                "symfony/security": ">=2.3,<2.5-dev",
-                "symfony/serializer": ">=2.3,<2.5-dev",
-                "symfony/translation": ">=2.3,<2.5-dev",
-                "symfony/twig-bridge": ">=2.3,<2.5-dev",
-                "symfony/validator": ">=2.3,<2.5-dev",
+                "symfony/browser-kit": ">=2.3,<2.6-dev",
+                "symfony/config": ">=2.3,<2.6-dev",
+                "symfony/css-selector": ">=2.3,<2.6-dev",
+                "symfony/debug": ">=2.3,<2.6-dev",
+                "symfony/dom-crawler": ">=2.3,<2.6-dev",
+                "symfony/finder": ">=2.3,<2.6-dev",
+                "symfony/form": ">=2.3,<2.6-dev",
+                "symfony/locale": ">=2.3,<2.6-dev",
+                "symfony/monolog-bridge": ">=2.3,<2.6-dev",
+                "symfony/options-resolver": ">=2.3,<2.6-dev",
+                "symfony/process": ">=2.3,<2.6-dev",
+                "symfony/security": ">=2.3,<2.6-dev",
+                "symfony/serializer": ">=2.3,<2.6-dev",
+                "symfony/translation": ">=2.3,<2.6-dev",
+                "symfony/twig-bridge": ">=2.3,<2.6-dev",
+                "symfony/validator": ">=2.3,<2.6-dev",
                 "twig/twig": ">=1.8.0,<2.0-dev"
             },
             "suggest": {
-                "symfony/browser-kit": ">=2.3,<2.5-dev",
-                "symfony/css-selector": ">=2.3,<2.5-dev",
-                "symfony/dom-crawler": ">=2.3,<2.5-dev",
-                "symfony/form": ">=2.3,<2.5-dev"
+                "symfony/browser-kit": ">=2.3,<2.6-dev",
+                "symfony/css-selector": ">=2.3,<2.6-dev",
+                "symfony/dom-crawler": ">=2.3,<2.6-dev",
+                "symfony/form": ">=2.3,<2.6-dev"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1.x-dev"
+                    "dev-master": "1.2.x-dev"
                 }
             },
             "autoload": {
@@ -431,7 +432,9 @@
             "authors": [
                 {
                     "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
+                    "email": "fabien@symfony.com",
+                    "homepage": "http://fabien.potencier.org",
+                    "role": "Lead Developer"
                 },
                 {
                     "name": "Igor Wiedler",
@@ -444,7 +447,161 @@
             "keywords": [
                 "microframework"
             ],
-            "time": "2013-10-30 08:53:26"
+            "time": "2014-03-29 14:15:59"
+        },
+        {
+            "name": "stack/builder",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stackphp/builder.git",
+                "reference": "b4af43e7b7f3f7fac919ff475b29f7c5dc7b23b7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stackphp/builder/zipball/b4af43e7b7f3f7fac919ff475b29f7c5dc7b23b7",
+                "reference": "b4af43e7b7f3f7fac919ff475b29f7c5dc7b23b7",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "symfony/http-foundation": "~2.1",
+                "symfony/http-kernel": "~2.1"
+            },
+            "require-dev": {
+                "silex/silex": "~1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Stack": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Igor Wiedler",
+                    "email": "igor@wiedler.ch",
+                    "homepage": "http://wiedler.ch/igor/"
+                }
+            ],
+            "description": "Builder for stack middlewares based on HttpKernelInterface.",
+            "keywords": [
+                "stack"
+            ],
+            "time": "2014-01-28 19:42:24"
+        },
+        {
+            "name": "stack/lazy-http-kernel",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stackphp/LazyHttpKernel.git",
+                "reference": "879ff7b685c4588f89e2f4f3a507243f4991fb86"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stackphp/LazyHttpKernel/zipball/879ff7b685c4588f89e2f4f3a507243f4991fb86",
+                "reference": "879ff7b685c4588f89e2f4f3a507243f4991fb86",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0",
+                "symfony/http-foundation": "~2.1",
+                "symfony/http-kernel": "~2.1"
+            },
+            "require-dev": {
+                "stack/callable-http-kernel": "~1.0@dev",
+                "stack/url-map": "~1.0@dev"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Stack": "src"
+                },
+                "files": [
+                    "src/Stack/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Igor Wiedler",
+                    "email": "igor@wiedler.ch",
+                    "homepage": "http://wiedler.ch/igor/"
+                }
+            ],
+            "description": "HttpKernelInterface lazy proxy.",
+            "keywords": [
+                "stack"
+            ],
+            "time": "2013-12-04 11:21:16"
+        },
+        {
+            "name": "stack/url-map",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stackphp/url-map.git",
+                "reference": "82801a76778003030f0ee0753df6ec955a56514d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stackphp/url-map/zipball/82801a76778003030f0ee0753df6ec955a56514d",
+                "reference": "82801a76778003030f0ee0753df6ec955a56514d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "symfony/http-foundation": "~2.1",
+                "symfony/http-kernel": "~2.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~3.7",
+                "silex/silex": "~1.0@dev",
+                "stack/builder": "~1.0@dev",
+                "stack/callable-http-kernel": "~1.0@dev"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Stack\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Christoph Hochstrasser",
+                    "email": "christoph.hochstrasser@gmail.com",
+                    "homepage": "http://christophh.net"
+                }
+            ],
+            "description": "URL Map middleware.",
+            "time": "2014-02-17 11:55:02"
         },
         {
             "name": "symfony/config",
@@ -849,17 +1006,17 @@
         },
         {
             "name": "symfony/icu",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "target-dir": "Symfony/Component/Icu",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Icu.git",
-                "reference": "cac3fdfb111adbe590155f491594636d45129783"
+                "reference": "fdba214b1e087c149843bde976263c53ac10c975"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Icu/zipball/cac3fdfb111adbe590155f491594636d45129783",
-                "reference": "cac3fdfb111adbe590155f491594636d45129783",
+                "url": "https://api.github.com/repos/symfony/Icu/zipball/fdba214b1e087c149843bde976263c53ac10c975",
+                "reference": "fdba214b1e087c149843bde976263c53ac10c975",
                 "shasum": ""
             },
             "require": {
@@ -892,7 +1049,7 @@
                 "icu",
                 "intl"
             ],
-            "time": "2013-06-03 18:32:07"
+            "time": "2013-10-04 09:12:07"
         },
         {
             "name": "symfony/intl",
@@ -1412,7 +1569,10 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "drewm/mailchimp-api": 20
+        "drewm/mailchimp-api": 20,
+        "stack/builder": 20,
+        "stack/url-map": 20,
+        "stack/lazy-http-kernel": 20
     },
     "platform": [
 
