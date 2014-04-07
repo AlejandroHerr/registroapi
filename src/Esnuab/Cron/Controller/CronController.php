@@ -31,7 +31,7 @@ class CronController implements ControllerProviderInterface
 	function cleanConfirmed(Application $app)
 	{	
 		$this->confirmationManager->deleteConfirmed($app);
-    	return new Response('',200);
+    	return new Response('',201);
 	}
 	function confirmSocios(Application $app)
 	{
