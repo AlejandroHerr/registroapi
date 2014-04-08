@@ -8,6 +8,9 @@ $app['debug'] = true;
 //DB
 $app['db.config'] = require_once ROOT . '/config/db.php';
 $app->register(new Silex\Provider\DoctrineServiceProvider(),$app['db.config']);
+$app->register(new Silex\Provider\TwigServiceProvider(), array(
+    'twig.path' => ROOT.'/public/views',
+));
 $app['confirmation_manager'] = $app->share(function($app) {
 	return new \Esnuab\Cron\Model\Manager\ConfirmationManager($app['db']);
 });
