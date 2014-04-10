@@ -22,6 +22,9 @@ list($app['mailchimp.apikey'],$app['mailchimp.listid']) = require_once ROOT . '/
 $app['mailchimp'] = $app->share(function($app) {
 	return new Drewm\MailChimp($app['mailchimp.apikey']);
 });
+$app['mpdf']=$app->share(function($app){
+	return new mPDF('utf-8','A4','','',20,15,48,25,10,10);	
+});
 require_once 'routes.php';
 
 return $app;

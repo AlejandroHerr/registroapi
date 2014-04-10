@@ -25,6 +25,7 @@ class CronController implements ControllerProviderInterface
 		$controllers->get('/confirmar',array($this,"confirmSocios"));
 		$controllers->get('/suscribir',array($this,"subscribeSocios"));
 		$controllers->get('/limpiar',array($this,"cleanConfirmed"));
+		$controllers->get('/facturar',array($this,"facturar"));
 		return $controllers;
 	}
 	
@@ -69,5 +70,13 @@ class CronController implements ControllerProviderInterface
             ));
 		$subRequest = Request::create('/limpiar', 'GET');
     	return $app->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+	}
+	function facturar(Application $app)
+	{
+		$invoice = $app['twig']->render('factura.twig', array());
+		//return $invoice;
+		$app['mpdf']->WriteHTML($invoice);
+		$app['mpdf']->Output();
+
 	}
 }
