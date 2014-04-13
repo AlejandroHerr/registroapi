@@ -6,8 +6,6 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\NonceExpiredException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Esnuab\Libro\Security\WsseUserToken;
-use Doctrine\DBAL\Connection;
 
 class WsseProvider implements AuthenticationProviderInterface
 {
@@ -24,6 +22,7 @@ class WsseProvider implements AuthenticationProviderInterface
         if ($user && $this->validateDigest($token->digest, $token->nonce, $token->created, $user->getPassword())) {
             $authenticatedToken = new WsseUserToken($user->getRoles());
             $authenticatedToken->setUser($user);
+
             return $authenticatedToken;
         }
         throw new AuthenticationException('The WSSE authentication failed.');
@@ -46,6 +45,7 @@ class WsseProvider implements AuthenticationProviderInterface
         }
         file_put_contents($this->cacheDir . '/' . $nonce, time());
         $expected = base64_encode(sha1(base64_decode($nonce) . $created . $secret, true));
+
         return $digest === $expected;
     }
     public function supports(TokenInterface $token)

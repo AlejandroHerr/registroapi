@@ -7,13 +7,12 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class SocioForm extends AbstractType {
-    
-    
-    public function buildForm(FormBuilderInterface $builder, array $options) {
-
+class SocioForm extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $builder
-        	->add('nombre','text',array(
+            ->add('nombre','text',array(
                 'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 2, 'max' => 50))),
                 'invalid_message' => 'La dsf está mal'
             ))
@@ -46,17 +45,19 @@ class SocioForm extends AbstractType {
                 'widget' => 'single_text',
                 'constraints' => array(new Assert\NotBlank())
             ))
-        ;    
+        ;
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)    {
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
         $resolver->setDefaults(array(
             'data_class' => 'Esnuab\Libro\Model\Entity\Socio',
             'csrf_protection'   => false
         ));
     }
-    
-    public function getName() {
+
+    public function getName()
+    {
         return "socio";
     }
 }
