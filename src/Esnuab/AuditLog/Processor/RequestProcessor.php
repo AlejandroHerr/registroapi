@@ -7,12 +7,12 @@ use Silex\Application;
 class RequestProcessor
 {
     protected $context;
-    
+
     public function __construct(Application $context)
     {
         $this->context = $context;
     }
-    
+
     public function __invoke(array $record)
     {
         $record['extra'] = array_merge($record['extra'], array(
@@ -23,6 +23,7 @@ class RequestProcessor
                 'referer' => $this->context['request']->headers->get('Referer')
             )
         ));
+
         return $record;
     }
 }

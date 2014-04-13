@@ -21,6 +21,7 @@ class UserProcessor
                 'user' => null !== $token ? $token->getUser()->getUsername() : 'anon'
             )
         ));
+
         return $record;
     }
 }
