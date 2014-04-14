@@ -1,250 +1,152 @@
 <html>
-<head>
-<style>
-body {font-family: sans-serif;
-    font-size: 10pt;
-}
-p {    margin: 0pt;
-}
-td { vertical-align: top; }
-.items td {
-    border-left: 0.1mm solid #000000;
-    border-right: 0.1mm solid #000000;
-}
-table thead td { background-color: #EEEEEE;
-    text-align: center;
-    border: 0.1mm solid #000000;
-}
-.items td.blanktotal {
-    background-color: #FFFFFF;
-    border: 0mm none #000000;
-    border-top: 0.1mm solid #000000;
-    border-right: 0.1mm solid #000000;
-}
-.items td.totals {
-    text-align: right;
-    border: 0.1mm solid #000000;
-}
-</style>
-</head>
-<body>
+  <head>
+    <style>
+    body {
+    font-family:sans-serif;
+    font-size:10pt;
+    }
 
-<!--mpdf
-<htmlpageheader name="myheader">
-<table width="100%"><tr>
-<td width="50%" style="color:#0000BB;"><span style="font-weight: bold; font-size: 14pt;">Acme Trading Co.</span><br />123 Anystreet<br />Your City<br />GD12 4LP<br /><span style="font-size: 15pt;">&#9742;</span> 01777 123 567</td>
-<td width="50%" style="text-align: right;">Invoice No.<br /><span style="font-weight: bold; font-size: 12pt;">0012345</span></td>
-</tr></table>
-</htmlpageheader>
+    p {
+    margin:0;
+    }
 
-<htmlpagefooter name="myfooter">
-<div style="border-top: 1px solid #000000; font-size: 9pt; text-align: center; padding-top: 3mm; ">
-Page {PAGENO} of {nb}
-</div>
-</htmlpagefooter>
+    td {
+    vertical-align:top;
+    }
 
-<sethtmlpageheader name="myheader" value="on" show-this-page="1" />
-<sethtmlpagefooter name="myfooter" value="on" />
-mpdf-->
+    .items td {
+    border-left:.1mm solid #000;
+    border-right:.1mm solid #000;
+    }
 
-<div style="text-align: right">Date: '.date('jS F Y').'</div>
+    table thead td {
+    background-color:#EEE;
+    text-align:center;
+    border:.1mm solid #000;
+    }
 
-<table width="100%" style="font-family: serif;" cellpadding="10">
-<tr>
-<td width="45%" style="border: 0.1mm solid #888888;"><span style="font-size: 7pt; color: #555555; font-family: sans;">SOLD TO:</span><br /><br />345 Anotherstreet<br />Little Village<br />Their City<br />CB22 6SO</td>
-<td width="10%">&nbsp;</td>
-<td width="45%" style="border: 0.1mm solid #888888;"><span style="font-size: 7pt; color: #555555; font-family: sans;">SHIP TO:</span><br /><br />345 Anotherstreet<br />Little Village<br />Their City<br />CB22 6SO</td>
-</tr>
-</table>
+    .items td.blanktotal {
+    background-color:#FFF;
+    border:0 none #000;
+    border-top:.1mm solid #000;
+    border-right:.1mm solid #000;
+    }
+
+    .items td.totals {
+    text-align:right;
+    border:.1mm solid #000;
+    }
+
+    #comentario {
+    border:.2mm solid #000;
+    width:95%;
+    margin:5mm auto;
+    padding:5mm;
+    }
+    #header table{
+      width:100%;
+    }
+    #header table tr td{
+      width:50%;
+    }
+    .right{
+      text-align: right;
+    }
+    #header-factura, #header-factura td, #header-factura th{
+      border-collapse: collapse;
+      text-align: center;
+      border: .1mm solid #000;
+    }
+    #header-factura td{
+      padding: auto 0.5em;
+    }
+    </style>
+
+  </head>
+  <body>
+    <htmlpageheader name="myheader">
+    <div id='header'>
+      <table>
+        <tr>
+          <td>
+            <img src='/public/views/img/logo_factura.png'><br>
+            <span style="font-weight: bold; font-size: 14pt;">Erasmus Student Network Barcelona</span>
+            <br />
+            Pla&ccedil;a C&iacute;vica,Cerdanyola del Vall&egrave;s
+            <br />
+            08290 (Barcelona)
+            <br />
+            info@esnuab.org
+          </td>
+          <td style="text-align: right;">
+            <table id="header-factura">
+              <tr><th colspan='2'>FACTURA</th></tr>
+              <tr><td>N&uacute;mero</td><td>Fecha</td></tr>
+              <tr><td>{{facturaId}}</td><td>{{fecha}}</td></tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+    </htmlpageheader>
+
+  <htmlpagefooter name="myfooter">
+    <div style="border-top: 1px solid #000000; font-size: 9pt; text-align: center; padding-top: 3mm; ">
+      P&aacute;gina {PAGENO} de {nb}
+    </div>
+  </htmlpagefooter>
+
+  <sethtmlpageheader name="myheader" value="on" show-this-page="1" />
+  <sethtmlpagefooter name="myfooter" value="on" />
+  
+  <table width="100%" style="font-family: serif;" cellpadding="10">
+    <tr>
+      <td width="45%" style="border: 0 solid #888888;"></td>
+      <td width="10%">&nbsp;</td>
+      <td width="45%" style="border: 0.1mm solid #888888;">
+        Pol Barbarroja Schuler<br /><br />345 Anotherstreet<br />Little Village<br />Their City<br />CB22 6SO</td>
+    </tr>
+  </table>
 
 
-<table class="items" width="100%" style="font-size: 9pt; border-collapse: collapse;" cellpadding="8">
-<thead>
-<tr>
-<td width="15%">REF. NO.</td>
-<td width="10%">QUANTITY</td>
-<td width="45%">DESCRIPTION</td>
-<td width="15%">UNIT PRICE</td>
-<td width="15%">AMOUNT</td>
-</tr>
-</thead>
-<tbody>
-<!-- ITEMS HERE -->
-<tr>
-<td align="center">MF1234567</td>
-<td align="center">10</td>
-<td>Large pack Hoover bags</td>
-<td align="right">&pound;2.56</td>
-<td align="right">&pound;25.60</td>
-</tr>
-<tr>
-<td align="center">MX37801982</td>
-<td align="center">1</td>
-<td>Womans waterproof jacket<br />Options - Red and charcoal.</td>
-<td align="right">&pound;112.56</td>
-<td align="right">&pound;112.56</td>
-</tr>
-<tr>
-<td align="center">MR7009298</td>
-<td align="center">25</td>
-<td>Steel nails; oval head; 30mm x 3mm. Packs of 1000.</td>
-<td align="right">&pound;12.26</td>
-<td align="right">&pound;325.60</td>
-</tr>
-<tr>
-<td align="center">MF1234567</td>
-<td align="center">10</td>
-<td>Large pack Hoover bags</td>
-<td align="right">&pound;2.56</td>
-<td align="right">&pound;25.60</td>
-</tr>
-<tr>
-<td align="center">MX37801982</td>
-<td align="center">1</td>
-<td>Womans waterproof jacket<br />Options - Red and charcoal.</td>
-<td align="right">&pound;112.56</td>
-<td align="right">&pound;112.56</td>
-</tr>
-<tr>
-<td align="center">MR7009298</td>
-<td align="center">25</td>
-<td>Steel nails; oval head; 30mm x 3mm. Packs of 1000.</td>
-<td align="right">&pound;12.26</td>
-<td align="right">&pound;325.60</td>
-</tr>
-<tr>
-<td align="center">MF1234567</td>
-<td align="center">10</td>
-<td>Large pack Hoover bags</td>
-<td align="right">&pound;2.56</td>
-<td align="right">&pound;25.60</td>
-</tr>
-<tr>
-<td align="center">MX37801982</td>
-<td align="center">1</td>
-<td>Womans waterproof jacket<br />Options - Red and charcoal.</td>
-<td align="right">&pound;112.56</td>
-<td align="right">&pound;112.56</td>
-</tr>
-<tr>
-<td align="center">MR7009298</td>
-<td align="center">25</td>
-<td>Steel nails; oval head; 30mm x 3mm. Packs of 1000.</td>
-<td align="right">&pound;12.26</td>
-<td align="right">&pound;325.60</td>
-</tr>
-<tr>
-<td align="center">MF1234567</td>
-<td align="center">10</td>
-<td>Large pack Hoover bags</td>
-<td align="right">&pound;2.56</td>
-<td align="right">&pound;25.60</td>
-</tr>
-<tr>
-<td align="center">MX37801982</td>
-<td align="center">1</td>
-<td>Womans waterproof jacket<br />Options - Red and charcoal.</td>
-<td align="right">&pound;112.56</td>
-<td align="right">&pound;112.56</td>
-</tr>
-<tr>
-<td align="center">MR7009298</td>
-<td align="center">25</td>
-<td>Steel nails; oval head; 30mm x 3mm. Packs of 1000.</td>
-<td align="right">&pound;12.26</td>
-<td align="right">&pound;325.60</td>
-</tr>
-<tr>
-<td align="center">MF1234567</td>
-<td align="center">10</td>
-<td>Large pack Hoover bags</td>
-<td align="right">&pound;2.56</td>
-<td align="right">&pound;25.60</td>
-</tr>
-<tr>
-<td align="center">MX37801982</td>
-<td align="center">1</td>
-<td>Womans waterproof jacket<br />Options - Red and charcoal.</td>
-<td align="right">&pound;112.56</td>
-<td align="right">&pound;112.56</td>
-</tr>
-<tr>
-<td align="center">MF1234567</td>
-<td align="center">10</td>
-<td>Large pack Hoover bags</td>
-<td align="right">&pound;2.56</td>
-<td align="right">&pound;25.60</td>
-</tr>
-<tr>
-<td align="center">MX37801982</td>
-<td align="center">1</td>
-<td>Womans waterproof jacket<br />Options - Red and charcoal.</td>
-<td align="right">&pound;112.56</td>
-<td align="right">&pound;112.56</td>
-</tr>
-<tr>
-<td align="center">MR7009298</td>
-<td align="center">25</td>
-<td>Steel nails; oval head; 30mm x 3mm. Packs of 1000.</td>
-<td align="right">&pound;12.26</td>
-<td align="right">&pound;325.60</td>
-</tr>
-<tr>
-<td align="center">MR7009298</td>
-<td align="center">25</td>
-<td>Steel nails; oval head; 30mm x 3mm. Packs of 1000.</td>
-<td align="right">&pound;12.26</td>
-<td align="right">&pound;325.60</td>
-</tr>
-<tr>
-<td align="center">MF1234567</td>
-<td align="center">10</td>
-<td>Large pack Hoover bags</td>
-<td align="right">&pound;2.56</td>
-<td align="right">&pound;25.60</td>
-</tr>
-<tr>
-<td align="center">MX37801982</td>
-<td align="center">1</td>
-<td>Womans waterproof jacket<br />Options - Red and charcoal.</td>
-<td align="right">&pound;112.56</td>
-<td align="right">&pound;112.56</td>
-</tr>
-<tr>
-<td align="center">MR7009298</td>
-<td align="center">25</td>
-<td>Steel nails; oval head; 30mm x 3mm. Packs of 1000.</td>
-<td align="right">&pound;12.26</td>
-<td align="right">&pound;325.60</td>
-</tr>
-<!-- END ITEMS HERE -->
-<tr>
-<td class="blanktotal" colspan="3" rowspan="6"></td>
-<td class="totals">Subtotal:</td>
-<td class="totals">&pound;1825.60</td>
-</tr>
-<tr>
-<td class="totals">Tax:</td>
-<td class="totals">&pound;18.25</td>
-</tr>
-<tr>
-<td class="totals">Shipping:</td>
-<td class="totals">&pound;42.56</td>
-</tr>
-<tr>
-<td class="totals"><b>TOTAL:</b></td>
-<td class="totals"><b>&pound;1882.56</b></td>
-</tr>
-<tr>
-<td class="totals">Deposit:</td>
-<td class="totals">&pound;100.00</td>
-</tr>
-<tr>
-<td class="totals"><b>Balance due:</b></td>
-<td class="totals"><b>&pound;1782.56</b></td>
-</tr>
-</tbody>
-</table>
-<div style="text-align: center; font-style: italic;">Payment terms: payment due in 30 days</div>
-</body>
+  <table class="items" width="100%" style="font-size: 9pt; border-collapse: collapse;" cellpadding="8">
+    <thead>
+      <tr>
+        <td width="60%">CONCEPTO</td>
+        <td width="10%">CANTIDAD</td>
+        <td width="10%">PRECIO</td>
+        <td width="10%">IVA</td>
+        <td width="10%">TOTAL</td>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- ITEMS HERE -->
+      {% for item in items %}
+      <tr>
+        <td align="center"><h3>{{ item.concepto }}</h3>Valida para un anyo.</td>
+        <td align="center">{{ item.cantidad }}</td>
+        <td align="right">{{ item.precio }}&euro;</td>
+        <td align="center">{{ item.iva }}%</td>
+        <td align="right">{{ item.total }}&euro;</td>
+      </tr>
+      {% endfor %}
+
+      <!-- END ITEMS HERE -->
+      <tr>
+        <td class="blanktotal" colspan="3" rowspan="6"></td>
+        <td class="totals">Subtotal:</td>
+        <td class="totals">{{total.subtotal}}&euro;</td>
+      </tr>
+      <tr>
+        <td class="totals">IVA:</td>
+        <td class="totals">{{total.iva}}&euro;</td>
+      </tr>
+      <tr>
+        <td class="totals"><b>TOTAL:</b></td>
+        <td class="totals"><b>{{total.total}}&euro;</b></td>
+      </tr>
+    </tbody>
+  </table>
+  <div id='comentario'><h2>Comentarios</h2></div>
+  </body>
 </html>
