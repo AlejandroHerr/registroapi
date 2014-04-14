@@ -11,4 +11,6 @@ var/logs/*.log
 *.ini
 todo
 sftp-config.json
+*.phar
+docs*
 
