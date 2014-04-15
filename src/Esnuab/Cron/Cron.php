@@ -1,7 +1,5 @@
 <?php
 
-use Symfony\Component\HttpFoundation\Request;
-
 $app = new Silex\Application();
 $app['debug'] = true;
 
@@ -11,19 +9,19 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(),$app['db.config']);
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => ROOT.'/public/views',
 ));
-$app['confirmation_manager'] = $app->share(function($app) {
-	return new \Esnuab\Cron\Model\Manager\ConfirmationManager($app['db']);
+$app['confirmation_manager'] = $app->share(function ($app) {
+    return new \Esnuab\Cron\Model\Manager\ConfirmationManager($app['db']);
 });
 $app['mandrill.apikey'] = require_once ROOT . '/config/mandrill.php';
-$app['mandrill'] = $app->share(function($app) {
-	return new Mandrill($app['mandrill.apikey']);
+$app['mandrill'] = $app->share(function ($app) {
+    return new Mandrill($app['mandrill.apikey']);
 });
 list($app['mailchimp.apikey'],$app['mailchimp.listid']) = require_once ROOT . '/config/mailchimp.php';
-$app['mailchimp'] = $app->share(function($app) {
-	return new Drewm\MailChimp($app['mailchimp.apikey']);
+$app['mailchimp'] = $app->share(function ($app) {
+    return new Drewm\MailChimp($app['mailchimp.apikey']);
 });
-$app['mpdf']=$app->share(function($app){
-	return new mPDF('utf-8','A4','','',20,15,48,25,10,10);	
+$app['mpdf']=$app->share(function ($app) {
+    return new Esnuab\Facturador\Facturador($app);
 });
 require_once 'routes.php';
 
