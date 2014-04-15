@@ -10,11 +10,16 @@
         "symfony/security": "~2.3",
         "monolog/monolog": ">=1.0.0",
         "mandrill/mandrill": "1.0.*",
-        "drewm/mailchimp-api": "dev-master"
+        "drewm/mailchimp-api": "dev-master",
+        "stack/builder":"1.0.*@dev",
+        "stack/url-map": "1.0.*@dev",
+        "stack/lazy-http-kernel": "1.0.*@dev",
+        "mpdf/mpdf": "dev-master",
+        "twig/twig": ">=1.8,<2.0-dev"
     },
     "autoload": {
         "psr-0": {
             "Esnuab": "src/"
         }
     }
-}   
+}

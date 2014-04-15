@@ -23,6 +23,7 @@ class Socio extends Base
     public function setId($id)
     {
         $this->id=$id;
+
         return $this;
     }
     public function getNombre()
@@ -32,14 +33,17 @@ class Socio extends Base
     public function setNombre($nombre)
     {
         $this->nombre = ucwords($nombre);
+
         return $this;
     }
     public function getApellido()
     {
         return $this->apellido;
     }
-    public function setApellido($apellido) {
+    public function setApellido($apellido)
+    {
         $this->apellido = ucwords($apellido);
+
         return $this;
     }
     public function getEmail()
@@ -49,14 +53,17 @@ class Socio extends Base
     public function setEmail($email)
     {
         $this->email = $email;
+
         return $this;
     }
     public function getEsncard()
     {
         return $this->esncard;
     }
-    public function setEsncard($esncard) {
+    public function setEsncard($esncard)
+    {
         $this->esncard = strtoupper($esncard);
+
         return $this;
     }
     public function getPassport()
@@ -66,6 +73,7 @@ class Socio extends Base
     public function setPassport($passport)
     {
         $this->passport = strtoupper($passport);
+
         return $this;
     }
     public function getPais()
@@ -75,6 +83,7 @@ class Socio extends Base
     public function setPais($pais)
     {
         $this->pais = $pais;
+
         return $this;
     }
     public function getCreatedAt()
@@ -84,6 +93,7 @@ class Socio extends Base
     public function setCreatedAt($created_at)
     {
         $this->created_at = $created_at;
+
         return $this;
     }
     public function getExpiresAt()
@@ -96,6 +106,7 @@ class Socio extends Base
         $time = \DateTime::createFromFormat('Y-m-d', $this->getCreatedAt());
         $time->modify("+1 year");
         $this->expires_at = $time->format('Y-m-d');
+
         return $this;
     }
     public function getModAt()
@@ -106,12 +117,14 @@ class Socio extends Base
     {
         $time = new \DateTime(date('Y-m-d H:i:s', time()));
         $this->mod_at = $time->format('Y-m-d');
+
         return $this;
     }
     public function setExpired()
     {
-    	$time = new \DateTime(date('Y-m-d H:i:s', time()));
+        $time = new \DateTime(date('Y-m-d H:i:s', time()));
         $this->expires_at = $time->format('Y-m-d');
+
         return $this;
     }
     public function getLanguage()

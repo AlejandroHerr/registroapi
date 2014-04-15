@@ -1,6 +1,6 @@
 <?php
 
-namespace Esnuab\Services\AuditLog\Processor;
+namespace Esnuab\AuditLog\Processor;
 
 use Silex\Application;
 
@@ -21,6 +21,7 @@ class UserProcessor
                 'user' => null !== $token ? $token->getUser()->getUsername() : 'anon'
             )
         ));
+
         return $record;
     }
 }

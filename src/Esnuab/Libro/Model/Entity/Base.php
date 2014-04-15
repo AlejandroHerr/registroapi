@@ -4,14 +4,14 @@ namespace Esnuab\Libro\Model\Entity;
 
 abstract class Base
 {
-    function __construct(array $data=array())
+    public function __construct(array $data=array())
     {
         foreach ($data as $key => $value) {
             $this->__set($key,$value);
         }
     }
 
-    function __get($name)
+    public function __get($name)
     {
         $method = "get".ucwords($name);
         if(method_exists($this,$method)):
@@ -21,7 +21,7 @@ abstract class Base
         endif;
     }
 
-    function __set($name, $value)
+    public function __set($name, $value)
     {
         $method = "set".ucwords($name);
         if(method_exists($this, $method)):
@@ -34,22 +34,24 @@ abstract class Base
      {
         ob_start();
         var_dump($this);
+
         return ob_get_clean();
     }
-    function toArray()
+    public function toArray()
     {
-        $array = @array_filter( get_object_vars($this) ,function($value){
+        $array = @array_filter( get_object_vars($this) ,function ($value) {
             return $value!=null;
         });
+
         return $array;
     }
 
-    function serialize()
+    public function serialize()
     {
       return json_encode($this->toArray());
     }
 
-    function deszerialize($json)
+    public function deszerialize($json)
     {
         $datas = json_decode($json);
         $this->__construct($json);
