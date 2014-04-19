@@ -1,13 +1,13 @@
 angular.module('libroApp.socio', [])
     .controller('SocioCtrl', ['$routeParams', 'ApiCall',
         '$scope', 'credenciales', '$location', '$http', '$filter', 'loader',
-        function ($routeParams, ApiCall, $scope, credenciales, $location, $http, $filter, loader) {
+        function($routeParams, ApiCall, $scope, credenciales, $location, $http, $filter, loader) {
             if (!credenciales.isLogged()) {
                 $location.url("/app/logout");
                 return;
             }
             loader.setLoading();
-            $scope.getPais = function () {
+            $scope.getPais = function() {
                 if ($scope.paises.length) {
                     var selected = $filter('filter')($scope.paises, {
                         alpha2: $scope.socio.pais
@@ -17,24 +17,24 @@ angular.module('libroApp.socio', [])
                     return $scope.socio.pais;
                 }
             };
-            $scope.loadSocio = function (id) {
+            $scope.loadSocio = function(id) {
                 var data = ApiCall.getSocio(id, credenciales.getXWSSE())
-                    .then(function (d) {
+                    .then(function(d) {
                         $scope.socio = d.data;
                         $scope.pais = $scope.getPais();
                         loader.unsetLoading();
-                    }, function (d) {
+                    }, function(d) {
                         loader.unsetLoading();
                         var modalInstance = $modal.open({
                             templateUrl: '/app/partials/modal/40x.html',
                             controller: ErrorModalInstanceCtrl,
                             resolve: {
-                                error: function () {
+                                error: function() {
                                     return d;
                                 }
                             }
                         });
-                        modalInstance.result.then(function () {}, function () {
+                        modalInstance.result.then(function() {}, function() {
                             if (d.status == 403) {
                                 //levatelo a alg'un lado
                             } else {
@@ -43,7 +43,7 @@ angular.module('libroApp.socio', [])
                         });
                     });
             };
-            $scope.checkLength = function (data, min, max) {
+            $scope.checkLength = function(data, min, max) {
                 if (data.length < min) {
                     return "El tamano mínimo son 2 caracteres!";
                 }
@@ -51,7 +51,7 @@ angular.module('libroApp.socio', [])
                     return "El tamano máximo son 50 caracteres!";
                 }
             };
-            $scope.saveUser = function () {
+            $scope.saveUser = function() {
                 loader.setLoading();
                 var putData = {
                     'nombre': this.socio.nombre,
@@ -64,9 +64,9 @@ angular.module('libroApp.socio', [])
                     'language': this.socio.language
                 };
                 var data = ApiCall.putSocio(putData, this.socio.id, credenciales.getXWSSE())
-                    .then(function (d) {
+                    .then(function(d) {
                         $scope.loadSocio(id);
-                    }, function (d) {
+                    }, function(d) {
                         loader.unsetLoading();
                         //do something when it fails
                     });
@@ -78,7 +78,7 @@ angular.module('libroApp.socio', [])
             }, {
                 value: 'Espanyol'
             }];
-            $http.get('/app/resources/countries.json').success(function (data) {
+            $http.get('/app/resources/countries.json').success(function(data) {
                 $scope.paises = data.countries;
                 $scope.loadSocio(id);
             });

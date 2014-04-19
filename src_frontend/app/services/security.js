@@ -1,38 +1,38 @@
 angular.module('libroApp.security', [])
     .service('credenciales', ['xwsse',
-        function (xwsse) {
+        function(xwsse) {
             var username = '';
             var password = '';
             return {
-                getUser: function () {
+                getUser: function() {
                     return this.username;
                 },
-                setUser: function (user) {
+                setUser: function(user) {
                     this.username = user;
                 },
-                getPass: function () {
+                getPass: function() {
                     return this.password;
                 },
-                setPass: function (pass) {
+                setPass: function(pass) {
                     this.password = pass;
                 },
-                isLogged: function () {
+                isLogged: function() {
                     if (!this.username || !this.password) {
                         return false;
                     }
                     return true;
                 },
-                logOut: function () {
+                logOut: function() {
                     this.username = '';
                     this.password = '';
                 },
-                getXWSSE: function () {
+                getXWSSE: function() {
                     return xwsse.calc(this.username, this.password);
                 }
             };
         }
     ])
-    .service('base64', function () {
+    .service('base64', function() {
         this.base64EncodeChars =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
         this.base64DecodeChars = new Array(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -
@@ -43,7 +43,7 @@ angular.module('libroApp.security', [])
             15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1, -1, 26, 27,
             28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
             41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1);
-        this.base64encode = function (str) {
+        this.base64encode = function(str) {
             var out, i, len;
             var c1, c2, c3;
             len = str.length;
@@ -73,7 +73,7 @@ angular.module('libroApp.security', [])
             }
             return out;
         }
-        this.base64decode = function (str) {
+        this.base64decode = function(str) {
             var c1, c2, c3, c4;
             var i, len, out;
             len = str.length;
@@ -117,7 +117,7 @@ angular.module('libroApp.security', [])
             return out;
         }
     })
-    .service('sha1', function () {
+    .service('sha1', function() {
         this.hexcase = 0; /* hex output format. 0 - lowercase; 1 - uppercase        */
         this.b64pad = "="; /* base-64 pad character. "=" for strict RFC compliance   */
         this.chrsz = 8; /* bits per input character. 8 - ASCII; 16 - Unicode      */
@@ -125,34 +125,34 @@ angular.module('libroApp.security', [])
          * These are the functions you'll usually want to call
          * They take string arguments and return either hex or base-64 encoded strings
          */
-        this.hex_sha1 = function (s) {
+        this.hex_sha1 = function(s) {
             return this.binb2hex(this.core_sha1(this.str2binb(s), s.length * this.chrsz));
         }
-        this.b64_sha1 = function (s) {
+        this.b64_sha1 = function(s) {
             return this.binb2b64(this.core_sha1(this.str2binb(s), s.length * this.chrsz));
         }
-        this.str_sha1 = function (s) {
+        this.str_sha1 = function(s) {
             return this.binb2str(this.core_sha1(this.str2binb(s), s.length * this.chrsz));
         }
-        this.hex_hmac_sha1 = function (key, data) {
+        this.hex_hmac_sha1 = function(key, data) {
             return this.binb2hex(this.core_hmac_sha1(key, data));
         }
-        this.b64_hmac_sha1 = function (key, data) {
+        this.b64_hmac_sha1 = function(key, data) {
             return this.binb2b64(this.core_hmac_sha1(key, data));
         }
-        this.str_hmac_sha1 = function (key, data) {
+        this.str_hmac_sha1 = function(key, data) {
             return this.binb2str(this.core_hmac_sha1(key, data));
         }
         /*
          * Perform a simple self-test to see if the VM is working
          */
-        this.sha1_vm_test = function () {
+        this.sha1_vm_test = function() {
             return this.hex_sha1("abc") == "a9993e364706816aba3e25717850c26c9cd0d89d";
         }
         /*
          * Calculate the SHA-1 of an array of big-endian words, and a bit length
          */
-        this.core_sha1 = function (x, len) {
+        this.core_sha1 = function(x, len) {
             /* append padding */
             x[len >> 5] |= 0x80 << (24 - len % 32);
             x[((len + 64 >> 9) << 4) + 15] = len;
@@ -192,7 +192,7 @@ angular.module('libroApp.security', [])
          * Perform the appropriate triplet combination function for the current
          * iteration
          */
-        this.sha1_ft = function (t, b, c, d) {
+        this.sha1_ft = function(t, b, c, d) {
             if (t < 20) return (b & c) | ((~b) & d);
             if (t < 40) return b ^ c ^ d;
             if (t < 60) return (b & c) | (b & d) | (c & d);
@@ -201,14 +201,14 @@ angular.module('libroApp.security', [])
         /*
          * Determine the appropriate additive constant for the current iteration
          */
-        this.sha1_kt = function (t) {
+        this.sha1_kt = function(t) {
             return (t < 20) ? 1518500249 : (t < 40) ? 1859775393 :
                 (t < 60) ? -1894007588 : -899497514;
         }
         /*
          * Calculate the HMAC-SHA1 of a key and some data
          */
-        this.core_hmac_sha1 = function (key, data) {
+        this.core_hmac_sha1 = function(key, data) {
             var bkey = this.str2binb(key);
             if (bkey.length > 16) bkey = this.core_sha1(bkey, key.length * this.chrsz);
             var ipad = Array(16),
@@ -225,7 +225,7 @@ angular.module('libroApp.security', [])
          * Add integers, wrapping at 2^32. This uses 16-bit operations internally
          * to work around bugs in some JS interpreters.
          */
-        this.safe_add = function (x, y) {
+        this.safe_add = function(x, y) {
             var lsw = (x & 0xFFFF) + (y & 0xFFFF);
             var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
             return (msw << 16) | (lsw & 0xFFFF);
@@ -233,14 +233,14 @@ angular.module('libroApp.security', [])
         /*
          * Bitwise rotate a 32-bit number to the left.
          */
-        this.rol = function (num, cnt) {
+        this.rol = function(num, cnt) {
             return (num << cnt) | (num >>> (32 - cnt));
         }
         /*
          * Convert an 8-bit or 16-bit string to an array of big-endian words
          * In 8-bit function, characters >255 have their hi-byte silently ignored.
          */
-        this.str2binb = function (str) {
+        this.str2binb = function(str) {
             var bin = Array();
             var mask = (1 << this.chrsz) - 1;
             for (var i = 0; i < str.length * this.chrsz; i += this.chrsz)
@@ -250,7 +250,7 @@ angular.module('libroApp.security', [])
         /*
          * Convert an array of big-endian words to a string
          */
-        this.binb2str = function (bin) {
+        this.binb2str = function(bin) {
             var str = "";
             var mask = (1 << this.chrsz) - 1;
             for (var i = 0; i < bin.length * 32; i += this.chrsz) {
@@ -261,7 +261,7 @@ angular.module('libroApp.security', [])
         /*
          * Convert an array of big-endian words to a hex string.
          */
-        this.binb2hex = function (binarray) {
+        this.binb2hex = function(binarray) {
             var hex_tab = this.hexcase ? "0123456789ABCDEF" : "0123456789abcdef";
             var str = "";
             for (var i = 0; i < binarray.length * 4; i++) {
@@ -273,7 +273,7 @@ angular.module('libroApp.security', [])
         /*
          * Convert an array of big-endian words to a base-64 string
          */
-        this.binb2b64 = function (binarray) {
+        this.binb2b64 = function(binarray) {
             var tab = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
             var str = "";
             for (var i = 0; i < binarray.length * 4; i += 3) {
@@ -292,9 +292,9 @@ angular.module('libroApp.security', [])
         };
     })
     .service('xwsse', ['base64', 'sha1',
-        function (base64, sha1) {
+        function(base64, sha1) {
             this.b64pad = "=";
-            this.calc = function (ousername, opassword) {
+            this.calc = function(ousername, opassword) {
                 var userName = ousername;
                 var password = opassword;
                 var nonce = this.generateNonce(16);
@@ -306,7 +306,7 @@ angular.module('libroApp.security', [])
                     "\", Nonce=\"" + nonce64 + "\", Created=\"" + created + "\"";
                 return digest;
             };
-            this.generateNonce = function (length) {
+            this.generateNonce = function(length) {
                 var nonceChars = "0123456789abcdef";
                 var result = "";
                 for (var i = 0; i < length; i++) {
@@ -314,7 +314,7 @@ angular.module('libroApp.security', [])
                 }
                 return result;
             };
-            this.getW3CDate = function (date) {
+            this.getW3CDate = function(date) {
                 var yyyy = date.getUTCFullYear();
                 var mm = (date.getUTCMonth() + 1);
                 if (mm < 10) {
@@ -341,15 +341,15 @@ angular.module('libroApp.security', [])
         }
     ])
     .factory('Socio', ['$resource',
-        function ($resource) {
+        function($resource) {
             return $resource('/apisocios', {}, {
                 query: {
                     method: 'GET',
                     interceptor: {
-                        response: function (data) {
+                        response: function(data) {
                             console.log('response in interceptor', data);
                         },
-                        responseError: function (data) {
+                        responseError: function(data) {
                             console.log('error in interceptor', data);
                         }
                     },
