@@ -1,0 +1,28 @@
+{
+  "name": "LibroDeSocios",
+  "version": "0.3.0",
+  "description": "Libro de Socios",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AlejandroHerr/registroapi.git"
+  },
+  "author": "AlejandroHerr",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AlejandroHerr/registroapi/issues"
+  },
+  "homepage": "https://github.com/AlejandroHerr/registroapi",
+  "devDependencies": {
+    "grunt": "^0.4.4",
+    "grunt-contrib-uglify": "^0.4.0",
+    "grunt-contrib-concat": "~0.4.0",
+    "grunt-contrib-jshint": "^0.4.3",
+    "grunt-contrib-less": "~0.11.0",
+    "grunt-contrib-clean": "^0.5.0",
+    "grunt-contrib-copy": "^0.5.0",
+    "grunt-recess": "^0.6.1",
+    "grunt-ngmin": "0.4.1",
+    "grunt-html2js": "^0.2.4",
+    "bower": ""
+  }
+}
