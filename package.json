@@ -23,6 +23,7 @@
     "grunt-recess": "^0.6.1",
     "grunt-ngmin": "0.4.1",
     "grunt-html2js": "^0.2.4",
-    "bower": ""
+    "bower": "",
+    "grunt-jsbeautifier": "^0.2.7"
   }
 }

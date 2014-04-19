@@ -1,12 +1,13 @@
-module.exports = function (grunt) {
-  grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-recess');
-  grunt.loadNpmTasks('grunt-ngmin');
-  grunt.loadNpmTasks('grunt-html2js');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
+module.exports = function(grunt) {
+    grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-recess');
+    grunt.loadNpmTasks('grunt-ngmin');
+    grunt.loadNpmTasks('grunt-html2js');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-jsbeautifier');
 
     var userConfig = require('./build.config.js');
     var taskConfig = {
@@ -55,26 +56,26 @@ module.exports = function (grunt) {
             }
         },
         jshint: {
-      src: [ 
-        '<%= app_files.js %>'
-      ],
-      test: [
-        '<%= app_files.jsunit %>'
-      ],
-      gruntfile: [
-        'Gruntfile.js'
-      ],
-      options: {
-        curly: true,
-        immed: true,
-        newcap: true,
-        noarg: true,
-        sub: true,
-        boss: true,
-        eqnull: true
-      },
-      globals: {}
-    },
+            src: [
+                '<%= app_files.js %>'
+            ],
+            test: [
+                '<%= app_files.jsunit %>'
+            ],
+            gruntfile: [
+                'Gruntfile.js'
+            ],
+            options: {
+                curly: true,
+                immed: true,
+                newcap: true,
+                noarg: true,
+                sub: true,
+                boss: true,
+                eqnull: true
+            },
+            globals: {}
+        },
         clean: [
             '<%= build_dir %>',
             '<%= compile_dir %>'
@@ -131,13 +132,17 @@ module.exports = function (grunt) {
          */
         uglify: {
             options: {
-              mangle: false
+                mangle: false
             },
             compile: {
                 files: {
                     '<%= concat.compile_js.dest %>': '<%= concat.compile_js.dest %>'
                 }
             }
+        },
+        jsbeautifier: {
+            files: ['<%= app_files.js %>', 'Gruntfile.js'],
+            options: {}
         },
         /**
          * `recess` handles our LESS compilation and uglification automatically.
@@ -246,11 +251,13 @@ module.exports = function (grunt) {
     grunt.registerTask('compile', [
         'recess:compile', 'copy:compile_assets', 'ngmin:compile', 'concat:compile_js', 'uglify', 'index:compile'
     ]);
+
+    grunt.registerTask('beautify', ['jsbeautifier']);
     /**
      * A utility function to get all app JavaScript sources.
      */
     function filterForJS(files) {
-        return files.filter(function (file) {
+        return files.filter(function(file) {
             return file.match(/\.js$/);
         });
     }
@@ -258,7 +265,7 @@ module.exports = function (grunt) {
      * A utility function to get all app CSS sources.
      */
     function filterForCSS(files) {
-        return files.filter(function (file) {
+        return files.filter(function(file) {
             return file.match(/\.css$/);
         });
     }
@@ -268,16 +275,16 @@ module.exports = function (grunt) {
      * the list into variables for the template to use and then runs the
      * compilation.
      */
-    grunt.registerMultiTask('index', 'Process index.html template', function () {
+    grunt.registerMultiTask('index', 'Process index.html template', function() {
         var dirRE = new RegExp('^(' + grunt.config('build_dir') + '|' + grunt.config('compile_dir') + ')\/', 'g');
-        var jsFiles = filterForJS(this.filesSrc).map(function (file) {
+        var jsFiles = filterForJS(this.filesSrc).map(function(file) {
             return file.replace(dirRE, '');
         });
-        var cssFiles = filterForCSS(this.filesSrc).map(function (file) {
+        var cssFiles = filterForCSS(this.filesSrc).map(function(file) {
             return file.replace(dirRE, '');
         });
         grunt.file.copy('src_frontend/index.html', this.data.dir + '/index.html', {
-            process: function (contents, path) {
+            process: function(contents, path) {
                 return grunt.template.process(contents, {
                     data: {
                         scripts: jsFiles,
