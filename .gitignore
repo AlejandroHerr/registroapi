@@ -16,7 +16,9 @@ docs*
 *.sw*
 *~
 build/
-bin/
 node_modules/
 vendor/
+vendorjs/
+build/
+/app/
 
