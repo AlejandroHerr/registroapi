@@ -30,6 +30,14 @@ module.exports = function(grunt) {
                     flatten: true
                 }]
             },
+            build_appcss: {
+                files: [{
+                    src: ['<%= app_files.css %>'],
+                    dest: '<%= build_dir %>/',
+                    cwd: '.',
+                    expand: true
+                }]
+            },              
             build_appjs: {
                 files: [{
                     src: ['<%= app_files.js %>'],
@@ -215,7 +223,7 @@ module.exports = function(grunt) {
                     '<%= build_dir %>/src_frontend/**/*.js',
                     '<%= html2js.common.dest %>',
                     '<%= html2js.app.dest %>',
-                    '<%= vendor_files.css %>',
+                    /*'<%= vendor_files.css %>',*/
                     '<%= recess.build.dest %>'
                 ]
             },
@@ -228,7 +236,7 @@ module.exports = function(grunt) {
                 dir: '<%= compile_dir %>',
                 src: [
                     '<%= concat.compile_js.dest %>',
-                    '<%= vendor_files.css %>',
+                    /*'<%= vendor_files.css %>',*/
                     '<%= recess.compile.dest %>'
                 ]
             }
@@ -242,6 +250,7 @@ module.exports = function(grunt) {
     grunt.registerTask('build', [
         'clean', 'html2js', 'jshint', 'recess:build',
         'concat:build_css', 'copy:build_app_assets', 'copy:build_vendor_assets',
+        'copy:build_appcss',
         'copy:build_appjs', 'copy:build_vendorjs', 'index:build'
     ]);
     /**

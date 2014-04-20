@@ -27,7 +27,8 @@ module.exports = {
     ctpl: [ 'src_frontend/common/**/*.tpl.html' ],
 
     html: [ 'src_frontend/index.html' ],
-    less: 'src_frontend/less/main.less'
+    less: 'src_frontend/less/main.less',
+    html: [ 'src_frontend/less/*.css' ]
   },
 
   /**
@@ -56,8 +57,11 @@ module.exports = {
       'vendorjs/angular-xeditable/dist/js/xeditable.min.js'
     ],
     css: [
+    'src_frontend/less/*.css'
+
     ],
     assets: [
+
     ]
   },
 };
