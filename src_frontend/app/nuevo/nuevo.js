@@ -23,7 +23,7 @@ angular.module('libroApp.nuevo', []).controller('NuevoSocioCtrl', ['loader', 'Ap
             }
             var socio = this.socio;
             var modalInstance = $modal.open({
-                templateUrl: '/app/partials/modal/registrar.html',
+                templateUrl: 'modal/registrar.tpl.html',
                 controller: 'RegistrarModalInstanceCtrl',
                 resolve: {
                     socio: function() {

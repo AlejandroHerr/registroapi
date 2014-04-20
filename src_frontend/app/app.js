@@ -27,28 +27,28 @@ libroApp.run(function(editableOptions) {
 libroApp.config(['$routeProvider',
     function($routeProvider) {
         $routeProvider.
-        when('/bin/login', {
+        when('/login', {
             templateUrl: 'login/login.tpl.html',
             controller: 'LoginCtrl'
         }).
-        when('/bin/logout', {
+        when('/logout', {
             templateUrl: 'login/login.tpl.html',
             controller: 'LogoutCtrl'
         }).
-        when('/bin/socios', {
+        when('/socios', {
             templateUrl: 'socios/socios.tpl.html',
             controller: 'SociosCtrl'
         }).
-        when('/bin/socio/:socioId/:mode', {
+        when('/socio/:socioId/:mode', {
             templateUrl: 'socio/socio.tpl.html',
             controller: 'SocioCtrl'
         }).
-        when('/bin/socio/nuevo', {
+        when('/socio/nuevo', {
             templateUrl: 'nuevo/nuevo.tpl.html',
             controller: 'NuevoSocioCtrl'
         }).
         otherwise({
-            redirectTo: '/bin/login'
+            redirectTo: '/login'
         });
     }
 ]);

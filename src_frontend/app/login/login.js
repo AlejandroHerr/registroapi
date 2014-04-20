@@ -8,7 +8,7 @@ angular.module('libroApp.login', [])
             credenciales.setPass($scope.password);
             if (credenciales.isLogged()) {
                 loader.setLoading();
-                $location.url("/bin/socios");
+                $location.url("/socios");
             }
         };
     }

@@ -35,7 +35,7 @@ angular.module('libroApp.socios', [])
                             flag = true;
                             loader.unsetLoading();
                             var modalInstance = $modal.open({
-                                templateUrl: '/app/partials/modal/40x.html',
+                                templateUrl: 'modal/40x.tpl.html',
                                 controller: 'ErrorModalInstanceCtrl',
                                 resolve: {
                                     error: function() {
@@ -47,7 +47,7 @@ angular.module('libroApp.socios', [])
                                 if (d.status == 403) {
                                     //levatelo a alg'un lado
                                 } else {
-                                    $location.url("/app/logout");
+                                    $location.url("/logout");
                                 }
                             });
 
@@ -56,7 +56,7 @@ angular.module('libroApp.socios', [])
             };
             $scope.remove = function(socio) {
                 var modalInstance = $modal.open({
-                    templateUrl: '/app/partials/modal/delete.html',
+                    templateUrl: '/modal/delete.tpl.html',
                     controller: 'DeleteModalInstanceCtrl',
                     resolve: {
                         socio: function() {
@@ -70,7 +70,7 @@ angular.module('libroApp.socios', [])
             };
             $scope.edit = function(socio) {
                 loader.setLoading();
-                $location.url("/app/socio/" + socio + "/edit");
+                $location.url("/socio/" + socio + "/edit");
             };
             var flag = true;
             $scope.options = queryOptions.get();

@@ -26,7 +26,7 @@ angular.module('libroApp.socio', [])
                     }, function(d) {
                         loader.unsetLoading();
                         var modalInstance = $modal.open({
-                            templateUrl: '/app/partials/modal/40x.html',
+                            templateUrl: 'modal/40x.tpl.html',
                             controller: ErrorModalInstanceCtrl,
                             resolve: {
                                 error: function() {
@@ -38,7 +38,7 @@ angular.module('libroApp.socio', [])
                             if (d.status == 403) {
                                 //levatelo a alg'un lado
                             } else {
-                                $location.url("/app/logout");
+                                $location.url("/logout");
                             }
                         });
                     });
@@ -78,7 +78,7 @@ angular.module('libroApp.socio', [])
             }, {
                 value: 'Espanyol'
             }];
-            $http.get('/app/resources/countries.json').success(function(data) {
+            $http.get('/resources/countries.json').success(function(data) {
                 $scope.paises = data.countries;
                 $scope.loadSocio(id);
             });
