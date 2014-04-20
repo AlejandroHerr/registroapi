@@ -1,0 +1,22 @@
+
+			<div class="modal-header">
+				<h3>ELIMINAR USUARIO</h3>
+			</div>
+			<div class="modal-body">
+				<p>¿Estás seguro de que quieres eliminar al socio <strong>{{ socio.nombre }}</strong> <strong>{{ socio.apellido }}</strong>, con número de ESN CARD <strong>{{ socio.esncard }}</strong>?</p>
+				
+				<div class="form-group">
+					<label>Confirma:</label>
+    				<input type="text" class="form-control" name="confirmacion" ng-model="confirmacion" placeholder="Introduce ELIMINAR y el número de ESN CARD">
+				</div>
+				<div>
+				 	<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">
+				 		{{alert.msg}}
+				 	</alert>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-danger" ng-click="ok(confirmacion)">ELIMINAR</button>
+				<button class="btn btn-warning" ng-click="salir()">CERRAR</button>
+
+			</div>
