@@ -2,14 +2,18 @@ angular.module('libroApp.api', [])
 
 .factory('ApiCall', ['$http',
     function($http) {
+        $http.defaults.useXDomain = true;
+        delete $http.defaults.headers.common['X-Requested-With'];
+        var domain = 'http://libro.localhost';
         var ApiCall = {
+            
             getSocios: function(page, passwordDigest, options) {
                 $http.defaults.headers.get = {
                     'X-WSSE': passwordDigest
                 };
                 var promise = $http({
                     method: 'GET',
-                    url: '/api/socios?maxResults=' + options.maxResults + '&currentPage=' + page + '&orderDir=' + options.orderDir + '&orderBy=' + options.orderBy
+                    url: domain + '/api/socios?maxResults=' + options.maxResults + '&currentPage=' + page + '&orderDir=' + options.orderDir + '&orderBy=' + options.orderBy
                 }).then(function(response) {
                     return response;
                 });
@@ -21,7 +25,7 @@ angular.module('libroApp.api', [])
                 };
                 var promise = $http({
                     method: 'GET',
-                    url: '/api/socios/' + id
+                    url: domain + '/api/socios/' + id
                 }).then(function(response) {
                     return response;
                 });
@@ -33,7 +37,7 @@ angular.module('libroApp.api', [])
                 };
                 var promise = $http({
                     method: 'POST',
-                    url: '/api/socios',
+                    url: domain + '/api/socios',
                     data: data
                 }).then(function(response) {
                     return response;
@@ -46,7 +50,7 @@ angular.module('libroApp.api', [])
                 };
                 var promise = $http({
                     method: 'PUT',
-                    url: '/api/socios/' + id,
+                    url: domain + '/api/socios/' + id,
                     data: data
                 }).then(function(response) {
                     return response;
@@ -59,7 +63,7 @@ angular.module('libroApp.api', [])
                 };
                 var promise = $http({
                     method: 'DELETE',
-                    url: '/api/socios/' + id
+                    url: domain + '/api/socios/' + id
                 }).then(function(response) {
                     return response;
                 });
