@@ -12,7 +12,6 @@ todo
 sftp-config.json
 *.phar
 docs*
-*.png
 *.sw*
 *~
 build/

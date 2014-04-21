@@ -60,6 +60,10 @@ module.exports = {
 
     ],
     assets: [
+    'vendorjs/bootstrap/fonts/glyphicons-halflings-regular.eot',
+    'vendorjs/bootstrap/fonts/glyphicons-halflings-regular.svg',
+    'vendorjs/bootstrap/fonts/glyphicons-halflings-regular.ttf',
+    'vendorjs/bootstrap/fonts/glyphicons-halflings-regular.woff'
 
     ]
   },
