@@ -50,5 +50,9 @@ foreach (array('user','admin','superadmin') as $role) {
     });
 }
 //ROUTING
+
 require_once 'routes.php';
+$app->match('/socios', function () use ($app) {
+    return $app->json(array('hola'), 201,array('Access-Control-Allow-Origin' => 'http://app.localhost','Access-Control-Allow-Headers'=>'X-WSSE'));
+})->method('OPTIONS');
 return $app;

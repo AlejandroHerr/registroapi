@@ -14,12 +14,15 @@ class ApiController implements ControllerProviderInterface
 {
     protected $socioManager;
     protected $transactionLogger;
-    private $headers;
+    protected $headers;
     public function __construct($socioManager,$transactionLogger=null)
     {
         $this->transactionLogger = $transactionLogger;
         $this->socioManager = $socioManager;
-        $this->headers= array('Access-Control-Allow-Origin' => '*');
+        $this->headers= array(
+            'Access-Control-Allow-Origin' => 'http://app.localhost',
+            'Access-Control-Allow-Headers'=>'X-WSSE'
+        );
     }
     public function connect(Application $app)
     {
@@ -58,7 +61,7 @@ class ApiController implements ControllerProviderInterface
             'socios' => $socios
         );
 
-        return $app->json($response, 200,$this->headers);
+        return $app->json($response, 200,array('Access-Control-Allow-Origin' => 'http://app.localhost','Access-Control-Allow-Headers'=>'X-WSSE'));
     }
     public function postSocio(Application $app)
     {
