@@ -1,14 +1,12 @@
 angular.module('libroApp.nuevo', []).controller('NuevoSocioCtrl', ['loader', 'ApiCall', '$modal', 'credenciales',
-    '$http', '$scope', '$location',
-    function(loader, ApiCall, $modal, credenciales, $http, $scope, $location) {
+    '$http', '$scope', '$location','countries',
+    function(loader, ApiCall, $modal, credenciales, $http, $scope, $location,countries) {
         if (!credenciales.isLogged()) {
             $location.url("/app/logout");
             return;
         }
         loader.setLoading();
-        $http.get('/app/resources/countries.json').success(function(response) {
-            $scope.countries = response.countries;
-        });
+        $scope.countries = countries.get().countries;
         $scope.languages = [{
             value: 'English'
         }, {
