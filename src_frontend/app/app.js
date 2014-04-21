@@ -14,7 +14,8 @@ var libroApp = angular.module('libroApp', [
     'libroApp.socios',
     'libroApp.login',
     'libroApp.logout',
-    'libroApp.modals'
+    'libroApp.modals',
+    'libroApp.countries'
 ]).
 config(['$locationProvider',
     function($location) {
