@@ -56,7 +56,7 @@ angular.module('libroApp.socios', [])
             };
             $scope.remove = function(socio) {
                 var modalInstance = $modal.open({
-                    templateUrl: '/modal/delete.tpl.html',
+                    templateUrl: 'modal/delete.tpl.html',
                     controller: 'DeleteModalInstanceCtrl',
                     resolve: {
                         socio: function() {
