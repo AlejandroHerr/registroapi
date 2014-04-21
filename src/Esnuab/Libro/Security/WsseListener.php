@@ -36,6 +36,19 @@ class WsseListener implements ListenerInterface
 
             return;
         }
+
+        if ($request->getMethod() == 'OPTIONS') {
+            $token = new WsseUserToken();
+            $token->setUser('CorsPreflight');
+            $authToken = $this->authenticationManager->authenticatePreflight($token);
+            $this->securityContext->setToken($authToken);
+            if (null !== $this->logger) {
+                $this->logger->addInfo('Cors Preflight');
+            }
+
+            return;
+        }
+
         $wsseRegex = '/UsernameToken Username="([^"]+)", PasswordDigest="([^"]+)", Nonce="([^"]+)", Created="([^"]+)"/';
         if (!$request->headers->has('x-wsse') || 1 !== preg_match($wsseRegex, $request->headers->get('x-wsse'), $matches)) {
             $response = new JsonResponse(array(
