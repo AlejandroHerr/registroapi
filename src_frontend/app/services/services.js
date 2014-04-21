@@ -34,6 +34,7 @@ angular.module('libroApp.services', [ /*'ngResource'*/ ])
     };
 })
     .service('loader', [
+
         function() {
             var loadingState = false;
             return {

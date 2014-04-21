@@ -1,147 +1,103 @@
-<div class='center-block' id='nuevo-socio'> <form name='nuevoSocio' class="form-horizontal " role="form">
-	<div class="center-block">
-		<h1 class='text-center'>Nuevo Socio</h1>
-	</div>
-	<div class="form-group" ng-class="{'ng-invalid': nuevoSocio.esncard.$invalid===true,'ng-valid': nuevoSocio.esncard.$valid===true,'ng-pristine': nuevoSocio.esncard.$dirty===false}">
-		<label for="esncard" class="col-sm-2 col-sm-offset-2 col-xs-12 control-label">
-			ESN Card
-		</label>
-		<div class="col-sm-4 col-xs-12">
-			<input type="text" 
-				class="form-control" 
-				id="esncard" 
-				name='esncard' 
-				placeholder="ESN Card" 
-				ng-model="socio.esncard" 
-				ng-minlength="10" 
-				ng-maxlength="15" required>
-		</div>
-		<div class="col-sm-4 col-xs-12">
-			<p class="error" 
-				ng-show="nuevoSocio.esncard.$invalid&&nuevoSocio.esncard.$dirty">
-				¡Introduce un número válido!
-			</small>
-		</div>
-	</div>
-	<div class="form-group" ng-class="{'ng-invalid': nuevoSocio.created_at.$invalid===true,'ng-valid': nuevoSocio.created_at.$valid===true,'ng-pristine': nuevoSocio.created_at.$dirty===false}">
-		<label for="created_at" class="col-sm-2 col-sm-offset-2 col-xs-12 control-label">
-			Fecha de Alta
-		</label>
-		<div class="col-sm-4 col-xs-12">
-			<input type="date" 
-				class="form-control" 
-				id="created_at" 
-				name='created_at' 
-				placeholder="Fecha de Alta" 
-				ng-model="socio.created_at" 
-				ui-date-format  required>
-		</div>
-	</div>
-	<div class="form-group" ng-class="{'ng-invalid': nuevoSocio.nombre.$invalid===true,'ng-valid': nuevoSocio.nombre.$valid===true,'ng-pristine': nuevoSocio.nombre.$dirty===false}">
-		<label for="nombre" class="col-sm-2 col-sm-offset-2 col-xs-12 control-label">
-			Nombre
-		</label>
-		<div class="col-sm-4 col-xs-12">
-			<input type="text" 
-				class="form-control" 
-				id="nombre" 
-				name='nombre' 
-				placeholder="Nombre" 
-				ng-model="socio.nombre" 
-				ng-minlength="2" 
-				ng-maxlength="50" required>
-		</div>
-		<div class="col-sm-4 col-xs-12">
-			<p class="error" 
-				ng-show="nuevoSocio.nombre.$invalid&&nuevoSocio.nombre.$dirty">
-				¡Entre 2 y 50 caracteres!
-			</small>
-		</div>
-	</div>
-	<div class="form-group" ng-class="{'ng-invalid': nuevoSocio.apellido.$invalid===true,'ng-valid': nuevoSocio.apellido.$valid===true,'ng-pristine': nuevoSocio.apellido.$dirty===false}">
-		<label for="apellido" class="col-sm-2 col-sm-offset-2 col-xs-12 control-label">Apellido</label>
-		<div class="col-sm-4 col-xs-12">
-			<input type="text" 
-				class="form-control" 
-				id="apellido"
-				name="apellido" 
-				placeholder="Apellido" 
-				ng-model="socio.apellido" 
-				ng-minlength="2" 
-				ng-maxlength="50" required>
-		</div>
-		<div class="col-sm-4 col-xs-12">
-			<p class="error" 
-				ng-show="nuevoSocio.apellido.$invalid&&nuevoSocio.apellido.$dirty">
-				¡Entre 2 y 50 caracteres!
-			</small>
-		</div>
-	</div>
-	<div class="form-group" ng-class="{'ng-invalid': nuevoSocio.email.$invalid===true,'ng-valid': nuevoSocio.email.$valid===true,'ng-pristine': nuevoSocio.email.$dirty===false}">
-		<label for="email" class="col-sm-2 col-sm-offset-2 col-xs-12 control-label">Email</label>
-		<div class="col-sm-4 col-xs-12">
-			<input type="email" 
-				class="form-control" 
-				id="email" 
-				name="email" 
-				placeholder="Email" 
-				ng-model="socio.email" 
-				ng-minlength="2" 
-				ng-maxlength="50" required>
-		</div>
-		<div class="col-sm-4 col-xs-12">
-			<p class="error" 
-				ng-show="nuevoSocio.email.$invalid&&nuevoSocio.email.$dirty">
-				¡Introduce un e-mail válido!
-			</small>
-		</div>
-	</div>
-	<div class="form-group" ng-class="{'ng-invalid': nuevoSocio.passport.$invalid===true,'ng-valid': nuevoSocio.passport.$valid===true,'ng-pristine': nuevoSocio.passport.$dirty===false}">
-		<label for="passport" class="col-sm-2 col-sm-offset-2 col-xs-12 control-label">ID/Passport</label>
-		<div class="col-sm-4 col-xs-12">
-			<input type="text" 
-				class="form-control" 
-				id="passport"
-				name="passport" 
-				placeholder="ID/Passport" 
-				ng-model="socio.passport" 
-				ng-minlength="5" 
-				ng-maxlength="20" required>
-		</div>
-		<div class="col-sm-4 col-xs-12">
-			<p class="error" 
-				ng-show="nuevoSocio.passport.$invalid&&nuevoSocio.passport.$dirty">
-				¡Introduce un pasaporte válido!
-			</small>
-		</div>
-	</div>
-	<div class="form-group" ng-class="{'ng-invalid': nuevoSocio.pais.$invalid===true,'ng-valid': nuevoSocio.pais.$valid===true,'ng-pristine': nuevoSocio.pais.$dirty===false}">
-		<label for="pais" class="col-sm-2 col-sm-offset-2 col-xs-12 control-label">Pais</label>
-		<div class="col-sm-4 col-xs-12">
-			<select ng-model="socio.pais" class='form-control' name='pais' required>
-				<option ng-repeat="country in countries" value="{{country.alpha2}}">
-					{{country.name}}
-				</option>
-			</select>
-		</div>
-	</div>
-	<div class="form-group" ng-class="{'ng-invalid': nuevoSocio.language.$invalid===true,'ng-valid': nuevoSocio.language.$valid===true,'ng-pristine': nuevoSocio.language.$dirty===false}">
-		<label for="language" class="col-sm-2 col-sm-offset-2 col-xs-12 control-label">Idioma</label>
-		<div class="col-sm-4 col-xs-12">
-			<select ng-model="socio.language" class='form-control' name='language' required>
-				<option ng-repeat="language in languages" value="{{language.value}}">
-					{{language.value}}
-				</option>
-			</select>
-		</div>
-	</div>	
-	
-	<div class="form-group">
-		<div class="col-sm-offset-4 col-sm-2 col-sm-10">
-			<button type="submit" class="btn btn-lg active" ng-click='registrar()' ng-class="{'btn-danger': nuevoSocio.$invalid===true,'btn-success': nuevoSocio.email.$valid===true}"><span class='glyphicon glyphicon-save'></span> GUARDAR</button>
+<div class='center-block' id='nuevo-socio'>
+    <form name='nuevoSocio' class="form-horizontal " role="form">
+        <div class="center-block">
+            <h1 class='text-center'>Nuevo Socio</h1>
+        </div>
+        <div class="form-group" ng-class="{'ng-invalid': nuevoSocio.esncard.$invalid===true,'ng-valid': nuevoSocio.esncard.$valid===true,'ng-pristine': nuevoSocio.esncard.$dirty===false}">
+            <label for="esncard" class="col-sm-2 col-sm-offset-2 col-xs-12 control-label">
+                ESN Card
+            </label>
+            <div class="col-sm-4 col-xs-12">
+                <input type="text" class="form-control" id="esncard" name='esncard' placeholder="ESN Card" ng-model="socio.esncard" ng-minlength="10" ng-maxlength="15" required>
+            </div>
+            <div class="col-sm-4 col-xs-12">
+                <p class="error" ng-show="nuevoSocio.esncard.$invalid&&nuevoSocio.esncard.$dirty">
+                    ¡Introduce un número válido!
+                    </small>
+            </div>
+        </div>
+        <div class="form-group" ng-class="{'ng-invalid': nuevoSocio.created_at.$invalid===true,'ng-valid': nuevoSocio.created_at.$valid===true,'ng-pristine': nuevoSocio.created_at.$dirty===false}">
+            <label for="created_at" class="col-sm-2 col-sm-offset-2 col-xs-12 control-label">
+                Fecha de Alta
+            </label>
+            <div class="col-sm-4 col-xs-12">
+                <input type="date" class="form-control" id="created_at" name='created_at' placeholder="Fecha de Alta" ng-model="socio.created_at" ui-date-format required>
+            </div>
+        </div>
+        <div class="form-group" ng-class="{'ng-invalid': nuevoSocio.nombre.$invalid===true,'ng-valid': nuevoSocio.nombre.$valid===true,'ng-pristine': nuevoSocio.nombre.$dirty===false}">
+            <label for="nombre" class="col-sm-2 col-sm-offset-2 col-xs-12 control-label">
+                Nombre
+            </label>
+            <div class="col-sm-4 col-xs-12">
+                <input type="text" class="form-control" id="nombre" name='nombre' placeholder="Nombre" ng-model="socio.nombre" ng-minlength="2" ng-maxlength="50" required>
+            </div>
+            <div class="col-sm-4 col-xs-12">
+                <p class="error" ng-show="nuevoSocio.nombre.$invalid&&nuevoSocio.nombre.$dirty">
+                    ¡Entre 2 y 50 caracteres!
+                    </small>
+            </div>
+        </div>
+        <div class="form-group" ng-class="{'ng-invalid': nuevoSocio.apellido.$invalid===true,'ng-valid': nuevoSocio.apellido.$valid===true,'ng-pristine': nuevoSocio.apellido.$dirty===false}">
+            <label for="apellido" class="col-sm-2 col-sm-offset-2 col-xs-12 control-label">Apellido</label>
+            <div class="col-sm-4 col-xs-12">
+                <input type="text" class="form-control" id="apellido" name="apellido" placeholder="Apellido" ng-model="socio.apellido" ng-minlength="2" ng-maxlength="50" required>
+            </div>
+            <div class="col-sm-4 col-xs-12">
+                <p class="error" ng-show="nuevoSocio.apellido.$invalid&&nuevoSocio.apellido.$dirty">
+                    ¡Entre 2 y 50 caracteres!
+                    </small>
+            </div>
+        </div>
+        <div class="form-group" ng-class="{'ng-invalid': nuevoSocio.email.$invalid===true,'ng-valid': nuevoSocio.email.$valid===true,'ng-pristine': nuevoSocio.email.$dirty===false}">
+            <label for="email" class="col-sm-2 col-sm-offset-2 col-xs-12 control-label">Email</label>
+            <div class="col-sm-4 col-xs-12">
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email" ng-model="socio.email" ng-minlength="2" ng-maxlength="50" required>
+            </div>
+            <div class="col-sm-4 col-xs-12">
+                <p class="error" ng-show="nuevoSocio.email.$invalid&&nuevoSocio.email.$dirty">
+                    ¡Introduce un e-mail válido!
+                    </small>
+            </div>
+        </div>
+        <div class="form-group" ng-class="{'ng-invalid': nuevoSocio.passport.$invalid===true,'ng-valid': nuevoSocio.passport.$valid===true,'ng-pristine': nuevoSocio.passport.$dirty===false}">
+            <label for="passport" class="col-sm-2 col-sm-offset-2 col-xs-12 control-label">ID/Passport</label>
+            <div class="col-sm-4 col-xs-12">
+                <input type="text" class="form-control" id="passport" name="passport" placeholder="ID/Passport" ng-model="socio.passport" ng-minlength="5" ng-maxlength="20" required>
+            </div>
+            <div class="col-sm-4 col-xs-12">
+                <p class="error" ng-show="nuevoSocio.passport.$invalid&&nuevoSocio.passport.$dirty">
+                    ¡Introduce un pasaporte válido!
+                    </small>
+            </div>
+        </div>
+        <div class="form-group" ng-class="{'ng-invalid': nuevoSocio.pais.$invalid===true,'ng-valid': nuevoSocio.pais.$valid===true,'ng-pristine': nuevoSocio.pais.$dirty===false}">
+            <label for="pais" class="col-sm-2 col-sm-offset-2 col-xs-12 control-label">Pais</label>
+            <div class="col-sm-4 col-xs-12">
+                <select ng-model="socio.pais" class='form-control' name='pais' required>
+                    <option ng-repeat="country in countries" value="{{country.alpha2}}">
+                        {{country.name}}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group" ng-class="{'ng-invalid': nuevoSocio.language.$invalid===true,'ng-valid': nuevoSocio.language.$valid===true,'ng-pristine': nuevoSocio.language.$dirty===false}">
+            <label for="language" class="col-sm-2 col-sm-offset-2 col-xs-12 control-label">Idioma</label>
+            <div class="col-sm-4 col-xs-12">
+                <select ng-model="socio.language" class='form-control' name='language' required>
+                    <option ng-repeat="language in languages" value="{{language.value}}">
+                        {{language.value}}
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-4 col-sm-2 col-sm-10">
+                <button type="submit" class="btn btn-lg active" ng-click='registrar()' ng-class="{'btn-danger': nuevoSocio.$invalid===true,'btn-success': nuevoSocio.email.$valid===true}">
+                    <span class='glyphicon glyphicon-save'></span>GUARDAR</button>
 
 
-			<!--ng-disabled='nuevoSocio.$invalid'
+                <!--ng-disabled='nuevoSocio.$invalid'
 			<div class="progress progress-striped active">
   <div class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
     <span class="sr-only">45% Complete</span>
@@ -149,8 +105,8 @@
 </div>-->
 
 
-		</div>
-	</div>
-</form>
+            </div>
+        </div>
+    </form>
 
 </div>

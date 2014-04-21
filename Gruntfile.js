@@ -37,7 +37,7 @@ module.exports = function(grunt) {
                     cwd: '.',
                     expand: true
                 }]
-            },              
+            },
             build_appjs: {
                 files: [{
                     src: ['<%= app_files.js %>'],
@@ -148,9 +148,46 @@ module.exports = function(grunt) {
                 }
             }
         },
-        jsbeautifier: {
-            files: ['<%= app_files.js %>', 'Gruntfile.js'],
-            options: {}
+        "jsbeautifier": {
+            files: ['<%= app_files.js %>', 'Gruntfile.js', '<%= app_files.less %>', '<%= app_files.ctpl %>', '<%= app_files.atpl %>'],
+            options: {
+
+                html: {
+                    fileTypes: ['.tpl.html'],
+                    braceStyle: "collapse",
+                    indentChar: " ",
+                    indentScripts: "keep",
+                    indentSize: 4,
+                    maxPreserveNewlines: 10,
+                    preserveNewlines: true,
+                    unformatted: ["a", "sub", "sup", "b", "i", "u"],
+                    wrapLineLength: 0
+                },
+                css: {
+                    fileTypes: ['.less'],
+                    indentChar: " ",
+                    indentSize: 4
+                },
+                js: {
+                    braceStyle: "collapse",
+                    breakChainedMethods: false,
+                    e4x: false,
+                    evalCode: false,
+                    indentChar: " ",
+                    indentLevel: 0,
+                    indentSize: 4,
+                    indentWithTabs: false,
+                    jslintHappy: false,
+                    keepArrayIndentation: false,
+                    keepFunctionIndentation: false,
+                    maxPreserveNewlines: 10,
+                    preserveNewlines: true,
+                    spaceBeforeConditional: true,
+                    spaceInParen: false,
+                    unescapeStrings: false,
+                    wrapLineLength: 0
+                }
+            }
         },
         /**
          * `recess` handles our LESS compilation and uglification automatically.

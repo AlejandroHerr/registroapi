@@ -28,7 +28,6 @@ module.exports = {
 
     html: [ 'src_frontend/index.html' ],
     less: 'src_frontend/less/main.less',
-    html: [ 'src_frontend/less/*.css' ]
   },
 
   /**

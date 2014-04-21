@@ -5,7 +5,7 @@ angular.module('libroApp.api', [])
         $http.defaults.useXDomain = true;
         delete $http.defaults.headers.common['X-Requested-With'];
         var domain = 'http://libro.localhost';
-        var ApiCall = {       
+        var ApiCall = {
             getSocios: function(page, passwordDigest, options) {
                 $http.defaults.headers.get = {
                     'X-WSSE': passwordDigest
