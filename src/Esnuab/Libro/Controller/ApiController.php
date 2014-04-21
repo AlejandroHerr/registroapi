@@ -14,15 +14,10 @@ class ApiController implements ControllerProviderInterface
 {
     protected $socioManager;
     protected $transactionLogger;
-    protected $headers;
     public function __construct($socioManager,$transactionLogger=null)
     {
         $this->transactionLogger = $transactionLogger;
         $this->socioManager = $socioManager;
-        $this->headers= array(
-            'Access-Control-Allow-Origin' => 'http://app.localhost',
-            'Access-Control-Allow-Headers'=>'X-WSSE'
-        );
     }
     public function connect(Application $app)
     {
@@ -61,7 +56,7 @@ class ApiController implements ControllerProviderInterface
             'socios' => $socios
         );
 
-        return $app->json($response, 200,array('Access-Control-Allow-Origin' => 'http://app.localhost','Access-Control-Allow-Headers'=>'X-WSSE'));
+        return $app->json($response, 200,$app['cors.headers']);
     }
     public function postSocio(Application $app)
     {
@@ -70,16 +65,16 @@ class ApiController implements ControllerProviderInterface
     public function getSocio(Application $app, $id)
     {
         if (!$this->socioManager->existsSocio($app, $id)) {
-            return $app->json(array('message' => 'El socio con id ' . $id . ' no existe.'), 404,$this->headers);
+            return $app->json(array('message' => 'El socio con id ' . $id . ' no existe.'), 404,$app['cors.headers']);
         }
         $socio = $this->socioManager->getSocio($app, $id);
 
-        return $app->json($socio->toArray(), 200,$this->headers);
+        return $app->json($socio->toArray(), 200,$app['cors.headers']);
     }
     public function putSocio(Application $app, $id, Request $request)
     {
         if (!$this->socioManager->existsSocio($app, $id)) {
-            return $app->json(array('message' => 'El socio con id ' . $id . ' no existe.'), 404,$this->headers);
+            return $app->json(array('message' => 'El socio con id ' . $id . ' no existe.'), 404,$app['cors.headers']);
         }
 
         return $this->processForm($app, $id);
@@ -87,11 +82,11 @@ class ApiController implements ControllerProviderInterface
     public function deleteSocio(Application $app, $id)
     {
         if (!$this->socioManager->existsSocio($app, $id)) {
-            return $app->json(array('message' => 'El socio con id ' . $id . ' no exise.'), 404,$this->headers);
+            return $app->json(array('message' => 'El socio con id ' . $id . ' no exise.'), 404,$app['cors.headers']);
         }
         $this->socioManager->deleteSocio($app, $id);
 
-        return $app->json(null, 204,$this->headers);
+        return $app->json(null, 204,$app['cors.headers']);
     }
     public function processForm(Application $app, $id = null)
     {
@@ -107,14 +102,14 @@ class ApiController implements ControllerProviderInterface
                         'errores' => array(
                             "esncard" => "La ESN Card ya existe"
                         )
-                    ), 400, $this->headers);
+                    ), 400, $app['cors.headers']);
                 }
                 if ($this->socioManager->existsSocio($app, $socio->getEmail(), 'email')) {
                     return $app->json(array(
                         'errores' => array(
                             "esncard" => "El e-mail ya existe"
                         )
-                    ), 400, $this->headers);
+                    ), 400, $app['cors.headers']);
                 }
                 $socio = $this->socioManager->createSocio($socio, $app);
                 if (null !== $this->transactionLogger) {
@@ -127,14 +122,14 @@ class ApiController implements ControllerProviderInterface
                         'errores' => array(
                             "esncard" => "La ESN Card ya existe"
                         )
-                    ), 400, $this->headers);
+                    ), 400, $app['cors.headers']);
                 }
                 if ($this->socioManager->existsSocio($app, $socio->getEmail(), 'email', false, $id)) {
                     return $app->json(array(
                         'errores' => array(
                             "esncard" => "El e-mail ya existe"
                         )
-                    ), 400, $this->headers);
+                    ), 400, $app['cors.headers']);
                 }
                 $socio = $this->socioManager->updateSocio($socio, $app, $id);
                 if (null !== $this->transactionLogger) {
@@ -142,10 +137,10 @@ class ApiController implements ControllerProviderInterface
                 }
             }
 
-            return $app->json($socio->toArray(), 201,$this->headers);
+            return $app->json($socio->toArray(), 201,$app['cors.headers']);
         }
 
-        return $app->json(array('errores' => $this->getArray($this->form)), 400,$this->headers);
+        return $app->json(array('errores' => $this->getArray($this->form)), 400,$app['cors.headers']);
     }
     public function getFormHeaders(Request $request)
     {
