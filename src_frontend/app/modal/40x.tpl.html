@@ -1,0 +1,10 @@
+<div class="modal-header">
+    <h2>Error {{error.status}} - {{name}}</h2>
+</div>
+<div class="modal-body">
+    <p>{{msg}}</p>
+    <pre>{{error.data | json}}</pre>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-warning" ng-click="salir()">ADI&Oacute;S</button>
+</div>

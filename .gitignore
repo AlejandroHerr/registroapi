@@ -1,5 +1,4 @@
 config/*.php
-vendor
 .DS_Store
 .settings
 *.sublime-project
@@ -13,4 +12,12 @@ todo
 sftp-config.json
 *.phar
 docs*
-*.png
+*.sw*
+*~
+build/
+node_modules/
+vendor/
+vendorjs/
+build/
+/app/
+

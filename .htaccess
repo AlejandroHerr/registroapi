@@ -4,6 +4,7 @@ IndexIgnore */*
 RewriteEngine on
 
 RewriteBase /web
+RewriteCond %{REQUEST_URI} !/build
 RewriteCond %{REQUEST_URI} !/app
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^ index.php [QSA,L]

@@ -27,6 +27,14 @@ class WsseProvider implements AuthenticationProviderInterface
         }
         throw new AuthenticationException('The WSSE authentication failed.');
     }
+    public function authenticatePreflight(TokenInterface $token)
+    {
+        $user = $this->userProvider->loadUserByUsername($token->getUsername());
+        $authenticatedToken = new WsseUserToken($user->getRoles());
+        $authenticatedToken->setUser($user);
+
+        return $authenticatedToken;
+    }
     protected function validateDigest($digest, $nonce, $created, $secret)
     {
         if (strtotime($created) > (time() + 60)) {
