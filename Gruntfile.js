@@ -8,6 +8,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-html2js');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-jsbeautifier');
+    grunt.loadNpmTasks('grunt-contrib-less');
 
     var userConfig = require('./build.config.js');
     var taskConfig = {
@@ -28,14 +29,6 @@ module.exports = function(grunt) {
                     cwd: '.',
                     expand: true,
                     flatten: true
-                }]
-            },
-            build_appcss: {
-                files: [{
-                    src: ['<%= app_files.css %>'],
-                    dest: '<%= build_dir %>/',
-                    cwd: '.',
-                    expand: true
                 }]
             },
             build_appjs: {
@@ -90,17 +83,6 @@ module.exports = function(grunt) {
         ],
         concat: {
             /**
-             * The `build_css` target concatenates compiled CSS and vendor CSS
-             * together.
-             */
-            build_css: {
-                src: [
-                    '<%= vendor_files.css %>',
-                    '<%= recess.build.dest %>'
-                ],
-                dest: '<%= recess.build.dest %>'
-            },
-            /**
              * The `compile_js` target is the concatenation of our application source
              * code and all specified vendor source code into a single file.
              */
@@ -149,7 +131,7 @@ module.exports = function(grunt) {
             }
         },
         "jsbeautifier": {
-            files: ['<%= app_files.js %>', 'Gruntfile.js', '<%= app_files.less %>', '<%= app_files.ctpl %>', '<%= app_files.atpl %>'],
+            files: ['<%= app_files.js %>', 'Gruntfile.js' /*, '<%= app_files.less %>', '<%= app_files.ctpl %>', '<%= app_files.atpl %>'*/ ],
             options: {
 
                 html: {
@@ -224,6 +206,22 @@ module.exports = function(grunt) {
          * AngularJS's template cache. This means that the templates too become
          * part of the initial payload as one JavaScript file. Neat!
          */
+        less: {
+            build: {
+                files: {
+                    '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.css': '<%= app_files.less %>'
+                }
+            },
+            compile: {
+                files: {
+                    '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.css': '<%= app_files.less %>'
+                },
+                options: {
+                    cleancss: true,
+                    compress: true
+                }
+            }
+        },
         html2js: {
             /**
              * These are the templates from `src_frontend/app`.
@@ -285,9 +283,7 @@ module.exports = function(grunt) {
      * The `build` task gets your app ready to run for development and testing.
      */
     grunt.registerTask('build', [
-        'clean', 'html2js', 'jshint', 'recess:build',
-        'concat:build_css', 'copy:build_app_assets', 'copy:build_vendor_assets',
-        'copy:build_appcss',
+        'clean', 'html2js', 'jshint', 'less:build', 'copy:build_app_assets', 'copy:build_vendor_assets',
         'copy:build_appjs', 'copy:build_vendorjs', 'index:build'
     ]);
     /**
@@ -295,7 +291,7 @@ module.exports = function(grunt) {
      * minifying your code.
      */
     grunt.registerTask('compile', [
-        'recess:compile', 'copy:compile_assets', 'ngmin:compile', 'concat:compile_js', 'uglify', 'index:compile'
+        'less:compile', 'copy:compile_assets', 'ngmin:compile', 'concat:compile_js', 'uglify', 'index:compile'
     ]);
 
     grunt.registerTask('beautify', ['jsbeautifier']);

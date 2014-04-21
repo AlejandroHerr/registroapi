@@ -56,7 +56,7 @@ module.exports = {
       'vendorjs/angular-xeditable/dist/js/xeditable.min.js'
     ],
     css: [
-    'src_frontend/less/*.css'
+      'vendorjs/angular-xeditable/dist/css/xeditable.css'
 
     ],
     assets: [
