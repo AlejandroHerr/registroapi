@@ -4,7 +4,6 @@ var libroApp = angular.module('libroApp', [
     'ngRoute',
     'ui.bootstrap',
     'templates-app',
-    'templates-common',
     'libroApp.api',
     'libroApp.outercontroller',
     'libroApp.security',
