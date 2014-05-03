@@ -13,6 +13,7 @@ var html2js = require('gulp-html2js');
 var htmlmin = require('gulp-htmlmin');
 var clean = require('gulp-clean');
 var inject = require('gulp-inject');
+var watch = require('gulp-watch');
 
 /***BUILD***/
 gulp.task('clean-build-js', function () {
@@ -143,7 +144,9 @@ gulp.task('deploy', ['deploy-app'], function () {
 /***DEFAULT***/
 gulp.task('default', ['build'], function () {
     gulp.start('deploy');
+    gulp.watch(config.src_dir + '/less/*.less', ['css-build']);
 });
+
 gulp.task('clean-all', function () {
     return gulp.src([config.build_dir, config.deploy_dir], {
             read: false,
@@ -151,3 +154,5 @@ gulp.task('clean-all', function () {
         })
         .pipe(clean());
 });
+//var watcher = gulp.watch(config.src_dir + '/less/*.less', ['css-build']);
+
