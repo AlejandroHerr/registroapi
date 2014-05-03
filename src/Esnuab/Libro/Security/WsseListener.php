@@ -15,12 +15,18 @@ class WsseListener implements ListenerInterface
 {
     protected $securityContext;
     protected $authenticationManager;
+    protected $corsHeaders;
     public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager, Connection $conn, LoggerInterface $logger = null)
     {
         $this->securityContext = $securityContext;
         $this->authenticationManager = $authenticationManager;
         $this->conn = $conn;
         $this->logger = $logger;
+        $this->corsHeaders = array(
+            'Access-Control-Allow-Origin' => '*',
+            'Access-Control-Allow-Headers'=>'*',
+            'Access-Control-Allow-Methods' => '*'
+        );
     }
     public function handle(GetResponseEvent $event)
     {
@@ -29,9 +35,12 @@ class WsseListener implements ListenerInterface
             if (null !== $this->logger) {
                 $this->logger->addNotice('IP bloqueada / Acceso no autorizado');
             }
-            $response = new JsonResponse(array(
-                'error' => 'Too many login attempts in the last 30 minutes. Waith 30 min.'
-            ), 401);
+            $response = new JsonResponse(
+                array(
+                    'error' => 'Too many login attempts in the last 30 minutes. Waith 30 min.'
+                ),
+                401,
+                $this->corsHeaders);
             $event->setResponse($response);
 
             return;
@@ -51,9 +60,15 @@ class WsseListener implements ListenerInterface
 
         $wsseRegex = '/UsernameToken Username="([^"]+)", PasswordDigest="([^"]+)", Nonce="([^"]+)", Created="([^"]+)"/';
         if (!$request->headers->has('x-wsse') || 1 !== preg_match($wsseRegex, $request->headers->get('x-wsse'), $matches)) {
-            $response = new JsonResponse(array(
-                'error' => 'Wrong headers.'
-            ), 401);
+            if (null !== $this->logger) {
+                $this->logger->addNotice('Acceso no autorizado');
+            }
+            $response = new JsonResponse(
+                array(
+                    'error' => 'Wrong headers.'
+                ),
+                401,
+                $this->corsHeaders);
             $event->setResponse($response);
 
             return;
@@ -69,6 +84,7 @@ class WsseListener implements ListenerInterface
             if (null !== $this->logger) {
                 $this->logger->addInfo('Acceso autorizado');
             }
+            $this->cleanIpReports($request);
 
             return;
         } catch (AuthenticationException $failed) {
@@ -76,16 +92,32 @@ class WsseListener implements ListenerInterface
             if (null !== $this->logger) {
                 $this->logger->addNotice('Acceso no autorizado');
             }
-            $response = new JsonResponse(array(
-                'error' => 'Wrong credentials.'
-            ), 401);
+            $response = new JsonResponse(
+                array(
+                    'error' => 'Wrong credentials.'
+                ),
+                401,
+                $this->corsHeaders);
             $event->setResponse($response);
 
             return;
+
         }
-        $response = new JsonResponse();
-        $response->setStatusCode(401);
+        $response = new JsonResponse(
+            array(
+                'error' => 'Unauthorized.'
+            ),
+            401,
+            $this->corsHeaders);
         $event->setResponse($response);
+    }
+    protected function cleanIpReports(Request $request)
+    {
+        $ip = $request->getClientIp();
+        $ip = str_replace('.', 'p', $ip);
+        $this->conn->delete('login_attempts', array(
+            'ip' => $ip
+        ));
     }
     protected function isIpBlocked(Request $request)
     {

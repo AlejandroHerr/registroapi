@@ -45,7 +45,7 @@ foreach (array('user','admin','superadmin') as $role) {
                 $app['monolog.access']->addNotice('Acceso prohibido');
             }
 
-            return $app->json("No tienes permiso para acceder.",403);
+            return $app->json("No tienes permiso para acceder.",403,$app['cors.headers']);
         }
     });
 }
