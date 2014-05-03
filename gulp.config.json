@@ -21,7 +21,8 @@
                   "vendorjs/angular/angular.min.js",
                   "vendorjs/angular-route/angular-route.min.js",
                   "vendorjs/angular-bootstrap/ui-bootstrap-tpls.min.js",
-                  "vendorjs/angular-xeditable/dist/js/xeditable.min.js"
+                  "vendorjs/angular-xeditable/dist/js/xeditable.min.js",
+                  "vendorjs/jsSHA/src/sha512.js"
 
             ],
             "assets": [
