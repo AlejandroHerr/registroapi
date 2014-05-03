@@ -59,8 +59,6 @@ class WsseListener implements ListenerInterface
                 'error' => 'Wrong headers.'
             ), 401,$this->corsHeaders);
             $event->setResponse($response);
-
-            return;
         }
         $token = new WsseUserToken();
         $token->setUser($matches[1]);
