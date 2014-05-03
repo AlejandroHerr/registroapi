@@ -1,6 +1,6 @@
 {
   "name": "LibroDeSocios",
-  "version": "0.3.0",
+  "version": "0.3.2",
   "homepage": "https://github.com/AlejandroHerr/registroapi",
   "authors": [
     "AlejandroHerr <alejandrohnc88@gmail.com>"
@@ -16,11 +16,13 @@
     "test",
     "tests"
   ],
-    "dependencies": {
-    "angular" : "1.2.16",
+  "dependencies": {
+    "angular": "1.2.16",
     "angular-route": "",
-    "angular-bootstrap" : "",
-    "angular-xeditable" : "",
-    "bootstrap" : ""
-  }
+    "angular-bootstrap": "",
+    "angular-xeditable": "",
+    "bootstrap": "",
+    "jsSHA":""
+  },
+  "devDependencies": {}
 }

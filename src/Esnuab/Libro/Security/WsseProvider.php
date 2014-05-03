@@ -52,7 +52,8 @@ class WsseProvider implements AuthenticationProviderInterface
             mkdir($this->cacheDir, 0777, true);
         }
         file_put_contents($this->cacheDir . '/' . $nonce, time());
-        $expected = base64_encode(sha1(base64_decode($nonce) . $created . $secret, true));
+        //$expected = base64_encode(sha1(base64_decode($nonce) . $created . $secret, true));
+        $expected = base64_encode(hash('sha512',base64_decode($nonce) . $created . $secret, true));
 
         return $digest === $expected;
     }
