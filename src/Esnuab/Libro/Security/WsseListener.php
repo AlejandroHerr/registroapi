@@ -15,12 +15,18 @@ class WsseListener implements ListenerInterface
 {
     protected $securityContext;
     protected $authenticationManager;
+    protected $corsHeaders;
     public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager, Connection $conn, LoggerInterface $logger = null)
     {
         $this->securityContext = $securityContext;
         $this->authenticationManager = $authenticationManager;
         $this->conn = $conn;
         $this->logger = $logger;
+        $this->corsHeaders = array(
+            'Access-Control-Allow-Origin' => '*',
+            'Access-Control-Allow-Headers'=>'*',
+            'Access-Control-Allow-Methods' => '*'
+        );
     }
     public function handle(GetResponseEvent $event)
     {
@@ -31,10 +37,8 @@ class WsseListener implements ListenerInterface
             }
             $response = new JsonResponse(array(
                 'error' => 'Too many login attempts in the last 30 minutes. Waith 30 min.'
-            ), 401);
+            ), 401,$this->corsHeaders);
             $event->setResponse($response);
-
-            return;
         }
 
         if ($request->getMethod() == 'OPTIONS') {
@@ -53,7 +57,7 @@ class WsseListener implements ListenerInterface
         if (!$request->headers->has('x-wsse') || 1 !== preg_match($wsseRegex, $request->headers->get('x-wsse'), $matches)) {
             $response = new JsonResponse(array(
                 'error' => 'Wrong headers.'
-            ), 401);
+            ), 401,$this->corsHeaders);
             $event->setResponse($response);
 
             return;
@@ -78,14 +82,10 @@ class WsseListener implements ListenerInterface
             }
             $response = new JsonResponse(array(
                 'error' => 'Wrong credentials.'
-            ), 401);
+            ), 401,$this->corsHeaders);
             $event->setResponse($response);
 
-            return;
         }
-        $response = new JsonResponse();
-        $response->setStatusCode(401);
-        $event->setResponse($response);
     }
     protected function isIpBlocked(Request $request)
     {
