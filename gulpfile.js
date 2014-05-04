@@ -5,7 +5,6 @@ var less = require('gulp-less');
 var path = require('path');
 var cssmin = require('gulp-cssmin');
 var rename = require('gulp-rename');
-//var uncss = require('gulp-uncss');
 var ngmin = require('gulp-ngmin');
 var uglify = require('gulp-uglify');
 var concat = require('gulp-concat');
@@ -14,6 +13,8 @@ var htmlmin = require('gulp-htmlmin');
 var clean = require('gulp-clean');
 var inject = require('gulp-inject');
 var watch = require('gulp-watch');
+var replace = require('gulp-replace');
+var ftp = require('gulp-ftp');
 
 /***BUILD***/
 gulp.task('clean-build-js', function () {
@@ -57,6 +58,7 @@ gulp.task('js-build', ['templates'], function () {
     return gulp.src(config.vendor.js.concat(config.app.js, [config.build_assets_dir + "/delete/templates.js"]))
         .pipe(ngmin())
         .pipe(concat(p.name + '-' + p.version + '.js'))
+        .pipe(replace('remoteBackendURI', config.localBackend))
         .pipe(gulp.dest(config.build_assets_dir));
 });
 gulp.task('build-app', ['clean-build', 'js-build', 'css-build'], function () {});
@@ -138,13 +140,12 @@ gulp.task('deploy-assets', function () {
 });
 gulp.task('post-deploy', ['deploy-index', 'deploy-assets'], function () {});
 gulp.task('deploy', ['deploy-app'], function () {
-    gulp.start('post-deploy');
+    return gulp.start('post-deploy');
 });
 
 /***DEFAULT***/
 gulp.task('default', ['build'], function () {
-    gulp.start('deploy');
-    gulp.watch(config.src_dir + '/less/*.less', ['css-build']);
+    return gulp.start('deploy');
 });
 
 gulp.task('clean-all', function () {
@@ -154,5 +155,9 @@ gulp.task('clean-all', function () {
         })
         .pipe(clean());
 });
-//var watcher = gulp.watch(config.src_dir + '/less/*.less', ['css-build']);
 
+gulp.task('upload', function () {
+    return gulp.src(config.deploy_dir + '/**')
+        .pipe(replace(config.localBackend,config.remoteBackend))
+        .pipe(ftp(config.ftp));
+});
