@@ -21,8 +21,8 @@ angular.module('libroApp.socios', [])
                 if (flag) {
                     loader.setLoading();
                     flag = false;
-                    var data = ApiCall.getSocios(page, credenciales.getXWSSE(),
-                        $scope.options)
+                    var path = '/api/socios?maxResults=' + $scope.maxResults + '&currentPage=' + page + '&orderDir=' + $scope.options.orderDir + '&orderBy=' + $scope.options.orderBy;
+                    var data = ApiCall.makeCall(credenciales.getXWSSE(), 'GET', path, null)
                         .then(function(d) {
                             $scope.socios = d.data.socios;
                             $scope.totalItems = d.data.pagination.totalResults;
