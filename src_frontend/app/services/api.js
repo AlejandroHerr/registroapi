@@ -4,7 +4,7 @@ angular.module('libroApp.api', [])
     function($http) {
         $http.defaults.useXDomain = true;
         delete $http.defaults.headers.common['X-Requested-With'];
-        var domain = 'http://libro.localhost';
+        var domain = 'remoteBackendURI';
         var ApiCall = {
             getSocios: function(page, passwordDigest, options) {
                 $http.defaults.headers.get = {
