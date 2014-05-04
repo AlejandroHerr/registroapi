@@ -20,4 +20,5 @@ vendor/
 vendorjs/
 build/
 /app/
+gulp.config.js
 
