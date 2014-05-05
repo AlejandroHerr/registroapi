@@ -1,5 +1,4 @@
 <?php
 
-use Esnuab\Libro\Controller\ApiController;
-
-$app->mount('/', new ApiController($app['socio_manager'],$app['monolog.transaction']));
+$app->mount('/admin', new Esnuab\Libro\Controller\AdminController($app['user_manager'],$app['monolog.transaction']));
+$app->mount('/', new Esnuab\Libro\Controller\ApiController($app['socio_manager'],$app['monolog.transaction']));
