@@ -10,7 +10,7 @@ use Esnuab\Libro\Form\UserForm;
 use Silex\Provider\FormServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
 
-class AdminController implements ControllerProviderInterface
+class AdminController extends ApiController
 {
     protected $transactionLogger;
     protected $userManager;
@@ -123,33 +123,5 @@ class AdminController implements ControllerProviderInterface
         }
 
         return $app->json(array('errores' => $this->getArray($this->form)), 400,$app['cors.headers']);
-    }
-    public function getFormHeaders(Request $request)
-    {
-        $this->data = json_decode($request->getContent(), true);
-    }
-    protected function getArray(\Symfony\Component\Form\Form $form)
-    {
-        return $this->getErrors($form);
-    }
-    protected function getErrors($form)
-    {
-        $errors = array();
-
-        if ($form instanceof \Symfony\Component\Form\Form) {
-
-            foreach ($form->getErrors() as $error) {
-
-                $errors[] = $error->getMessage();
-            }
-
-            foreach ($form->all() as $key => $child) {
-                if ($err = $this->getErrors($child)) {
-                    $errors[$key] = $err;
-                }
-            }
-        }
-
-        return $errors;
     }
 }
