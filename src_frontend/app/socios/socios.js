@@ -1,6 +1,5 @@
 angular.module('libroApp.socios', [])
-    .controller('SociosCtrl', ['ApiCall', '$modal', 'queryOptions',
-        'credenciales', '$scope', '$location', 'loader',
+    .controller('SociosCtrl', ['ApiCall', '$modal', 'queryOptions', 'credenciales', '$scope', '$location', 'loader',
         function(ApiCall, $modal, queryOptions, credenciales, $scope, $location, loader) {
             if (!credenciales.isLogged()) {
                 $location.url("/app/logout");
@@ -50,7 +49,6 @@ angular.module('libroApp.socios', [])
                                     $location.url("/logout");
                                 }
                             });
-
                         });
                 }
             };

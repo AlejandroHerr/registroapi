@@ -34,16 +34,8 @@ angular.module('libroApp.security', [])
         }
     ])
     .service('base64', function() {
-        this.base64EncodeChars =
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-        this.base64DecodeChars = new Array(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -
-            1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -
-            1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63,
-            52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -1, -1, -1, -1, 0, 1, 2,
-            3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
-            15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1, -1, 26, 27,
-            28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-            41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1);
+        this.base64EncodeChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+        this.base64DecodeChars = new Array(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -1, -1, -1, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1, -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1);
         this.base64encode = function(str) {
             var out, i, len;
             var c1, c2, c3;
@@ -85,34 +77,28 @@ angular.module('libroApp.security', [])
                 do {
                     c1 = this.base64DecodeChars[str.charCodeAt(i++) & 0xff];
                 } while (i < len && c1 == -1);
-                if (c1 == -1)
-                    break;
+                if (c1 == -1) break;
                 /* c2 */
                 do {
                     c2 = this.base64DecodeChars[str.charCodeAt(i++) & 0xff];
                 } while (i < len && c2 == -1);
-                if (c2 == -1)
-                    break;
+                if (c2 == -1) break;
                 out += String.fromCharCode((c1 << 2) | ((c2 & 0x30) >> 4));
                 /* c3 */
                 do {
                     c3 = str.charCodeAt(i++) & 0xff;
-                    if (c3 == 61)
-                        return out;
+                    if (c3 == 61) return out;
                     c3 = this.base64DecodeChars[c3];
                 } while (i < len && c3 == -1);
-                if (c3 == -1)
-                    break;
+                if (c3 == -1) break;
                 out += String.fromCharCode(((c2 & 0XF) << 4) | ((c3 & 0x3C) >> 2));
                 /* c4 */
                 do {
                     c4 = str.charCodeAt(i++) & 0xff;
-                    if (c4 == 61)
-                        return out;
+                    if (c4 == 61) return out;
                     c4 = this.base64DecodeChars[c4];
                 } while (i < len && c4 == -1);
-                if (c4 == -1)
-                    break;
+                if (c4 == -1) break;
                 out += String.fromCharCode(((c3 & 0x03) << 6) | c4);
             }
             return out;
@@ -126,13 +112,11 @@ angular.module('libroApp.security', [])
                 var password = opassword;
                 var nonce = this.generateNonce(16);
                 var nonce64 = base64.base64encode(nonce);
-                var created = this.getW3CDate(new Date());                
+                var created = this.getW3CDate(new Date());
                 var unHashedPasswordDigest = nonce + created + password;
                 var shaObj = new jsSHA(unHashedPasswordDigest, "TEXT");
                 var passwordDigest = shaObj.getHash("SHA-512", "B64");
-                var digest = "UsernameToken Username=\"" + userName +
-                    "\", PasswordDigest=\"" + passwordDigest +
-                    "\", Nonce=\"" + nonce64 + "\", Created=\"" + created + "\"";
+                var digest = "UsernameToken Username=\"" + userName + "\", PasswordDigest=\"" + passwordDigest + "\", Nonce=\"" + nonce64 + "\", Created=\"" + created + "\"";
                 return digest;
             };
             this.generateNonce = function(length) {

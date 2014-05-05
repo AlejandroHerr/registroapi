@@ -1,6 +1,5 @@
 angular.module('libroApp.socio', [])
-    .controller('SocioCtrl', ['$routeParams', 'ApiCall',
-        '$scope', 'credenciales', '$location', '$http', '$filter', 'loader', 'countries',
+    .controller('SocioCtrl', ['$routeParams', 'ApiCall', '$scope', 'credenciales', '$location', '$http', '$filter', 'loader', 'countries',
         function($routeParams, ApiCall, $scope, credenciales, $location, $http, $filter, loader, countries) {
             if (!credenciales.isLogged()) {
                 $location.url("/logout");
@@ -80,8 +79,8 @@ angular.module('libroApp.socio', [])
             }, {
                 value: 'Espanyol'
             }];
-
-            $scope.paises = countries.get().countries;
+            $scope.paises = countries.get()
+                .countries;
             $scope.loadSocio(id);
         }
     ]);

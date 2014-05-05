@@ -35,8 +35,7 @@
         </table>
         <div id="getTable-Options" class="text-right well well-sm">
             <h4 ng-click="toCollapse()">
-                <span class="glyphicon" ng-class='{"glyphicon-collapse-down": isCollapsed===true , "glyphicon-collapse-up": isCollapsed===false}'></span>Opciones
-            </h4>
+                <span class="glyphicon" ng-class='{"glyphicon-collapse-down": isCollapsed===true , "glyphicon-collapse-up": isCollapsed===false}'></span>Opciones</h4>
             <div ng-class="{'collapse': isCollapsed}">
                 <div class='text-left'>
                     <div class='row'>
@@ -65,8 +64,7 @@
                                     <option value="25">25</option>
                                     <option value="50">50</option>
                                     <option value="100">100</option>
-                                </select>resultados por página.
-                            </p>
+                                </select>resultados por página.</p>
                         </div>
                     </div>
                     <div class='row'>
@@ -92,5 +90,3 @@
             <pagination boundary-links="true" total-items="totalItems" page="currentPage" items-per-page="maxResults" class="pagination-sm" on-select-page="changePage(page)" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" num-pages="numPages"></pagination>
         </div>
     </div>
-
-
