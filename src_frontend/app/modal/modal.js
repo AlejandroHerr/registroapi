@@ -25,7 +25,8 @@ angular.module('libroApp.modals', [])
                 if (str == 'ELIMINAR ' + $scope.socio.esncard) {
                     $scope.addAlert('success',
                         'Nuestros monos lo están borrando... Espera y no toques nada.');
-                    var data = ApiCall.deleteSocio(credenciales.getXWSSE(), $scope.socio.id)
+                    var path = '/api/socios/' + $scope.socio.id;
+                    var data = ApiCall.makeCall(credenciales.getXWSSE(), 'DELETE', path, null)
                         .then(function(d) {
                                 $modalInstance.close();
                             },
@@ -74,7 +75,8 @@ angular.module('libroApp.modals', [])
             $scope.progress = "50";
             $scope.status = "progress-bar-warning";
             $scope.isCollapsed = false;
-            var data = ApiCall.postSocio(socio, credenciales.getXWSSE())
+            var path = '/api/socios';
+            var data = ApiCall.makeCall(credenciales.getXWSSE(), 'POST', path, socio)
                 .then(function(d) {
                     $scope.successFlag = true;
                     $scope.progress = "100";

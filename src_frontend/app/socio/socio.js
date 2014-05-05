@@ -18,7 +18,8 @@ angular.module('libroApp.socio', [])
                 }
             };
             $scope.loadSocio = function(id) {
-                var data = ApiCall.getSocio(id, credenciales.getXWSSE())
+                var path = '/api/socios/' + id;
+                var data = ApiCall.makeCall(credenciales.getXWSSE(), 'GET', path, null)
                     .then(function(d) {
                         $scope.socio = d.data;
                         $scope.pais = $scope.getPais();
@@ -63,7 +64,8 @@ angular.module('libroApp.socio', [])
                     'created_at': this.socio.created_at,
                     'language': this.socio.language
                 };
-                var data = ApiCall.putSocio(putData, this.socio.id, credenciales.getXWSSE())
+                var path = '/api/socios/' + id;
+                var data = ApiCall.makeCall(credenciales.getXWSSE(), 'PUT', path, putData)
                     .then(function(d) {
                         $scope.loadSocio(id);
                     }, function(d) {
