@@ -10,7 +10,7 @@ class User extends Base
     protected $roles;
     protected $activo;
     protected $nombre;
-    protected $apellido;
+    protected $apellidos;
     protected $email;
 
     public function getId()
@@ -59,13 +59,13 @@ class User extends Base
 
         return $this;
     }
-    public function getApellido()
+    public function getApellidos()
     {
-        return $this->apellido;
+        return $this->apellidos;
     }
-    public function setApellido($apellido)
+    public function setApellidos($apellidos)
     {
-        $this->apellido = ucwords($apellido);
+        $this->apellidos = ucwords($apellidos);
 
         return $this;
     }
