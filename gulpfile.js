@@ -56,7 +56,7 @@ gulp.task('templates', function () {
 });
 gulp.task('js-build', ['templates'], function () {
     return gulp.src(config.vendor.js.concat(config.app.js, [config.build_assets_dir + "/delete/templates.js"]))
-        .pipe(ngmin())
+        //.pipe(ngmin())
         .pipe(concat(p.name + '-' + p.version + '.js'))
         .pipe(replace('remoteBackendURI', config.localBackend))
         .pipe(gulp.dest(config.build_assets_dir));

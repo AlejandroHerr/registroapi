@@ -20,5 +20,6 @@ vendor/
 vendorjs/
 build/
 /app/
-gulp.config.js
+gulp.config.json
+.todo
 
