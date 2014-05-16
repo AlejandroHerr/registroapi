@@ -1,7 +1,23 @@
 angular.module('libroApp.logout', [])
-    .controller('LogoutCtrl', ['credenciales', '$scope', '$location',
-        function(credenciales, $scope, $location) {
+    .config(['$stateProvider',
+        function ($stateProvider) {
+            $stateProvider
+                .state('logout', {
+                url: '/logout',
+                views: {
+                    'content': {
+                        templateUrl: 'login/login.tpl.html',
+                        controller: 'LogoutCtrl'
+                    }
+                }
+            });
+        }
+    ])
+    .controller('LogoutCtrl', ['credenciales', '$scope', '$state',
+        function (credenciales, $scope, $state) {
             credenciales.logOut();
-            $location.url('/login');
+            $state.go('login', {}, {
+                location: true
+            });
         }
     ]);
