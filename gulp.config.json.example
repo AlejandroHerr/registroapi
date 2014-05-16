@@ -6,6 +6,7 @@
                   "./src_frontend/app/modal/40x.tpl.html",
                   "./src_frontend/app/modal/delete.tpl.html",
                   "./src_frontend/app/modal/registrar.tpl.html",
+                  "./src_frontend/app/navbar/navbar.tpl.html",
                   "./src_frontend/app/nuevo/nuevo.tpl.html",
                   "./src_frontend/app/socio/socio.tpl.html",
                   "./src_frontend/app/socios/socios.tpl.html"
@@ -36,5 +37,13 @@
       "build_assets_dir" : "./build/assets",
       "deploy_dir" : "./app",
       "deploy_assets_dir" : "./app/assets",
-      "src_dir": "./src_frontend"
+      "src_dir": "./src_frontend",
+      "localBackend": "http://libro.localhost",
+      "remoteBackend": "http://remote.domain.org",
+      "ftp":{
+            "host": "domain.org",
+            "user": "username",
+            "pass": "password",
+            "remotePath": "/path/to/app"
+        }
 }

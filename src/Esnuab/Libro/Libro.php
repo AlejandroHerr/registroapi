@@ -10,6 +10,9 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(),$app['db.config']);
 $app['socio_manager'] = $app->share(function ($app) {
     return new \Esnuab\Libro\Model\Manager\SocioManager($app['db']);
 });
+$app['user_manager'] = $app->share(function ($app) {
+    return new \Esnuab\Libro\Model\Manager\UserManager($app['db']);
+});
 //MONOLOG
 $app->register(new Silex\Provider\MonologServiceProvider());
 $app['monolog.logfile']=function () {
@@ -60,12 +63,13 @@ $app['cors.headers']=function () use ($app) {
     $origin = $app['request']->headers->get('Origin');
     $regex = array(
         '/.esnuab.org$/',
-        '/.localhost$/'
+        '/.localhost$/',
+        '/http:\/\/localhost$/'
     );
-    if (preg_match($regex[0], $origin) ||preg_match($regex[1], $origin)) {
+    if (preg_match($regex[0], $origin) ||preg_match($regex[1], $origin) || preg_match($regex[2], $origin)) {
         return array(
             'Access-Control-Allow-Origin' => $origin,
-            'Access-Control-Allow-Headers'=>'X-WSSE',
+            'Access-Control-Allow-Headers'=>'X-WSSE, content-type',
             'Access-Control-Allow-Methods' => 'POST, GET, PUT, DELETE'
         );
     }
