@@ -1,5 +1,5 @@
 /* App Module */
-var libroApp = angular.module('libroApp', ['xeditable', 'ngRoute', 'ui.bootstrap', 'templates-app', 'libroApp.api', 'libroApp.outercontroller', 'libroApp.security', 'libroApp.services', 'libroApp.nuevo', 'libroApp.socio', 'libroApp.socios', 'libroApp.login', 'libroApp.logout', 'libroApp.modals', 'libroApp.countries'])
+var libroApp = angular.module('libroApp', ['xeditable', 'ui.router', 'ui.bootstrap', 'templates-app', 'libroApp.api', 'libroApp.outercontroller', 'libroApp.security', 'libroApp.services', 'libroApp.nuevo', 'libroApp.socio', 'libroApp.socios', 'libroApp.users', 'libroApp.login', 'libroApp.logout', 'libroApp.modals', 'libroApp.countries'])
     .
 config(['$locationProvider',
     function($location) {
@@ -9,36 +9,38 @@ config(['$locationProvider',
 libroApp.run(function(editableOptions) {
     editableOptions.theme = 'bs3';
 });
-libroApp.config(['$routeProvider',
-    function($routeProvider) {
-        $routeProvider.
-        when('/login', {
+libroApp.config(['$stateProvider',
+    function($stateProvider) {
+        $stateProvider.
+        state('login', {
+            url: '/login',
             templateUrl: 'login/login.tpl.html',
             controller: 'LoginCtrl'
         })
             .
-        when('/logout', {
+        state('logout', {
+            url: '/logout',
             templateUrl: 'login/login.tpl.html',
             controller: 'LogoutCtrl'
         })
-            .
-        when('/socios', {
+        state('socios', {
+            url: '/socios',
             templateUrl: 'socios/socios.tpl.html',
             controller: 'SociosCtrl'
         })
             .
-        when('/socio/:socioId/:mode', {
+        state('socio.view', {
+            url: '/socio/:socioId/:mode',
             templateUrl: 'socio/socio.tpl.html',
             controller: 'SocioCtrl'
         })
             .
-        when('/socio/nuevo', {
+        state('socio.nuevo', {
+            url: '/socio/nuevo',
             templateUrl: 'nuevo/nuevo.tpl.html',
             controller: 'NuevoSocioCtrl'
         })
             .
-        otherwise({
-            redirectTo: '/login'
-        });
+        otherwise('/login');
     }
 ]);
