@@ -6,6 +6,7 @@
                   "./src_frontend/app/modal/40x.tpl.html",
                   "./src_frontend/app/modal/delete.tpl.html",
                   "./src_frontend/app/modal/registrar.tpl.html",
+                  "./src_frontend/app/navbar/navbar.tpl.html",
                   "./src_frontend/app/nuevo/nuevo.tpl.html",
                   "./src_frontend/app/socio/socio.tpl.html",
                   "./src_frontend/app/socios/socios.tpl.html"
