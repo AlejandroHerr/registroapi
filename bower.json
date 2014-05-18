@@ -22,7 +22,8 @@
     "angular-xeditable": "",
     "bootstrap": "",
     "jsSHA":"",
-    "angular-ui-router":""
+    "angular-ui-router":"",
+    "fontawesome": ""
   },
   "devDependencies": {}
 }
