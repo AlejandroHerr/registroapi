@@ -1,12 +1,19 @@
 angular.module('libroApp.socio', [])
-    .controller('SocioCtrl', ['$routeParams', 'ApiCall', '$scope', 'credenciales', '$location', '$http', '$filter', 'loader', 'countries',
-        function($routeParams, ApiCall, $scope, credenciales, $location, $http, $filter, loader, countries) {
-            if (!credenciales.isLogged()) {
-                $location.url("/logout");
-                return;
-            }
+    .config(['$stateProvider',
+        function ($stateProvider) {
+            $stateProvider
+                .state('logged.socio.socio', {
+                    url: '/socio/:socioId/{mode:.*}',
+                    templateUrl: 'socio/socio.tpl.html',
+                    controller: 'SocioCtrl'
+
+                });
+        }
+    ])
+    .controller('SocioCtrl', ['$stateParams', 'ApiCall', '$scope', 'credenciales', '$state', '$http', '$filter', 'loader', 'countries',
+        function ($stateParams, ApiCall, $scope, credenciales, $state, $http, $filter, loader, countries) {
             loader.setLoading();
-            $scope.getPais = function() {
+            $scope.setPais = function () {
                 if ($scope.paises.length) {
                     var selected = $filter('filter')($scope.paises, {
                         alpha2: $scope.socio.pais
@@ -16,42 +23,54 @@ angular.module('libroApp.socio', [])
                     return $scope.socio.pais;
                 }
             };
-            $scope.loadSocio = function(id) {
+            $scope.loadSocio = function (id) {
                 var path = '/api/socios/' + id;
                 var data = ApiCall.makeCall(credenciales.getXWSSE(), 'GET', path, null)
-                    .then(function(d) {
+                    .then(function (d) {
                         $scope.socio = d.data;
-                        $scope.pais = $scope.getPais();
+                        $scope.pais = $scope.setPais();
+                        if ($stateParams.mode) {
+                            if ($stateParams.mode == 'edit') {
+                                setTimeout(function () {
+                                    angular.element(document.getElementById('toEditBtn'))
+                                        .triggerHandler('click');
+                                }, 0);
+                            }
+                        }
                         loader.unsetLoading();
-                    }, function(d) {
+                    }, function (d) {
                         loader.unsetLoading();
                         var modalInstance = $modal.open({
                             templateUrl: 'modal/40x.tpl.html',
                             controller: ErrorModalInstanceCtrl,
                             resolve: {
-                                error: function() {
+                                error: function () {
                                     return d;
                                 }
                             }
                         });
-                        modalInstance.result.then(function() {}, function() {
-                            if (d.status == 403) {
-                                //levatelo a alg'un lado
+                        modalInstance.result.then(function () {}, function () {
+                            if (d.status == 404) {
+                                $state.go('logout', {}, {
+                                    location: true
+                                });
                             } else {
-                                $location.url("/logout");
+                                $state.go('logged', {}, {
+                                    location: true
+                                });
                             }
                         });
                     });
             };
-            $scope.checkLength = function(data, min, max) {
+            $scope.checkLength = function (data, min, max) {
                 if (data.length < min) {
-                    return "El tamano mínimo son 2 caracteres!";
+                    return 'El tamano mínimo son '+min+' caracteres!';
                 }
                 if (data.length > max) {
-                    return "El tamano máximo son 50 caracteres!";
+                    return 'El tamano máximo son '+max+' caracteres!';
                 }
             };
-            $scope.saveUser = function() {
+            $scope.saveUser = function () {
                 loader.setLoading();
                 var putData = {
                     'nombre': this.socio.nombre,
@@ -65,14 +84,32 @@ angular.module('libroApp.socio', [])
                 };
                 var path = '/api/socios/' + id;
                 var data = ApiCall.makeCall(credenciales.getXWSSE(), 'PUT', path, putData)
-                    .then(function(d) {
+                    .then(function (d) {
                         $scope.loadSocio(id);
-                    }, function(d) {
+                    }, function (d) {
                         loader.unsetLoading();
-                        //do something when it fails
+                        var modalInstance = $modal.open({
+                            templateUrl: 'modal/40x.tpl.html',
+                            controller: ErrorModalInstanceCtrl,
+                            resolve: {
+                                error: function () {
+                                    return d;
+                                }
+                            }
+                        });
+                        modalInstance.result.then(function () {}, function () {
+                            if (d.status == 404) {
+                                $state.go('logout', {}, {
+                                    location: true
+                                });
+                            } else {
+                                $state.go('logged', {}, {
+                                    location: true
+                                });
+                            }
+                        });
                     });
             };
-            var id = $routeParams.socioId;
             $scope.paises = [];
             $scope.languages = [{
                 value: 'English'
@@ -81,6 +118,7 @@ angular.module('libroApp.socio', [])
             }];
             $scope.paises = countries.get()
                 .countries;
+            var id = $stateParams.socioId;
             $scope.loadSocio(id);
         }
     ]);

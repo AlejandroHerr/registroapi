@@ -18,11 +18,12 @@
   ],
   "dependencies": {
     "angular": "1.2.16",
-    "angular-route": "",
     "angular-bootstrap": "0.10",
     "angular-xeditable": "",
     "bootstrap": "",
-    "jsSHA":""
+    "jsSHA":"",
+    "angular-ui-router":"",
+    "fontawesome": ""
   },
   "devDependencies": {}
 }

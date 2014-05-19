@@ -1,7 +1,4 @@
 /*LOADER*/
-#view-container{
-  margin:75px auto 0 auto;
-}
 .loader{
   z-index: 1031;
   position: fixed;
@@ -52,61 +49,26 @@
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
-/*TABLES*/
-.table-striped > tbody > tr:nth-child(odd) > td,
-.table-striped > tbody > tr:nth-child(odd) > th {
-  background-color: #ECECEC;
-}
-.table-hover > tbody > tr:hover > td,
-.table-hover > tbody > tr:hover > th {
-  background-color: #A5B5E9;
-}
-/*XEDITABLE FORM*/
-.title{
-  display: inline-block;
-  font-weight: bold;
-  padding-top: 5px;
-  vertical-align: top;
-  min-width: 90px;
-}
-.editable {
-  display: inline-block;
-  padding-top: 5px;
-  vertical-align: top;
-}
 /*NUEVO SOCIO FORM*/
 .error{
   color: #BB1616;
 }
-/*FOOTER*/
-/*FOOTER*/
-html {
-  position: relative;
-  min-height: 100%;
-}
-body {
-  /* Margin bottom by footer height */
-  margin-bottom: 40px;
-}
-#footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  /* Set the fixed height of the footer here */
-  height: 40px;
-  background: url('footer_bck.png') repeat-y #333 right;
-}
-#footer p{
-  font-family: Calibri;
-  color: #ccc;
-  text-align: right;
-  margin-bottom: 0px;
-}
-/*NAVBAR*/
-.navbar-default{
-  background-image: -webkit-linear-gradient(top, #222 0%, #f333 100%);
-  background-image: linear-gradient(to bottom, #222 0%, #333 100%);
-}
-.navbar-default .navbar-nav > li > a {
-  color: #ccc;
+/*CHANGES FOR THE ACCORDION*/
+li{
+  > .panel{
+    margin-bottom: 0px;
+    background-color: #f8f8f8 !important;
+    border: 0px !important;
+
+    .panel-heading{
+      background-color: #f8f8f8 !important;
+      border: 0px !important;
+    }
+    .panel-body{
+      padding: 0px;
+    }
+    a {
+      font-size: 14px;
+    }
+  }
 }

@@ -1,13 +1,25 @@
 angular.module('libroApp.login', [])
-    .controller('LoginCtrl', ['credenciales', '$scope', '$location', 'loader',
-        function(credenciales, $scope, $location, loader) {
-            $scope.logIn = function() {
+    .config(['$stateProvider',
+        function ($stateProvider) {
+            $stateProvider
+                .state('login', {
+                    url: '/login',
+                    templateUrl: 'login/login.tpl.html',
+                    controller: 'LoginCtrl'
+                });
+        }
+    ])
+    .controller('LoginCtrl', ['credenciales', '$scope', '$state', 'loader',
+        function (credenciales, $scope, $state, loader) {
+            $scope.logIn = function () {
                 event.preventDefault();
                 credenciales.setUser($scope.username);
                 credenciales.setPass($scope.password);
                 if (credenciales.isLogged()) {
                     loader.setLoading();
-                    $location.url("/socios");
+                    $state.go('logged', {}, {
+                        location: true
+                    });
                 }
             };
         }
