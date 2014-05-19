@@ -2,17 +2,11 @@ angular.module('libroApp.nuevo', [])
     .config(['$stateProvider',
         function ($stateProvider) {
             $stateProvider
-                .state('nuevoSocio', {
-                    url: '/socio/nuevo',
-                    views: {
-                        'content': {
-                            templateUrl: 'nuevo/nuevo.tpl.html',
-                            controller: 'NuevoSocioCtrl'
-                        },
-                        'navbar': {
-                            templateUrl: 'navbar/navbar.tpl.html'
-                        }
-                    }
+                .state('logged.socio.nuevo', {
+                    url: '/nuevo',
+                    templateUrl: 'nuevo/nuevo.tpl.html',
+                    controller: 'NuevoSocioCtrl'
+                       
                 });
         }
     ])

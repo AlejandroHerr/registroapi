@@ -2,17 +2,10 @@ angular.module('libroApp.socios', [])
     .config(['$stateProvider',
         function ($stateProvider) {
             $stateProvider
-                .state('socios', {
-                    url: '/socios',
-                    views: {
-                        'content': {
-                            templateUrl: 'socios/socios.tpl.html',
-                            controller: 'SociosCtrl'
-                        },
-                        'navbar': {
-                            templateUrl: 'navbar/navbar.tpl.html'
-                        }
-                    }
+                .state('logged.socio.lista', {
+                    url: '/lista',
+                    templateUrl: 'socios/socios.tpl.html',
+                    controller: 'SociosCtrl'
                 });
         }
     ])
@@ -89,7 +82,7 @@ angular.module('libroApp.socios', [])
             };
             $scope.edit = function (socio) {
                 loader.setLoading();
-                $state.go('getSocio', {
+                $state.go('logged.socio.socio', {
                     socioId: socio,
                     mode: 'edit'
                 }, {
