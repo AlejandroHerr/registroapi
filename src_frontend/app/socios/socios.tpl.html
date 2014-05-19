@@ -5,7 +5,7 @@
     </div>
 
 		<div class="row">
-			<div class="col-sm-12 col-md-8 col-lg-9">
+			<div class="col-sm-12 col-md-10 col-md-offset-1 col-lg-9 col-lg-offset-0">
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<i class="fa fa-list fa-fw"></i> Listado de Socios
@@ -21,7 +21,8 @@
 								<th></th>
 							</tr>
 							<tr ng-repeat="socio in socios">
-								<td><a ui-sref="getSocio({socioId: socio.id, mode: 'edit'})">{{socio.id}}</a>
+								<td>
+									<a ui-sref="logged.socio.socio({socioId: socio.id})">{{socio.id}}</a>
 								</td>
 								<td>{{socio.nombre}}</td>
 								<td>{{socio.apellido}}</td>
@@ -49,10 +50,10 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-sm-12 col-md-4 col-lg-3">
+			<div class="col-sm-12 col-md-10 col-md-offset-1 col-lg-3 col-lg-offset-0">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<i class="fa fa-cog fa-fw"></i> Opciones
+						<i class="fa fa-cogs fa-fw"></i> Opciones
 					</div>
 					<div class="panel-body">
 					  <div class='content'>
