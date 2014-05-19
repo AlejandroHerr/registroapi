@@ -1,7 +1,7 @@
 @navbar-width: 200px;
+@page-min-height: 400px;
 
 /* Global Styles */
-
 /* ------------------------------- */
 
 body {
@@ -32,9 +32,9 @@ body {
 @media(min-width:768px) {
     #page-wrapper {
         position: inherit;
-        margin: 0 0 0 250px;
+        margin: 0 0 0 @navbar-width;
         padding: 0 30px;
-        min-height: 1300px;
+        min-height: @page-min-height;
         border-left: 1px solid #e7e7e7;
     }
 }
@@ -138,7 +138,7 @@ body {
     .navbar-static-side {
         z-index: 1;
         position: absolute;
-        width: 250px;
+        width: @navbar-width;
         margin-top: 51px;
     }
 
