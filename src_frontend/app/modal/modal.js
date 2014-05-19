@@ -1,34 +1,34 @@
 angular.module('libroApp.modals', [])
     .controller('DeleteModalInstanceCtrl', ['ApiCall', 'credenciales', '$scope', '$modalInstance', 'socio',
-        function(ApiCall, credenciales, $scope, $modalInstance, socio) {
+        function (ApiCall, credenciales, $scope, $modalInstance, socio) {
             $scope.socio = socio;
             $scope.alerts = [{
                 type: 'warning',
                 msg: '¡Esta acción no se puede deshacer!'
             }];
-            $scope.addAlert = function(Type, Msg) {
+            $scope.addAlert = function (Type, Msg) {
                 $scope.alerts.push({
                     type: Type,
                     msg: Msg
                 });
             };
-            $scope.closeAlert = function(index) {
+            $scope.closeAlert = function (index) {
                 $scope.alerts.splice(index, 1);
             };
-            $scope.deletAlerts = function() {
+            $scope.deletAlerts = function () {
                 $scope.alerts = '';
             }
-            $scope.salir = function() {
+            $scope.salir = function () {
                 $modalInstance.dismiss();
             };
-            $scope.ok = function(str) {
+            $scope.ok = function (str) {
                 if (str == 'ELIMINAR ' + $scope.socio.esncard) {
                     $scope.addAlert('success', 'Nuestros monos lo están borrando... Espera y no toques nada.');
                     var path = '/api/socios/' + $scope.socio.id;
                     var data = ApiCall.makeCall(credenciales.getXWSSE(), 'DELETE', path, null)
-                        .then(function(d) {
+                        .then(function (d) {
                             $modalInstance.close();
-                        }, function(d) {
+                        }, function (d) {
                             if (d.status == 401) {
                                 $scope.addAlert('danger', '¡Tus credenciales son incorrectas..!');
                             } else if (d.status == 403) {
@@ -44,7 +44,7 @@ angular.module('libroApp.modals', [])
         }
     ])
     .controller('ErrorModalInstanceCtrl', ['$scope', '$modalInstance', 'error',
-        function($scope, $modalInstance, error) {
+        function ($scope, $modalInstance, error) {
             $scope.error = error;
             if (error.status == 401) {
                 $scope.name = 'No autorizado';
@@ -56,34 +56,34 @@ angular.module('libroApp.modals', [])
                 $scope.name = 'Error no previsto';
                 $scope.msg = 'Ha ocurrido un error raro que Alejandro I el Hermoso no tuvo en cuenta, así; que no te podemos dar más detalles.';
             }
-            $scope.salir = function() {
+            $scope.salir = function () {
                 $modalInstance.dismiss();
             };
         }
     ])
-    .controller('RegistrarModalInstanceCtrl', ['ApiCall', 'credenciales', '$scope', '$modalInstance', 'socio',
-        function(ApiCall, credenciales, $scope, $modalInstance, socio) {
+    .controller('RegistrarModalInstanceCtrl', ['ApiCall', 'credenciales', '$scope', '$modalInstance', 'item', 'url',
+        function (ApiCall, credenciales, $scope, $modalInstance, item, url) {
             $scope.successFlag = false;
             $scope.failFlag = false;
             $scope.progress = "50";
             $scope.status = "progress-bar-warning";
             $scope.isCollapsed = false;
-            var path = '/api/socios';
-            var data = ApiCall.makeCall(credenciales.getXWSSE(), 'POST', path, socio)
-                .then(function(d) {
+            var path = url;
+            var data = ApiCall.makeCall(credenciales.getXWSSE(), 'POST', path, item)
+                .then(function (d) {
                     $scope.successFlag = true;
                     $scope.progress = "100";
                     $scope.status = "progress-bar-success";
-                }, function(d) {
+                }, function (d) {
                     $scope.failFlag = true;
                     $scope.progress = "100";
                     $scope.status = "progress-bar-danger";
                     $scope.errors = d.data;
                 });
-            $scope.volver = function() {
+            $scope.volver = function () {
                 $modalInstance.close();
             }
-            $scope.salir = function() {
+            $scope.salir = function () {
                 $modalInstance.dismiss();
             };
             //en caso afirmativo el tiene que ir a close, sino a dismiss

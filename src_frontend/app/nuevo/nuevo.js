@@ -40,8 +40,11 @@ angular.module('libroApp.nuevo', [])
                     templateUrl: 'modal/registrar.tpl.html',
                     controller: 'RegistrarModalInstanceCtrl',
                     resolve: {
-                        socio: function () {
+                        item: function () {
                             return socio;
+                        },
+                        url: function () {
+                            return '/api/socios';
                         }
                     }
                 });
