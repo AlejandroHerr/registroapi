@@ -12,6 +12,7 @@ var libroApp = angular.module('libroApp', [
         'libroApp.socio',
         'libroApp.socios',
         'libroApp.users',
+        'libroApp.logged',
         'libroApp.login',
         'libroApp.logout',
         'libroApp.modals',

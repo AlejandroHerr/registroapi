@@ -4,12 +4,8 @@ angular.module('libroApp.logout', [])
             $stateProvider
                 .state('logout', {
                 url: '/logout',
-                views: {
-                    'content': {
-                        templateUrl: 'login/login.tpl.html',
-                        controller: 'LogoutCtrl'
-                    }
-                }
+                templateUrl: 'login/login.tpl.html',
+                controller: 'LogoutCtrl'
             });
         }
     ])
