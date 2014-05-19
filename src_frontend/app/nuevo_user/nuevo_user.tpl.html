@@ -1,0 +1,65 @@
+<div class="col-lg-12">
+    <h1 class="page-header">Nuevo Usuario</h1>
+</div>    
+    <form name='nuevoUser' class="form-horizontal " role="form">
+        <div class="form-group" ng-class="{'ng-invalid': nuevoUser.username.$invalid===true,'ng-valid': nuevoUser.username.$valid===true,'ng-pristine': nuevoUser.username.$dirty===false}">
+            <label for="username" class="col-xs-10 col-xs-offset-1 col-sm-3 col-sm-offset-1 col-md-2 col-md-offset-2 control-label">Username</label>
+            <div class="col-xs-10 col-xs-offset-1 col-sm-7 col-sm-offset-0 col-md-4">
+                <input type="text" class="form-control" id="username" name='username' placeholder="Username" ng-model="user.username" ng-minlength="2" ng-maxlength="255" required>
+            </div>
+            <div class="col-xs-10 col-xs-offset-1 col-sm-7 col-sm-offset-0 col-md-4">
+                <p class="error" ng-show="nuevoUser.username.$invalid&&nuevoUser.username.$dirty">¡Entre 2 y 255 caracteres!</small>
+            </div>
+        </div>
+        <div class="form-group" ng-class="{'ng-invalid': nuevoUser.password.$invalid===true,'ng-valid': nuevoUser.password.$valid===true,'ng-pristine': nuevoUser.password.$dirty===false}">
+            <label for="password" class="col-xs-10 col-xs-offset-1 col-sm-3 col-sm-offset-1 col-md-2 col-md-offset-2 control-label">Password</label>
+            <div class="col-xs-10 col-xs-offset-1 col-sm-7 col-sm-offset-0 col-md-4">
+                <input type="password" class="form-control" id="password" name='password' placeholder="Password" ng-model="user.password" ng-minlength="6" ng-maxlength="255" required>
+            </div>
+            <div class="col-xs-10 col-xs-offset-1 col-sm-7 col-sm-offset-0 col-md-4">
+                <p class="error" ng-show="nuevoUser.password.$invalid&&nuevoUser.password.$dirty">¡Introduce un password v&aacute;lido!</small>
+            </div>
+        </div>
+        <div class="form-group" ng-class="{'ng-invalid': nuevoUser.nombre.$invalid===true,'ng-valid': nuevoUser.nombre.$valid===true,'ng-pristine': nuevoUser.nombre.$dirty===false}">
+            <label for="nombre" class="col-xs-10 col-xs-offset-1 col-sm-3 col-sm-offset-1 col-md-2 col-md-offset-2 control-label">Nombre</label>
+            <div class="col-xs-10 col-xs-offset-1 col-sm-7 col-sm-offset-0 col-md-4">
+                <input type="text" class="form-control" id="nombre" name='nombre' placeholder="Nombre" ng-model="user.nombre" ng-minlength="2" ng-maxlength="50" required>
+            </div>
+            <div class="col-xs-10 col-xs-offset-1 col-sm-7 col-sm-offset-0 col-md-4">
+                <p class="error" ng-show="nuevoUser.nombre.$invalid&&nuevoUser.nombre.$dirty">¡Entre 2 y 50 caracteres!</small>
+            </div>
+        </div>
+        <div class="form-group" ng-class="{'ng-invalid': nuevoUser.apellidos.$invalid===true,'ng-valid': nuevoUser.apellidos.$valid===true,'ng-pristine': nuevoUser.apellidos.$dirty===false}">
+            <label for="apellidos" class="col-xs-10 col-xs-offset-1 col-sm-3 col-sm-offset-1 col-md-2 col-md-offset-2 control-label">Apellidos</label>
+            <div class="col-xs-10 col-xs-offset-1 col-sm-7 col-sm-offset-0 col-md-4">
+                <input type="text" class="form-control" id="apellidos" name="apellidos" placeholder="Apellidos" ng-model="user.apellidos" ng-minlength="2" ng-maxlength="50" required>
+            </div>
+            <div class="col-xs-10 col-xs-offset-1 col-sm-7 col-sm-offset-0 col-md-4">
+                <p class="error" ng-show="nuevoUser.apellidos.$invalid&&nuevoUser.apellidos.$dirty">¡Entre 2 y 50 caracteres!</small>
+            </div>
+        </div>
+        <div class="form-group" ng-class="{'ng-invalid': nuevoUser.email.$invalid===true,'ng-valid': nuevoUser.email.$valid===true,'ng-pristine': nuevoUser.email.$dirty===false}">
+            <label for="email" class="col-xs-10 col-xs-offset-1 col-sm-3 col-sm-offset-1 col-md-2 col-md-offset-2 control-label">Email</label>
+            <div class="col-xs-10 col-xs-offset-1 col-sm-7 col-sm-offset-0 col-md-4">
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email" ng-model="user.email" ng-minlength="2" ng-maxlength="50" required>
+            </div>
+            <div class="col-xs-10 col-xs-offset-1 col-sm-7 col-sm-offset-0 col-md-4">
+                <p class="error" ng-show="nuevoUser.email.$invalid&&nuevoUser.email.$dirty">¡Introduce un e-mail válido!</small>
+            </div>
+        </div>
+        <div class="form-group" ng-class="{'ng-invalid': nuevoUser.roles.$invalid===true,'ng-valid': nuevoUser.roles.$valid===true,'ng-pristine': nuevoUser.roles.$dirty===false}">
+            <label for="roles" class="col-xs-10 col-xs-offset-1 col-sm-3 col-sm-offset-1 col-md-2 col-md-offset-2 control-label">Roles</label>
+            <div class="col-xs-10 col-xs-offset-1 col-sm-7 col-sm-offset-0 col-md-4">
+                <select ng-model="user.roles" class='form-control' name='roles' required>
+                    <option ng-repeat="role in roles" value="{{role.value}}">{{role.value}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-10 col-xs-offset-1 col-sm-7 col-sm-offset-4">
+                <button type="submit" class="btn btn-lg active" ng-click='registrar()' ng-class="{'btn-danger': nuevoUser.$invalid===true,'btn-success': nuevoUser.email.$valid===true}">
+                    <span class='glyphicon glyphicon-save'></span>GUARDAR
+                </button>
+            </div>
+        </div>
+    </form>
