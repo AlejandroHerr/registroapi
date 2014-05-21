@@ -2,7 +2,6 @@
 namespace Esnuab\Libro\Controller;
 
 use Silex\Application;
-use Silex\ControllerProviderInterface;
 use Esnuab\Libro\Model\Entity\Socio;
 use Esnuab\Libro\Model\Manager\SocioManager;
 use Esnuab\Libro\Form\SocioForm;
