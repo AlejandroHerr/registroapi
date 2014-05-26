@@ -101,6 +101,9 @@ class AdminController extends ApiController
         if (!$this->userManager->existsUser($app, $id)) {
             return $app->json(array('message' => 'El user con id ' . $id . ' no existe.'), 404,$app['cors.headers']);
         }
+        if (!$this->userManager->isUserBlocked($id)) {
+            return $app->json(array('message' => 'El user con id ' . $id . ' esta bloqueado.'), 404,$app['cors.headers']);
+        }
         $app->register(new FormServiceProvider());
         $app->register(new ValidatorServiceProvider());
         $user = new User();
