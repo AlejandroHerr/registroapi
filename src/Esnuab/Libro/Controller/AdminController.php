@@ -58,7 +58,7 @@ class AdminController extends ApiController
         if (!$this->userManager->existsUser($app, $id)) {
             return $app->json(array('message' => 'El user con id ' . $id . ' no existe.'), 404,$app['cors.headers']);
         }
-        $user = $this->userManager->getUser($app,$id);
+        $user = $this->userManager->getUser($id);
 
         return $app->json($user->toArray(), 200,$app['cors.headers']);
     }
