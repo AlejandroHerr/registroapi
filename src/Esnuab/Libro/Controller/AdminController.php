@@ -2,7 +2,6 @@
 namespace Esnuab\Libro\Controller;
 
 use Silex\Application;
-use Silex\ControllerProviderInterface;
 use Esnuab\Libro\Model\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Esnuab\Libro\Form\NewUserForm;
@@ -22,7 +21,8 @@ class AdminController extends ApiController
     public function connect(Application $app)
     {
         $controllers = $app['controllers_factory'];
-        $controllers->get('/users', array($this,"getUsers"));
+        $controllers->get('/users', array($this,"getUsers"))
+        ->before(array($this,"getQueryHeaders"));
         $controllers->post('/users', array($this,"postUser"))
         ->before($app['filter.only_superadmin'])
         ->before(array($this,"getFormHeaders"));
@@ -39,8 +39,15 @@ class AdminController extends ApiController
 
     public function getUsers(Application $app)
     {
-        $users = $this->userManager->getUsers();
+        $totalResults = $this->userManager->getCount($this->queryParams);
+        $users = $this->userManager->getUsers($this->queryParams);
         $response = array(
+            'pagination' => array(
+                'totalResults' => $totalResults,
+                'maxResults' => $this->queryParams['maxResults'],
+                'currentPage' => $this->queryParams['page'],
+                'active' => $this->queryParams['active']
+            ),
             'users' => $users
         );
 
@@ -123,5 +130,12 @@ class AdminController extends ApiController
         }
 
         return $app->json(array('errores' => $this->getArray($this->form)), 400,$app['cors.headers']);
+    }
+    public function getQueryHeaders(Request $request)
+    {
+        $this->queryParams = $request->query->all();
+        $this->queryParams['page'] = !isset($this->queryParams['page']) ? 1 : $this->queryParams['page'];
+        $this->queryParams['maxResults'] = !isset($this->queryParams['maxResults']) ? 10 : $this->queryParams['maxResults'];
+        $this->queryParams['active'] = !isset($this->queryParams['active']) ? 0 : $this->queryParams['active'];
     }
 }
