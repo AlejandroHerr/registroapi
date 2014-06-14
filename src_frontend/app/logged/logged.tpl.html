@@ -240,10 +240,14 @@
 								<a ui-sref="logged.socio.nuevo"><i class="fa fa-pencil-square-o fa-fw"></i> Nuevo</a>
 							</li>
 							<li> 
-								<a href="index.html"><i class="fa fa-user fa-fw"></i> Usuarios</a>
+								<a ui-sref="logged.user.lista"><i class="fa fa-user fa-fw"></i> Usuarios</a>
+								<ul class="nav nav-second-level">
+									<li>
+										<a ui-sref="logged.user.nuevo">Nuevo</a>
+									</li>
+								</ul>
 							</li>
 						<accordion>
-							
 							<li>     
 								<accordion-group is-open="status.open3">
 									<accordion-heading>
