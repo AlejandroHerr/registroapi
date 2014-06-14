@@ -1,82 +1,49 @@
 angular.module('libroApp.users', [])
-    .controller('UsersCtrl', ['ApiCall', '$modal', 'queryOptions', 'credenciales', '$scope', '$location', 'loader',
-        function(ApiCall, $modal, queryOptions, credenciales, $scope, $location, loader) {
-            if (!credenciales.isLogged()) {
-                $location.url("/app/logout");
-                return;
-            }
-            $scope.refresh = function() {
-                $scope.loadSocios($scope.options.currentPage);
-            };
-            $scope.reset = function() {
-                $scope.options = queryOptions.reset();
-                $scope.loadSocios($scope.options.currentPage);
-            };
-            $scope.changePage = function(page) {
-                $scope.options.currentPage = page;
-                $scope.loadSocios($scope.options.currentPage);
-            };
-            $scope.loadSocios = function(page) {
-                if (flag) {
-                    loader.setLoading();
-                    flag = false;
-                    var path = '/api/socios?maxResults=' + $scope.maxResults + '&currentPage=' + page + '&orderDir=' + $scope.options.orderDir + '&orderBy=' + $scope.options.orderBy;
-                    var data = ApiCall.makeCall(credenciales.getXWSSE(), 'GET', path, null)
-                        .then(function(d) {
-                            $scope.socios = d.data.socios;
-                            $scope.totalItems = d.data.pagination.totalResults;
-                            $scope.options.currentPage = parseInt(d.data.pagination.currentPage, 10);
-                            $scope.currentPage = d.data.pagination.currentPage;
-                            $scope.maxResults = d.data.pagination.maxResults;
-                            flag = true;
-                            loader.unsetLoading();
-                        }, function(d) {
-                            flag = true;
-                            loader.unsetLoading();
-                            var modalInstance = $modal.open({
-                                templateUrl: 'modal/40x.tpl.html',
-                                controller: 'ErrorModalInstanceCtrl',
-                                resolve: {
-                                    error: function() {
-                                        return d;
-                                    }
-                                }
-                            });
-                            modalInstance.result.then(function() {}, function() {
-                                if (d.status == 403) {
-                                    //levatelo a alg'un lado
-                                } else {
-                                    $location.url("/logout");
-                                }
-                            });
-                        });
+    .config(['$stateProvider',
+        function ($stateProvider) {
+            $stateProvider.state('logged.user.lista', {
+                url: '/lista',
+                templateUrl: 'users/users.tpl.html',
+                controller: 'UsersCtrl'
+            });
+        }
+    ])
+    .controller('UsersCtrl', ['ApiCall', '$scope', 'credenciales',
+        function (ApiCall, $scope, credenciales) {
+            $scope.activeClass = function (state) {
+                if (state == 1) {
+                    return 'btn-success';
                 }
+                return 'btn-warning';
+            }
+            $scope.activeText = function (state) {
+                if (state == 1) {
+                    return 'ACTIVO';
+                }
+                return 'INACTIVO';
+            }
+            $scope.roleClass = function (role) {
+                if (role == 'ROLE_PRESIDENTE' || role == 'ROLE_SECRETARIO' || role == 'ROLE_SUPERADMIN') {
+                    return 'btn-danger';
+                }
+                if (role == 'ROLE_JUNTA' || role == 'ROLE_ADMIN') {
+                    return 'btn-primary';
+                }
+                if (role == 'ROLE_COLABORADOR' || role == 'ROLE_USER') {
+                    return 'btn-primary';
+                }
+                return 'btn-default';
+            }
+            $scope.loadUsers = function (page) {
+                var path = '/api/admin/users?page=' + page;
+                ApiCall.apiCall(credenciales.getXWSSE(), 'GET', path, null, succesCb);
             };
-            $scope.remove = function(socio) {
-                var modalInstance = $modal.open({
-                    templateUrl: 'modal/delete.tpl.html',
-                    controller: 'DeleteModalInstanceCtrl',
-                    resolve: {
-                        socio: function() {
-                            return socio;
-                        }
-                    }
-                });
-                modalInstance.result.then(function() {
-                    $scope.loadSocios($scope.options.currentPage);
-                });
+            succesCb = function (d) {
+                $scope.users = d.data.users;
+                $scope.totalItems = d.data.pagination.totalResults;
+                $scope.currentPage = d.data.pagination.currentPage;
+                $scope.maxResults = d.data.pagination.maxResults;
             };
-            $scope.edit = function(socio) {
-                loader.setLoading();
-                $location.url("/socio/" + socio + "/edit");
-            };
-            var flag = true;
-            $scope.options = queryOptions.get();
-            $scope.maxSize = 100;
-            $scope.isCollapsed = true;
-            $scope.toCollapse = function() {
-                $scope.isCollapsed = !$scope.isCollapsed;
-            };
-            $scope.loadSocios($scope.options.currentPage);
+            $scope.loadUsers(1);
         }
     ]);

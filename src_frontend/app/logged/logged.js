@@ -11,6 +11,11 @@ angular.module('libroApp.logged', [])
                     abstract: true,
                     url: '^/socios',
                     template: '<ui-view/>'
+                })
+                .state('logged.user', {
+                    abstract: true,
+                    url: '^/users',
+                    template: '<ui-view/>'
                 });
         }
     ])

@@ -1,13 +1,7 @@
 <?php
 namespace Esnuab\Libro\Controller;
 
-use Silex\Application;
 use Silex\ControllerProviderInterface;
-use Esnuab\Libro\Model\Entity\Socio;
-use Esnuab\Libro\Model\Manager\SocioManager;
-use Esnuab\Libro\Form\SocioForm;
-use Silex\Provider\FormServiceProvider;
-use Silex\Provider\ValidatorServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 
 abstract class ApiController implements ControllerProviderInterface

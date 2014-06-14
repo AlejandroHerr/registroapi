@@ -9,6 +9,7 @@ class User extends Base
     protected $password;
     protected $roles;
     protected $activo;
+    protected $blocked;
     protected $nombre;
     protected $apellidos;
     protected $email;
@@ -35,7 +36,7 @@ class User extends Base
     }
     public function setPassword($password)
     {
-        $this->password=hash('sha512', $password);
+        $this->password=base64_encode(hash('sha512',$password, true));
 
         return $this;
     }
@@ -76,6 +77,30 @@ class User extends Base
     public function setEmail($email)
     {
         $this->email = $email;
+
+        return $this;
+    }
+    public function getPassword()
+    {
+        return $this->password;
+    }
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+    public function setRoles($roles)
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+    public function getBlocked()
+    {
+        return $this->blocked;
+    }
+    public function setBlocked($blocked)
+    {
+        $this->blocked = $blocked;
 
         return $this;
     }
