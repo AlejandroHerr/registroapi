@@ -21,7 +21,7 @@
                             </tr>
                             <tr ng-repeat="user in users">
                                 <td>
-                                    <a>{{user.username}}</a>
+                                    <a ui-sref="logged.user.user({userId: user.id})">{{user.username}}</a>
                                 </td>
                                 <td>{{user.nombre}} {{user.apellidos}}</td>
                                 <td>
