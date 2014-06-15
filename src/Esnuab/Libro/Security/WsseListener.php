@@ -15,18 +15,12 @@ class WsseListener implements ListenerInterface
 {
     protected $securityContext;
     protected $authenticationManager;
-    protected $corsHeaders;
     public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager, Connection $conn, LoggerInterface $logger = null)
     {
         $this->securityContext = $securityContext;
         $this->authenticationManager = $authenticationManager;
         $this->conn = $conn;
         $this->logger = $logger;
-        $this->corsHeaders = array(
-            'Access-Control-Allow-Origin' => '*',
-            'Access-Control-Allow-Headers'=>'*',
-            'Access-Control-Allow-Methods' => '*'
-        );
     }
     public function handle(GetResponseEvent $event)
     {
@@ -39,21 +33,9 @@ class WsseListener implements ListenerInterface
                 array(
                     'error' => 'Too many login attempts in the last 30 minutes. Waith 30 min.'
                 ),
-                401,
-                $this->corsHeaders);
+                401
+            );
             $event->setResponse($response);
-
-            return;
-        }
-
-        if ($request->getMethod() == 'OPTIONS') {
-            $token = new WsseUserToken();
-            $token->setUser('CorsPreflight');
-            $authToken = $this->authenticationManager->authenticatePreflight($token);
-            $this->securityContext->setToken($authToken);
-            if (null !== $this->logger) {
-                $this->logger->addInfo('Cors Preflight');
-            }
 
             return;
         }
@@ -67,8 +49,8 @@ class WsseListener implements ListenerInterface
                 array(
                     'error' => 'Wrong headers.'
                 ),
-                401,
-                $this->corsHeaders);
+                401
+            );
             $event->setResponse($response);
 
             return;
@@ -96,8 +78,8 @@ class WsseListener implements ListenerInterface
                 array(
                     'error' => 'Wrong credentials.'
                 ),
-                401,
-                $this->corsHeaders);
+                401
+            );
             $event->setResponse($response);
 
             return;
@@ -107,8 +89,8 @@ class WsseListener implements ListenerInterface
             array(
                 'error' => 'Unauthorized.'
             ),
-            401,
-            $this->corsHeaders);
+            401
+        );
         $event->setResponse($response);
     }
     protected function cleanIpReports(Request $request)

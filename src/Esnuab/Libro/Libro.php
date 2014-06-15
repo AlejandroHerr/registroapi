@@ -70,27 +70,6 @@ foreach (array('user','admin','superadmin') as $role) {
 }
 //ROUTING
 require_once 'routes.php';
-$app->match('{blabla}', function () use ($app) {
-    return $app->json(array(), 204,$app['cors.headers']);
-})
-->assert('blabla', '.+')
-->method('OPTIONS');
-$app['cors.headers']=function () use ($app) {
-    $origin = $app['request']->headers->get('Origin');
-    $regex = array(
-        '/.esnuab.org$/',
-        '/.localhost$/',
-        '/http:\/\/localhost$/'
-    );
-    if (preg_match($regex[0], $origin) ||preg_match($regex[1], $origin) || preg_match($regex[2], $origin)) {
-        return array(
-            'Access-Control-Allow-Origin' => $origin,
-            'Access-Control-Allow-Headers'=>'X-WSSE, content-type',
-            'Access-Control-Allow-Methods' => 'POST, GET, PUT, DELETE'
-        );
-    }
 
-    return null;
 
-};
 return $app;

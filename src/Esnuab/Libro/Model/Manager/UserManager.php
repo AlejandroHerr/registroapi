@@ -44,7 +44,7 @@ class UserManager
     }
     public function getUser($id)
     {
-        $user = $this->conn->fetchAssoc('SELECT id,username,roles,activo,blocked,nombre,apellidos,email FROM users WHERE id = ?', array($app->escape($id)));
+        $user = $this->conn->fetchAssoc('SELECT id,username,roles,activo,blocked,nombre,apellidos,email FROM users WHERE id = ?', array($id));
 
         return new User($user);
     }
