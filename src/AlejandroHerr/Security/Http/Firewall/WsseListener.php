@@ -1,6 +1,7 @@
 <?php
-namespace Esnuab\Libro\Security;
+namespace AlejandroHerr\Security\Http\Firewall;
 
+use AlejandroHerr\Security\Core\Authentication\Token\WsseUserToken;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;

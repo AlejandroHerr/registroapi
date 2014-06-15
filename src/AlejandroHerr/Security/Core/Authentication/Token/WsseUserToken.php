@@ -1,5 +1,5 @@
 <?php
-namespace Esnuab\Libro\Security;
+namespace AlejandroHerr\Security\Core\Authentication\Token;
 
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 

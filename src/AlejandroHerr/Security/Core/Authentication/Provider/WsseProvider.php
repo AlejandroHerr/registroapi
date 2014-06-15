@@ -1,6 +1,7 @@
 <?php
-namespace Esnuab\Libro\Security;
+namespace AlejandroHerr\Security\Core\Authentication\Provider;
 
+use AlejandroHerr\Security\Core\Authentication\Token\WsseUserToken;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
