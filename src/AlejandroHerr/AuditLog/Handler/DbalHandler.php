@@ -1,6 +1,6 @@
 <?php
 
-namespace Esnuab\AuditLog\Handler;
+namespace AlejandroHerr\AuditLog\Handler;
 
 use Monolog\Logger;
 use Monolog\Handler\AbstractProcessingHandler;
