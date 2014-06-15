@@ -1,6 +1,7 @@
 <?php
 namespace Esnuab\Libro\Controller;
 
+use AlejandroHerr\ApiApplication\ApiController;
 use Silex\Application;
 use Esnuab\Libro\Model\Entity\User;
 use Symfony\Component\HttpFoundation\Request;

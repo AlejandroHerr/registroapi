@@ -1,6 +1,7 @@
 <?php
 namespace Esnuab\Libro\Controller;
 
+use AlejandroHerr\ApiApplication\ApiController;
 use Silex\Application;
 use Esnuab\Libro\Model\Entity\Socio;
 use Esnuab\Libro\Model\Manager\SocioManager;
