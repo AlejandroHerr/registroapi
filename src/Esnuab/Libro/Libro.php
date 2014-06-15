@@ -11,7 +11,6 @@ use Silex\Provider\DoctrineServiceProvider;
 use Silex\Provider\MonologServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 
-
 $app = new Application();
 $app['debug'] = true;
 
@@ -46,7 +45,7 @@ foreach (array('access','transaction') as $channel) {
 }
 
 ##################
-# MODEL MANAGERS #
+# model managers #
 ##################
 $app['socio_manager'] = $app->share(function ($app) {
     return new SocioManager($app['db']);
@@ -54,7 +53,10 @@ $app['socio_manager'] = $app->share(function ($app) {
 $app['user_manager'] = $app->share(function ($app) {
     return new UserManager($app['db']);
 });
-//SECURITY
+
+##################
+# security       #
+##################
 require_once 'security.php';
 foreach (array('user','admin','superadmin') as $role) {
     $app['filter.only_' . $role] = $app->protect(function (Request $request) use ($role,$app) {
@@ -68,8 +70,10 @@ foreach (array('user','admin','superadmin') as $role) {
         }
     });
 }
-//ROUTING
-require_once 'routes.php';
 
+##################
+# routing       #
+##################
+require_once 'routes.php';
 
 return $app;
