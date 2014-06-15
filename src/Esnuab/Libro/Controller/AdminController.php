@@ -146,7 +146,7 @@ class AdminController extends ApiController
         $user = new User();
         if ($action == 'block') {
             $user->setBlocked(1);
-        } else if ($action == 'unblock') {
+        } elseif ($action == 'unblock') {
             $user->setBlocked(0);
         } else {
             return $app->json(array('message' => 'Accion no permitida.'), 404);

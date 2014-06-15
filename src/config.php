@@ -6,7 +6,6 @@ use Stack\LazyHttpKernel;
 use AlejandroHerr\Stack\Cors;
 use Symfony\Component\HttpFoundation\Request;
 
-
 $app=new Application();
 
 $api = new LazyHttpKernel(function () {
