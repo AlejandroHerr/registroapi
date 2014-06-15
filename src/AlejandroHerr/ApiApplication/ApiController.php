@@ -1,8 +1,9 @@
 <?php
-namespace Esnuab\Libro\Controller;
+namespace AlejandroHerr\ApiApplication;
 
 use Silex\ControllerProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\Form;
 
 abstract class ApiController implements ControllerProviderInterface
 {
@@ -14,24 +15,15 @@ abstract class ApiController implements ControllerProviderInterface
     {
         $this->queryParams = $request->query->all();
     }
-    public function getArray(\Symfony\Component\Form\Form $form)
-    {
-        return $this->getErrors($form);
-    }
-
-    public function getErrors($form)
+    protected function getFormErrorsAsArray(Form $form)
     {
         $errors = array();
-        if ($form instanceof \Symfony\Component\Form\Form) {
-            foreach ($form->getErrors() as $error) {
-
-                $errors[] = $error->getMessage();
-            }
-
-            foreach ($form->all() as $key => $child) {
-                if ($err = $this->getErrors($child)) {
-                    $errors[$key] = $err;
-                }
+        foreach ($form->getErrors() as $error) {
+            $errors[] = $error->getMessage();
+        }
+        foreach ($form->all() as $key => $child) {
+            if ($err = $this->getFormErrorsAsArray($child)) {
+                $errors[$key] = $err;
             }
         }
 
