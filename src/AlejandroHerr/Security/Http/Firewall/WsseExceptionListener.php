@@ -43,12 +43,12 @@ class WsseExceptionListener extends ExceptionListener
     private function handleAuthenticationException(GetResponseForExceptionEvent $event, AuthenticationException $exception)
     {
         if (null !== $this->logger) {
-            $this->logger->info(sprintf('Wsse Authentication exception occurred (%i: %s)', $exception->getCode(),$exception->getMessage()));
+            $this->logger->info(sprintf('Wsse Authentication exception occurred (%u: %s)', $exception->getCode(),$exception->getMessage()));
         }
 
         try {
             $message = array('message' => $exception->getMessage());
-            $response = new JsonResponse($message,401,array('Content-Type'=>'application/json'));
+            $response = new JsonResponse($message,$exception->getCode(),array('Content-Type'=>'application/json'));
             $event->setResponse($response);
         } catch (\Exception $e) {
             $event->setException($e);
