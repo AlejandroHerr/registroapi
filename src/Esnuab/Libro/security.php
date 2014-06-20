@@ -2,6 +2,7 @@
 
 use AlejandroHerr\Security\Core\Authentication\Provider\WsseProvider;
 use AlejandroHerr\Security\Core\User\UserProvider;
+use AlejandroHerr\Security\Http\Firewall\WsseExceptionListener;
 use AlejandroHerr\Security\Http\Firewall\WsseListener;
 use Silex\Provider\SecurityServiceProvider;
 
@@ -13,6 +14,18 @@ $app['security.authentication_listener.factory.wsse'] = $app->protect(function (
     $app['security.authentication_listener.' . $name . '.wsse'] = $app->share(function () use ($app, $name) {
         return new WsseListener($app['security'], $app['security.authentication_provider.' . $name . '.wsse'], $app['db'],$app['monolog.access']);
     });
+    $app['security.exception_listener.'.$name] = $app->share(function () use ($app, $name) {
+        return new WsseExceptionListener(
+            $app['security'],
+            $app['security.trust_resolver'],
+            $app['security.http_utils'],
+            $name,
+            null,
+            null,
+            null,
+            $app['monolog']
+        );
+    });
 
     return array(
         'security.authentication_provider.' . $name . '.wsse',
@@ -21,6 +34,7 @@ $app['security.authentication_listener.factory.wsse'] = $app->protect(function (
         'pre_auth'
     );
 });
+
 $app->register(new SecurityServiceProvider(), array(
     'security.firewalls' => array(
         'default' => array(
