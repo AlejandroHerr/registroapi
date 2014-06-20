@@ -2,11 +2,12 @@
 namespace AlejandroHerr\Security\Http\Firewall;
 
 use AlejandroHerr\Security\Core\Authentication\Token\WsseUserToken;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use AlejandroHerr\Security\Core\Exception\MaxFailedAttemptsException;
+use AlejandroHerr\Security\Core\Exception\WrongWsseHeadersException;
+use AlejandroHerr\Security\Core\Exception\WsseAuthenticationException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Doctrine\DBAL\Connection;
@@ -26,41 +27,23 @@ class WsseListener implements ListenerInterface
     public function handle(GetResponseEvent $event)
     {
         $request = $event->getRequest();
-        if ($this->isIpBlocked($request)) {
-            if (null !== $this->logger) {
-                $this->logger->addNotice('IP bloqueada / Acceso no autorizado');
-            }
-            $response = new JsonResponse(
-                array(
-                    'error' => 'Too many login attempts in the last 30 minutes. Waith 30 min.'
-                ),
-                401
-            );
-            $event->setResponse($response);
 
-            return;
+        if ($this->isIpBlocked($request)) {
+            throw new MaxFailedAttemptsException();
         }
 
         $wsseRegex = '/UsernameToken Username="([^"]+)", PasswordDigest="([^"]+)", Nonce="([^"]+)", Created="([^"]+)"/';
         if (!$request->headers->has('x-wsse') || 1 !== preg_match($wsseRegex, $request->headers->get('x-wsse'), $matches)) {
-            if (null !== $this->logger) {
-                $this->logger->addNotice('Acceso no autorizado');
-            }
-            $response = new JsonResponse(
-                array(
-                    'error' => 'Wrong headers.'
-                ),
-                401
-            );
-            $event->setResponse($response);
-
-            return;
+            $this->reportIp($request);
+            throw new WrongWsseHeadersException();
         }
+
         $token = new WsseUserToken();
         $token->setUser($matches[1]);
         $token->digest = $matches[2];
         $token->nonce = $matches[3];
         $token->created = $matches[4];
+
         try {
             $authToken = $this->authenticationManager->authenticate($token);
             $this->securityContext->setToken($authToken);
@@ -70,29 +53,12 @@ class WsseListener implements ListenerInterface
             $this->cleanIpReports($request);
 
             return;
-        } catch (AuthenticationException $failed) {
+        } catch (WsseAuthenticationException $exception) {
             $this->reportIp($request);
-            if (null !== $this->logger) {
-                $this->logger->addNotice('Acceso no autorizado');
-            }
-            $response = new JsonResponse(
-                array(
-                    'error' => 'Wrong credentials.'
-                ),
-                401
-            );
-            $event->setResponse($response);
-
-            return;
-
+            throw $exception;
         }
-        $response = new JsonResponse(
-            array(
-                'error' => 'Unauthorized.'
-            ),
-            401
-        );
-        $event->setResponse($response);
+
+        throw new WsseAuthenticationException();
     }
     protected function cleanIpReports(Request $request)
     {
