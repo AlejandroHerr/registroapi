@@ -31,14 +31,10 @@ class Cors implements HttpKernelInterface
 
         $response = $this->app->handle($request, $type, $catch);
 
-        if ($response instanceof JsonResponse) {
-            $response = $this->jsonResponseToResponse($response);
-        }
-
         return $this->corsManager->addCorsResponseHeaders($request,$response);
     }
 
-    protected function jsonResponseToResponse(JsonResponse $response)
+    protected function jsonResponseToResponse(Response $response)
     {
         $content = $response->getContent();
         $status = $response->getStatusCode();
