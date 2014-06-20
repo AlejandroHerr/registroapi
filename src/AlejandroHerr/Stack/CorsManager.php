@@ -146,7 +146,7 @@ class CorsManager
     protected function writeAllowedMethodsHeaders(Response $response)
     {
         $response->headers->set('Access-Control-Allow-Methods',implode(', ', $this->options['allowedMethods']));
-        if (!in_array('*', $this->options['allowedMethods'])) {
+        if (in_array('*', $this->options['allowedMethods'])) {
             $response->headers->set('Access-Control-Allow-Methods','GET, POST, PUT, DELETE, PATCH, OPTIONS');
         }
     }
