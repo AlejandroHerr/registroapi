@@ -23,7 +23,7 @@ $app['security.authentication_listener.factory.wsse'] = $app->protect(function (
             null,
             null,
             null,
-            $app['monolog']
+            $app['monolog.access']
         );
     });
 
