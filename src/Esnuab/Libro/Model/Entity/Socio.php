@@ -2,7 +2,9 @@
 
 namespace Esnuab\Libro\Model\Entity;
 
-class Socio extends Base
+use AlejandroHerr\ApiApplication\Model\Entity\AbstractEntity;
+
+class Socio extends AbstractEntity
 {
     protected $id;
     protected $nombre;
