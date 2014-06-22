@@ -11,6 +11,7 @@ use Silex\Application;
 use Silex\Provider\DoctrineServiceProvider;
 use Silex\Provider\MonologServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 $app = new Application();
 
@@ -18,6 +19,16 @@ $app['exception_handler'] = $app->share(function () use ($app) {
     return new JsonExceptionHandler($app['debug']);
 });
 $app['debug'] = true;
+
+$app->error(function (\RuntimeException $e, $code) {
+    if ($e->getCode() >= 500 || $e->getCode() < 400) {
+        return;
+    }
+
+    $message = array('message' => $e->getMessage());
+
+    return new JsonResponse($message,$e->getCode());
+});
 
 $app['db.config'] = require_once ROOT . '/config/db.php';
 $app->register(new DoctrineServiceProvider(),$app['db.config']);
@@ -46,6 +57,22 @@ foreach (array('access','transaction') as $channel) {
             return $log;
         });
 }
+/*foreach (array('access','transaction') as $channel) {
+    $app['monolog.'.$channel] = $app->share(function () use ($app,$channel) {
+            $log = new $app['monolog.logger.class']($channel);
+            //$handler = new DbalHandler($app['db']);
+            $date = \DateTime::createFromFormat('U',time());
+            $file = ROOT.'/var/logs/acces_'.$date->format('Y-m-d').'.log';
+
+            $handler = new StreamHandler($file);
+            //$handler->setFormatter(new AuditFormatter());
+            $handler->pushProcessor(new RequestProcessor($app));
+            $handler->pushProcessor(new UserProcessor($app));
+            $log->pushHandler($handler);
+
+            return $log;
+        });
+}*/
 
 ###################
 # model managers  #
