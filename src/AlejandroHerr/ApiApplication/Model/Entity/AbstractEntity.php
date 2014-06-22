@@ -1,8 +1,8 @@
 <?php
 
-namespace Esnuab\Libro\Model\Entity;
+namespace AlejandroHerr\ApiApplication\Model\Entity;
 
-abstract class Base
+abstract class AbstractEntity
 {
     public function __construct(array $data=array())
     {
