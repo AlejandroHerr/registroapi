@@ -46,7 +46,7 @@ class SocioController extends ApiController
     public function getSocios(Application $app)
     {
         $totalResults = $this->socioManager->getCount($app);
-        $socios = $this->socioManager->getSocios($app, $this->queryParams);
+        $socios = $this->socioManager->getResources($app, $this->queryParams);
         $response = array(
             'pagination' => array(
                 'totalResults' => $totalResults,
@@ -60,88 +60,59 @@ class SocioController extends ApiController
     }
     public function postSocio(Application $app)
     {
-        return $this->processForm($app);
+        $socio = new Socio();
+
+        $app->register(new FormServiceProvider());
+        $app->register(new ValidatorServiceProvider());
+
+        $this->form = $app['form.factory']->create(new SocioForm(), $socio);
+        $this->form->submit($this->data, true);
+
+        if (!$this->form->isValid()) {
+            return $app->json(array('errores' => $this->getFormErrorsAsArray($this->form)), 400);
+        }
+
+        $this->socioManager->postResource($app, $socio);
+
+        $this->transactionLogger->addNotice('Socio creado',array('datos'=>$socio->toArray()));
+
+        return $app->json('', 201);
     }
     public function getSocio(Application $app, $id)
     {
-        if (!$this->socioManager->existsSocio($app, $id)) {
-            return $app->json(array('message' => 'El socio con id ' . $id . ' no existe.'), 404);
-        }
-        $socio = $this->socioManager->getSocio($app, $id);
+        $socio = $this->socioManager->getResource($app, $id);
 
         return $app->json($socio->toArray(), 200);
     }
     public function putSocio(Application $app, $id, Request $request)
     {
-        if (!$this->socioManager->existsSocio($app, $id)) {
-            return $app->json(array('message' => 'El socio con id ' . $id . ' no existe.'), 404);
+        $socio = $this->socioManager->getResource($app, $id);
+
+        $app->register(new FormServiceProvider());
+        $app->register(new ValidatorServiceProvider());
+
+        $this->form = $app['form.factory']->create(new SocioForm(), $socio);
+        $this->form->submit($this->data, true);
+
+        if (!$this->form->isValid()) {
+            return $app->json(array('errores' => $this->getFormErrorsAsArray($this->form)), 400);
         }
 
-        return $this->processForm($app, $id);
+        $this->socioManager->putResource($app, $socio);
+
+        $this->transactionLogger->addNotice('Socio actualizado',array('datos'=>$socio->toArray()));
+
+        return $app->json('', 204);
     }
     public function deleteSocio(Application $app, $id)
     {
-        if (!$this->socioManager->existsSocio($app, $id)) {
-            return $app->json(array('message' => 'El socio con id ' . $id . ' no exise.'), 404);
-        }
-        $this->socioManager->deleteSocio($app, $id);
+        $this->socioManager->deleteResource($app, $id);
+
+        $this->transactionLogger->addNotice('Socio eliminado',array('datos'=>$id));
 
         return $app->json(null, 204);
     }
-    public function processForm(Application $app, $id = null)
-    {
-        $app->register(new FormServiceProvider());
-        $app->register(new ValidatorServiceProvider());
-        $socio = new Socio();
-        $this->form = $app['form.factory']->create(new SocioForm(), $socio);
-        $this->form->submit($this->data, true);
-        if ($this->form->isValid()) {
-            if ($app['request']->getMethod() == 'POST') {
-                if ($this->socioManager->existsSocio($app, $socio->getEsncard(), 'esncard')) {
-                    return $app->json(array(
-                        'errores' => array(
-                            "esncard" => "La ESN Card ya existe"
-                        )
-                    ), 400);
-                }
-                if ($this->socioManager->existsSocio($app, $socio->getEmail(), 'email')) {
-                    return $app->json(array(
-                        'errores' => array(
-                            "esncard" => "El e-mail ya existe"
-                        )
-                    ), 400);
-                }
-                $socio = $this->socioManager->createSocio($socio, $app);
-                if (null !== $this->transactionLogger) {
-                    $this->transactionLogger->addNotice('Socio creado',array('datos'=>$socio->toArray()));
-                }
-            }
-            if ($app['request']->getMethod() == 'PUT') {
-                if ($this->socioManager->existsSocio($app, $socio->getEsncard(), 'esncard', false, $id)) {
-                    return $app->json(array(
-                        'errores' => array(
-                            "esncard" => "La ESN Card ya existe"
-                        )
-                    ), 400);
-                }
-                if ($this->socioManager->existsSocio($app, $socio->getEmail(), 'email', false, $id)) {
-                    return $app->json(array(
-                        'errores' => array(
-                            "esncard" => "El e-mail ya existe"
-                        )
-                    ), 400);
-                }
-                $socio = $this->socioManager->updateSocio($socio, $app, $id);
-                if (null !== $this->transactionLogger) {
-                    $this->transactionLogger->addNotice('Socio actualizado',array('datos'=>$socio->toArray()));
-                }
-            }
 
-            return $app->json($socio->toArray(), 201);
-        }
-
-        return $app->json(array('errores' => $this->getFormErrorsAsArray($this->form)), 400);
-    }
     public function getQueryHeaders(Request $request)
     {
         $this->queryParams = $request->query->all();

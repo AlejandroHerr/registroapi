@@ -2,78 +2,45 @@
 
 namespace Esnuab\Libro\Model\Manager;
 
-use Silex\Application;
+use AlejandroHerr\ApiApplication\Model\Exception\DuplicatedValueException;
+use AlejandroHerr\ApiApplication\Model\Manager\AbstractDbalManager;
 use Esnuab\Libro\Model\Entity\Socio;
+use Silex\Application;
 
-class SocioManager
+class SocioManager extends AbstractDbalManager
 {
-    public function getSocios(Application $app,$params)
+    protected $entity = 'Esnuab\Libro\Model\Entity\Socio';
+    protected $table = 'socio';
+
+    protected function beforeGetResources(Application $app, $queryParameters)
     {
-        $offset=($params['currentPage']-1)*$params['maxResults'];
+        $offset=($queryParameters['currentPage']-1)*$queryParameters['maxResults'];
 
-        $query = 'SELECT * from socio '.
-            'ORDER BY '.$params['orderBy'].' '.$params['orderDir'].
-            ' LIMIT '.$offset.','.$params['maxResults']
-        ;
-        $socios=$app['db']->fetchAll($query);
-
-        return $socios;
-    }
-    public function getSocio($app,$id)
-    {
-        $socio = $app['db']->fetchAssoc('SELECT * FROM socio WHERE id = ?', array($app->escape($id)));
-
-        return new Socio($socio);
-    }
-    public function createSocio(Socio $socio,$app)
-    {
-        $socio->setModAt();
-        $socio->setExpiresAt();
-        $app['db']->insert('socio',$socio->toArray());
-        $socio->setId($app['db']->lastInsertId());
-        $app['db']->insert('socio_confirmation',array(
-            'userId' => $socio->getId(),
-            'email' => $socio->getEmail(),
-            'name' => $socio->getNombre(). ' ' . $socio->getApellido(),
-            'expires_at' => $socio->getExpiresAt(),
-            'esncard' => $socio->getEsncard(),
-            'language' => $socio->getLanguage()
-        ));
-
-        return $socio;
-
-    }
-    public function updateSocio($socio,$app,$id)
-    {
-        $socio->setModAt();
-        $socio->setExpiresAt();
-        $app['db']->update('socio',$socio->toArray(),array('id' => $app->escape($id)));
-        $socio->setId($id);
-
-        return $socio;
-
-    }
-    public function deleteSocio($app,$id)
-    {
-        $app['db']->delete('socio',array('id' => $app->escape($id)));
+        return 'ORDER BY '.$queryParameters['orderBy'].' '.$queryParameters['orderDir'].
+            ' LIMIT '.$offset.','.$queryParameters['maxResults'];
     }
 
-    public function existsSocio($app,$value,$field='id',$excludeId=true,$id=null)
+    protected function beforePostResource(Application $app, $resource)
     {
-        $query= 'SELECT * FROM socio WHERE '.$field.' = "'.$app->escape($value).'"';
-        if (!$excludeId) {
-            $query = $query . " AND id != ".$app->escape($id);
+        if ($this->existsResource($app,$resource->getEsncard(),'esncard')) {
+            throw new DuplicatedValueException('esncard');
         }
-        if ($app['db']->fetchAssoc($query)) {
-            return true;
+        if ($this->existsResource($app,$resource->getEmail(),'email')) {
+            throw new DuplicatedValueException('email');
         }
-
-        return false;
+        $resource->setModAt();
+        $resource->setExpiresAt();
     }
-    public function getCount($app)
-    {
-        $count=$app['db']->fetchAssoc('SELECT COUNT(id) AS total FROM socio');
 
-        return $count['total'];
+    protected function beforePutResource(Application $app, $resource)
+    {
+        if ($this->existsResource($app,$resource->getEsncard(),'esncard',$resource->getId())) {
+            throw new DuplicatedValueException('esncard');
+        }
+        if ($this->existsResource($app,$resource->getEmail(),'email',$resource->getId())) {
+            throw new DuplicatedValueException('email');
+        }
+        $resource->setModAt();
+        $resource->setExpiresAt();
     }
 }
