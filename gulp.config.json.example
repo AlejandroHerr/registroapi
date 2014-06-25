@@ -1,22 +1,16 @@
 {
 	"app" : {
-		"templates" : [
-			"./src_frontend/index.html",
-                  "./src_frontend/app/login/login.tpl.html",
-                  "./src_frontend/app/modal/40x.tpl.html",
-                  "./src_frontend/app/modal/delete.tpl.html",
-                  "./src_frontend/app/modal/registrar.tpl.html",
-                  "./src_frontend/app/navbar/navbar.tpl.html",
-                  "./src_frontend/app/nuevo/nuevo.tpl.html",
-                  "./src_frontend/app/socio/socio.tpl.html",
-                  "./src_frontend/app/socios/socios.tpl.html"
-		],
+            "templates" : [
+                  "./src_frontend/app/**/*.tpl.html",
+                  "./src_frontend/app/**/**/*.tpl.html"
+            ],
             "js" : [
                   "./src_frontend/app/app.js",
-                  "./src_frontend/app/**/*.js"
+                  "./src_frontend/app/**/*.js",
+                  "./src_frontend/app/**/**/*.js"
             ],
             "assets" : "./src_frontend/assets/*"
-	},
+      },
       "vendor" : {
             "js" : [
                   "vendorjs/angular/angular.min.js",
