@@ -1,10 +1,10 @@
 angular.module('libroApp.api', [])
-    .factory('ApiCall', ['$http', '$modal', '$state', 'loader',
+    .factory('ApiCaller', ['$http', '$modal', '$state', 'loader',
         function ($http, $modal, $state, loader) {
             $http.defaults.useXDomain = true;
             delete $http.defaults.headers.common['X-Requested-With'];
             var domain = 'remoteBackendURI';
-            var makeCall = function (passwordDigest, method, path, data) {
+            var rawCall = function (passwordDigest, method, path, data) {
                 loader.setLoading();
                 $http.defaults.headers.common = {
                     'X-WSSE': passwordDigest
@@ -22,8 +22,8 @@ angular.module('libroApp.api', [])
                 });
                 return promise;
             };
-            var apiCall = function (passwordDigest, method, path, data, successCb) {
-                makeCall(passwordDigest, method, path, data)
+            var modalCall = function (passwordDigest, method, path, data, successCb) {
+                rawCall(passwordDigest, method, path, data)
                     .then(function (d) {
                         successCb(d);
                     }, function (d) {
@@ -41,21 +41,18 @@ angular.module('libroApp.api', [])
                                 $state.go('logout', {}, {
                                     location: true
                                 });
-                            }
-                            else {
+                            }else if (d.status == 403 || d.status == 404){
                                 $state.go('logged', {}, {
                                     location: true
                                 });
                             }
                         });
-                    }, function (d) {
-
-                    });
-
+                    }
+                );
             };
             return {
-                apiCall: apiCall,
-                makeCall: makeCall
+                modalCall: modalCall,
+                rawCall: rawCall
             }
         }
     ]);
