@@ -12,11 +12,11 @@ class SocioForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nombre','text',array(
+            ->add('name','text',array(
                 'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 2, 'max' => 50))),
                 'invalid_message' => 'La dsf está mal'
             ))
-            ->add('apellido', 'text',array(
+            ->add('surname', 'text',array(
                 'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 2, 'max' => 50))),
                 'invalid_message' => 'La dsf está mal'
             ))
@@ -32,7 +32,7 @@ class SocioForm extends AbstractType
                 'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 5, 'max' => 22))),
                 'invalid_message' => 'La dsf está mal'
             ))
-            ->add('pais','text',array(
+            ->add('country','text',array(
                 'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 2, 'max' => 2))),
                 'invalid_message' => 'La dsf está mal'
             ))

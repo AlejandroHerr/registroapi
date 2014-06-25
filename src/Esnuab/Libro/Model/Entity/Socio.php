@@ -7,12 +7,12 @@ use AlejandroHerr\ApiApplication\Model\Entity\AbstractEntity;
 class Socio extends AbstractEntity
 {
     protected $id;
-    protected $nombre;
-    protected $apellido;
+    protected $name;
+    protected $surname;
     protected $email;
     protected $esncard;
     protected $passport;
-    protected $pais;
+    protected $country;
     protected $created_at;
     protected $expires_at;
     protected $mod_at;
@@ -28,23 +28,23 @@ class Socio extends AbstractEntity
 
         return $this;
     }
-    public function getNombre()
+    public function getName()
     {
-        return $this->nombre;
+        return $this->name;
     }
-    public function setNombre($nombre)
+    public function setName($name)
     {
-        $this->nombre = ucwords($nombre);
+        $this->name = ucwords($name);
 
         return $this;
     }
-    public function getApellido()
+    public function getSurname()
     {
-        return $this->apellido;
+        return $this->surname;
     }
-    public function setApellido($apellido)
+    public function setSurname($surname)
     {
-        $this->apellido = ucwords($apellido);
+        $this->surname = ucwords($surname);
 
         return $this;
     }
@@ -80,11 +80,11 @@ class Socio extends AbstractEntity
     }
     public function getPais()
     {
-        return $this->pais;
+        return $this->country;
     }
-    public function setPais($pais)
+    public function setPais($country)
     {
-        $this->pais = $pais;
+        $this->country = $country;
 
         return $this;
     }
