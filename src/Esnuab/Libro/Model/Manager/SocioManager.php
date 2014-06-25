@@ -10,17 +10,19 @@ use Silex\Application;
 class SocioManager extends AbstractDbalManager
 {
     protected $entity = 'Esnuab\Libro\Model\Entity\Socio';
+    protected $collection = 'Esnuab\Libro\Model\Entity\SocioCollection';
     protected $table = 'socio';
 
-    protected function beforeGetResources(Application $app, $queryParameters)
+    public function beforeGetCollection(Application $app, $queryParameters)
     {
-        $offset=($queryParameters['currentPage']-1)*$queryParameters['maxResults'];
+        $queryParameters = array_map(array($app,'escape'), $queryParameters);
+        $offset=($queryParameters['page']-1)*$queryParameters['max'];
 
-        return 'ORDER BY '.$queryParameters['orderBy'].' '.$queryParameters['orderDir'].
-            ' LIMIT '.$offset.','.$queryParameters['maxResults'];
+        return 'ORDER BY '.$queryParameters['by'].' '.$queryParameters['dir'].
+            ' LIMIT '.$offset.','.$queryParameters['max'];
     }
 
-    protected function beforePostResource(Application $app, $resource)
+    public function beforePostResource(Application $app, $resource)
     {
         if ($this->existsResource($app,$resource->getEsncard(),'esncard')) {
             throw new DuplicatedValueException('esncard');
@@ -32,7 +34,7 @@ class SocioManager extends AbstractDbalManager
         $resource->setExpiresAt();
     }
 
-    protected function beforePutResource(Application $app, $resource)
+    public function beforePutResource(Application $app, $resource)
     {
         if ($this->existsResource($app,$resource->getEsncard(),'esncard',$resource->getId())) {
             throw new DuplicatedValueException('esncard');
