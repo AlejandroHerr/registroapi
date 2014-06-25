@@ -9,6 +9,7 @@ abstract class AbstractDbalManager
 {
     protected $entity;
     protected $table;
+    protected $collection;
 
     public function deleteResource(Application $app, $id)
     {
@@ -25,50 +26,38 @@ abstract class AbstractDbalManager
         return $count['total'];
     }
 
-    public function getResource(Application $app, $id)
+    public function getResourceById(Application $app, $id)
     {
-        if (!($ressource = $app['db']->fetchAssoc('SELECT * FROM '.$this->table.' WHERE id = ?', array($app->escape($id))))) {
+        if (!($resource = $app['db']->fetchAssoc('SELECT * FROM '.$this->table.' WHERE id = ?', array($app->escape($id))))) {
             throw new ResourceDoesNotExistException($id);
         }
 
-        return new $this->entity($ressource);
+        return new $this->entity($resource);
     }
 
-    public function getResources(Application $app, $queryParameters = array())
+    public function getCollection(Application $app, $query)
     {
-        $query = method_exists($this, 'beforeGetResources') ? $this->beforeGetResources($app, $queryParameters) : '';
-
         $query = 'SELECT * from '.$this->table.' '.$query;
-        $resources = $app['db']->fetchAll($query);
+        $collection = new $this->collection($app['db']->fetchAll($query));
 
-        !method_exists($this, 'afterGetResources') ?: $this->afterGetResources($app, $queryParameters);
-
-        return $resources;
+        return $collection;
     }
 
     public function postResource(Application $app, $resource)
     {
-        !method_exists($this, 'beforePostResource') ?: $this->beforePostResource($app, $resource);
-
         $app['db']->insert(
             $this->table,
             $resource->toArray()
         );
-
-        !method_exists($this, 'afterPostResource') ?: $this->afterPostResource($app, $resource);
     }
 
     public function putResource(Application $app, $resource)
     {
-        !method_exists($this, 'beforePutResource') ?: $this->beforePutResource($app, $resource);
-
         $app['db']->update(
             $this->table,
             $resource->toArray(),
             array('id' => $resource->getId())
         );
-
-        !method_exists($this, 'afterPutResource') ?: $this->afterPutResource($app, $resource);
     }
 
     protected function existsResource(Application $app, $value, $field='id', $excludedId=null)
