@@ -46,18 +46,19 @@ class SocioController extends ApiController
     public function getSocios(Application $app)
     {
         $totalResults = $this->socioManager->getCount($app);
-        $socios = $this->socioManager->getResources($app, $this->queryParams);
+        $socios = $this->socioManager->getCollection($app, $this->socioManager->beforeGetCollection($app, $this->queryParams));
         $response = array(
             'pagination' => array(
-                'totalResults' => $totalResults,
-                'maxResults' => $this->queryParams['maxResults'],
-                'currentPage' => $this->queryParams['currentPage']
+                'total' => $totalResults,
+                'max' => $this->queryParams['max'],
+                'page' => $this->queryParams['page']
             ),
-            'socios' => $socios
+            'socios' => $socios->toArray()
         );
 
         return $app->json($response, 200);
     }
+
     public function postSocio(Application $app)
     {
         $socio = new Socio();
@@ -72,18 +73,21 @@ class SocioController extends ApiController
             return $app->json(array('errores' => $this->getFormErrorsAsArray($this->form)), 400);
         }
 
+        $this->socioManager->beforePostResource($app, $socio);
         $this->socioManager->postResource($app, $socio);
 
         $this->transactionLogger->addNotice('Socio creado',array('datos'=>$socio->toArray()));
 
         return $app->json('', 201);
     }
+
     public function getSocio(Application $app, $id)
     {
-        $socio = $this->socioManager->getResource($app, $id);
+        $socio = $this->socioManager->getResourceById($app, $id);
 
         return $app->json($socio->toArray(), 200);
     }
+
     public function putSocio(Application $app, $id, Request $request)
     {
         $socio = $this->socioManager->getResource($app, $id);
@@ -98,12 +102,14 @@ class SocioController extends ApiController
             return $app->json(array('errores' => $this->getFormErrorsAsArray($this->form)), 400);
         }
 
+        $this->socioManager->beforePutResource($app, $socio);
         $this->socioManager->putResource($app, $socio);
 
         $this->transactionLogger->addNotice('Socio actualizado',array('datos'=>$socio->toArray()));
 
         return $app->json('', 204);
     }
+
     public function deleteSocio(Application $app, $id)
     {
         $this->socioManager->deleteResource($app, $id);
@@ -116,37 +122,25 @@ class SocioController extends ApiController
     public function getQueryHeaders(Request $request)
     {
         $this->queryParams = $request->query->all();
-        if (!array_key_exists('maxResults', $this->queryParams)) {
-            $this->queryParams['maxResults'] = 25;
+        if (!array_key_exists('max', $this->queryParams)) {
+            $this->queryParams['max'] = 25;
         }
-        if (!is_numeric($this->queryParams['maxResults'])) {
-            $this->queryParams['maxResults'] = 25;
+        if (!is_numeric($this->queryParams['max'])) {
+            $this->queryParams['max'] = 25;
         }
-        if (!array_key_exists('currentPage', $this->queryParams)) {
-            $this->queryParams['currentPage'] = 1;
+        if (!array_key_exists('page', $this->queryParams)) {
+            $this->queryParams['page'] = 1;
         }
-        if (!is_numeric($this->queryParams['currentPage'])) {
-            $this->queryParams['currentPage'] = 1;
+        if (!is_numeric($this->queryParams['page'])) {
+            $this->queryParams['page'] = 1;
         }
-        if (array_key_exists('orderDir', $this->queryParams)) {
-            $this->queryParams['orderDir'] = $this->queryParams['orderDir'] == 'ASC' ? 'ASC' : 'DESC';
+        if (array_key_exists('dir', $this->queryParams)) {
+            $this->queryParams['dir'] = $this->queryParams['dir'] == 'ASC' ? 'ASC' : 'DESC';
         } else {
-            $this->queryParams['orderDir'] = 'DESC';
+            $this->queryParams['dir'] = 'DESC';
         }
-        if (array_key_exists('orderBy', $this->queryParams)) {
-            $fields = array(
-                'id',
-                'nombre',
-                'apellido',
-                'email',
-                'esncard',
-                'passport',
-                'pais',
-                'created_at'
-            );
-            $this->queryParams['orderBy'] = in_array($this->queryParams['orderBy'], $fields) ? $this->queryParams['orderBy'] : 'created_at';
-        } else {
-            $this->queryParams['orderBy'] = 'created_at';
+        if (!array_key_exists('by', $this->queryParams)) {
+            $this->queryParams['by'] = 'id';
         }
     }
 }
