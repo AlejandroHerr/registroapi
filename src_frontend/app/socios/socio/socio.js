@@ -1,15 +1,4 @@
 angular.module('libroApp.socios.socio', [])
-    .config(['$stateProvider',
-        function ($stateProvider) {
-            $stateProvider
-                .state('logged.socios.socio', {
-                    url: '/:socioId/{mode:.*}',
-                    templateUrl: 'socios/socio/socio.tpl.html',
-                    controller: 'SociosSocioCtrl'
-
-                });
-        }
-    ])
     .controller('SociosSocioCtrl', ['$modal','$stateParams', 'ApiCaller', '$scope', 'credentials', '$state', '$filter', 'countries',
         function ($modal,$stateParams, ApiCaller, $scope, credentials, $state, $filter, countries) {
             var first = true;

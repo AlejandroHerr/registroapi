@@ -1,14 +1,4 @@
 angular.module('libroApp.socios.lista', [])
-    .config(['$stateProvider',
-        function ($stateProvider) {
-            $stateProvider
-                .state('logged.socios.lista', {
-                    url: '/',
-                    templateUrl: 'socios/lista/lista.tpl.html',
-                    controller: 'SociosListaCtrl'
-                });
-        }
-    ])
     .controller('SociosListaCtrl', ['ApiCaller', '$modal', 'queryParams', 'credentials', '$scope', '$state',
         function (ApiCaller, $modal, queryParams, credentials, $scope, $state) {
             $scope.changePage = function (page) {

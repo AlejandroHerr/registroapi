@@ -1,14 +1,4 @@
 angular.module('libroApp.socios.nuevo', [])
-    .config(['$stateProvider',
-        function ($stateProvider) {
-            $stateProvider
-                .state('logged.socios.nuevo', {
-                    url: '/nuevo',
-                    templateUrl: 'socios/nuevo/nuevo.tpl.html',
-                    controller: 'SociosNuevoCtrl'
-                });
-        }
-    ])
     .controller('SociosNuevoCtrl', ['loader', 'ApiCaller', '$modal', 'credentials', '$http', '$scope', '$state', 'countries',
         function (loader, ApiCaller, $modal, credentials, $http, $scope, $state, countries) {
             $scope.registrar = function () {
