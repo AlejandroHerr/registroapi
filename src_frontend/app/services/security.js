@@ -1,5 +1,5 @@
 angular.module('libroApp.security', [])
-    .service('credenciales', ['xwsse',
+    .service('credentials', ['xwsse',
         function(xwsse) {
             var username = '';
             var password = '';
