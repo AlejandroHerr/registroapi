@@ -9,13 +9,13 @@ angular.module('libroApp.login', [])
                 });
         }
     ])
-    .controller('LoginCtrl', ['credenciales', '$scope', '$state', 'loader',
-        function (credenciales, $scope, $state, loader) {
+    .controller('LoginCtrl', ['credentials', '$scope', '$state', 'loader',
+        function (credentials, $scope, $state, loader) {
             $scope.logIn = function () {
                 event.preventDefault();
-                credenciales.setUser($scope.username);
-                credenciales.setPass($scope.password);
-                if (credenciales.isLogged()) {
+                credentials.setUser($scope.username);
+                credentials.setPass($scope.password);
+                if (credentials.isLogged()) {
                     loader.setLoading();
                     $state.go('logged', {}, {
                         location: true

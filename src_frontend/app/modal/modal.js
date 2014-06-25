@@ -1,6 +1,6 @@
 angular.module('libroApp.modals', [])
-    .controller('DeleteModalInstanceCtrl', ['ApiCall', 'credenciales', '$scope', '$modalInstance', 'socio',
-        function (ApiCall, credenciales, $scope, $modalInstance, socio) {
+    .controller('DeleteModalInstanceCtrl', ['ApiCaller', 'credentials', '$scope', '$modalInstance', 'socio',
+        function (ApiCaller, credentials, $scope, $modalInstance, socio) {
             $scope.socio = socio;
             $scope.alerts = [{
                 type: 'warning',
@@ -25,12 +25,12 @@ angular.module('libroApp.modals', [])
                 if (str == 'ELIMINAR ' + $scope.socio.esncard) {
                     $scope.addAlert('success', 'Nuestros monos lo están borrando... Espera y no toques nada.');
                     var path = '/api/socios/' + $scope.socio.id;
-                    var data = ApiCall.makeCall(credenciales.getXWSSE(), 'DELETE', path, null)
+                    var data = ApiCaller.rawCall(credentials.getXWSSE(), 'DELETE', path, null)
                         .then(function (d) {
                             $modalInstance.close();
                         }, function (d) {
                             if (d.status == 401) {
-                                $scope.addAlert('danger', '¡Tus credenciales son incorrectas..!');
+                                $scope.addAlert('danger', '¡Tus credentials son incorrectas..!');
                             } else if (d.status == 403) {
                                 $scope.addAlert('danger', '¡No tienes permiso para borrar socios!');
                             } else {
@@ -46,7 +46,7 @@ angular.module('libroApp.modals', [])
     .controller('ErrorModalInstanceCtrl', ['$scope', '$modalInstance', 'error',
         function ($scope, $modalInstance, error) {
             $scope.error = error;
-            if (error.status == 401) {
+            /*if (error.status == 401) {
                 $scope.name = 'No autorizado';
                 $scope.msg = 'Parece ser que no te has loggeado correctamente. Puede ser que seas un piratilla o que tengas los dedos muy gordos y hayas tecleado muy mal. En todo caso, no te preocupes, la polic&iacute; se drige a tu casa para solucionarlo.';
             } else if (error.status == 403) {
@@ -55,21 +55,21 @@ angular.module('libroApp.modals', [])
             } else {
                 $scope.name = 'Error no previsto';
                 $scope.msg = 'Ha ocurrido un error raro que Alejandro I el Hermoso no tuvo en cuenta, así; que no te podemos dar más detalles.';
-            }
+            }*/
             $scope.salir = function () {
                 $modalInstance.dismiss();
             };
         }
     ])
-    .controller('RegistrarModalInstanceCtrl', ['ApiCall', 'credenciales', '$scope', '$modalInstance', 'item', 'url',
-        function (ApiCall, credenciales, $scope, $modalInstance, item, url) {
+    .controller('RegistrarModalInstanceCtrl', ['ApiCaller', 'credentials', '$scope', '$modalInstance', 'item', 'url',
+        function (ApiCaller, credentials, $scope, $modalInstance, item, url) {
             $scope.successFlag = false;
             $scope.failFlag = false;
             $scope.progress = "50";
             $scope.status = "progress-bar-warning";
             $scope.isCollapsed = false;
             var path = url;
-            var data = ApiCall.makeCall(credenciales.getXWSSE(), 'POST', path, item)
+            var data = ApiCaller.rawCall(credentials.getXWSSE(), 'POST', path, item)
                 .then(function (d) {
                     $scope.successFlag = true;
                     $scope.progress = "100";

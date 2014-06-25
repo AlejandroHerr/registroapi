@@ -9,9 +9,9 @@ angular.module('libroApp.logout', [])
             });
         }
     ])
-    .controller('LogoutCtrl', ['credenciales', '$scope', '$state',
-        function (credenciales, $scope, $state) {
-            credenciales.logOut();
+    .controller('LogoutCtrl', ['credentials', '$scope', '$state',
+        function (credentials, $scope, $state) {
+            credentials.logOut();
             $state.go('login', {}, {
                 location: true
             });

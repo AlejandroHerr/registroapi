@@ -10,14 +10,14 @@ angular.module('libroApp.user', [])
                 });
         }
     ])
-    .controller('UserCtrl', ['$stateParams', 'ApiCall', '$scope', 'credenciales', '$state', '$http', '$filter', 'loader',
-        function ($stateParams, ApiCall, $scope, credenciales, $state, $http, $filter, loader) {
+    .controller('UserCtrl', ['$stateParams', 'ApiCaller', '$scope', 'credentials', '$state', '$http', '$filter', 'loader',
+        function ($stateParams, ApiCaller, $scope, credentials, $state, $http, $filter, loader) {
             var bindUser = function(d){
                 $scope.user = d.data;
             };
             $scope.loadSocio = function (id) {
                 var path = '/api/admin/users/' + id;
-                ApiCall.apiCall(credenciales.getXWSSE(), 'GET', path, null, bindUser);                   
+                ApiCaller.modalCall(credentials.getXWSSE(), 'GET', path, null, bindUser);                   
             };
             var id = $stateParams.userId;
             $scope.loadSocio(id);

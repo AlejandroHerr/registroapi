@@ -31,6 +31,35 @@ angular.module('libroApp.services', [ /*'ngResource'*/ ])
             }
         };
     })
+    .service('queryParams', function() {
+        var config;
+        config = {
+            by: 'id',
+            dir: 'DESC',
+            page: '1',
+            max: 25
+        };
+        return {
+            get: function() {
+                return config;
+            },
+            getValue: function(value) {
+                return this.config[value];
+            },
+            set: function(values) {
+                this.config = values;
+                return this;
+            },
+            reset: function() {
+                return {
+                    by: 'id',
+                    dir: 'DESC',
+                    page: 1,
+                    max: 25
+                };
+            }
+        };
+    })
     .service('loader', [
 
         function() {

@@ -10,9 +10,9 @@ angular.module('libroApp.nuevo_user', [])
                 });
         }
     ])
-    .controller('NuevoUserCtrl', ['loader', 'ApiCall', '$modal', 'credenciales', '$http', '$scope', '$state',
-        function (loader, ApiCall, $modal, credenciales, $http, $scope, $state) {
-            if (!credenciales.isLogged()) {
+    .controller('NuevoUserCtrl', ['loader', 'ApiCaller', '$modal', 'credentials', '$http', '$scope', '$state',
+        function (loader, ApiCaller, $modal, credentials, $http, $scope, $state) {
+            if (!credentials.isLogged()) {
                 $state.go('logout', {}, {
                     location: true
                 });

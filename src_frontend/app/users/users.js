@@ -8,8 +8,8 @@ angular.module('libroApp.users', [])
             });
         }
     ])
-    .controller('UsersCtrl', ['ApiCall', '$scope', 'credenciales',
-        function (ApiCall, $scope, credenciales) {
+    .controller('UsersCtrl', ['ApiCaller', '$scope', 'credentials',
+        function (ApiCaller, $scope, credentials) {
             $scope.activeClass = function (state) {
                 if (state == 1) {
                     return 'btn-success';
@@ -36,7 +36,7 @@ angular.module('libroApp.users', [])
             }
             $scope.loadUsers = function (page) {
                 var path = '/api/admin/users?page=' + page;
-                ApiCall.apiCall(credenciales.getXWSSE(), 'GET', path, null, succesCb);
+                ApiCaller.modalCall(credentials.getXWSSE(), 'GET', path, null, succesCb);
             };
             succesCb = function (d) {
                 $scope.users = d.data.users;

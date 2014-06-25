@@ -1,9 +1,9 @@
 angular.module('libroApp.outercontroller', [])
-    .controller('OuterController', ['$scope', 'credenciales', 'loader',
-        function($scope, credenciales, loader) {
-            $scope.logged = credenciales.isLogged();
+    .controller('OuterController', ['$scope', 'credentials', 'loader',
+        function($scope, credentials, loader) {
+            $scope.logged = credentials.isLogged();
             $scope.$watch(function() {
-                return credenciales.isLogged()
+                return credentials.isLogged()
             }, function(newVal) {
                 $scope.logged = newVal;
             })
