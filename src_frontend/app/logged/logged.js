@@ -7,11 +7,6 @@ angular.module('libroApp.logged', [])
                     templateUrl: 'logged/logged.tpl.html',
                     controller: 'LoggedCtrl'
                 })
-                .state('logged.socio', {
-                    abstract: true,
-                    url: '^/socios',
-                    template: '<ui-view/>'
-                })
                 .state('logged.user', {
                     abstract: true,
                     url: '^/users',
