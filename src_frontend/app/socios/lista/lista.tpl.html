@@ -22,10 +22,10 @@
 							</tr>
 							<tr ng-repeat="socio in socios">
 								<td>
-									<a ui-sref="logged.socio.socio({socioId: socio.id})">{{socio.id}}</a>
+									<a ui-sref="logged.socios.socio({socioId: socio.id})">{{socio.id}}</a>
 								</td>
-								<td>{{socio.nombre}}</td>
-								<td>{{socio.apellido}}</td>
+								<td>{{socio.name}}</td>
+								<td>{{socio.surname}}</td>
 								<td>{{socio.esncard}}</td>
 								<td>{{socio.created_at}}</td>
 								<td>
@@ -42,10 +42,10 @@
 							<h5>
 								<strong>Mostrando
 									<span class="badge">{{socios.length}}</span> resultados de
-									<span class="badge">{{totalItems}}</span>
+									<span class="badge">{{total}}</span>
 								</strong>
 							</h5>
-							<pagination boundary-links="true" total-items="totalItems" page="currentPage" items-per-page="maxResults" class="pagination-sm" on-select-page="changePage(page)" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" num-pages="numPages"></pagination>
+							<pagination boundary-links="true" total-items="total" page="page" items-per-page="max" class="pagination-sm" on-select-page="changePage(page)" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" num-pages="numPages"></pagination>
 						</div>
 					</div>
 				</div>
@@ -60,27 +60,28 @@
 							<div>
 								<h5>Ordenar por</h5>
 								<div class="btn-group">
-									<button type="button" class="btn btn-info btn-xs" ng-model="options.orderBy" btn-radio="'created_at'">Fecha de Alta</button>
-									<button type="button" class="btn btn-info btn-xs" ng-model="options.orderBy" btn-radio="'nombre'">Nombre</button>
-									 <button type="button" class="btn btn-info btn-xs" ng-model="options.orderBy" btn-radio="'apellido'">Apellido</button>
+									<button type="button" class="btn btn-info btn-xs" ng-model="options.by" btn-radio="'created_at'">Fecha de Alta</button>
+									<button type="button" class="btn btn-info btn-xs" ng-model="options.by" btn-radio="'name'">Nombre</button>
+									 <button type="button" class="btn btn-info btn-xs" ng-model="options.by" btn-radio="'surname'">Apellido</button>
+									 <button type="button" class="btn btn-info btn-xs" ng-model="options.by" btn-radio="'id'">id</button>
 								</div>
 							</div>
 							<div>
 								<h5>Orden</h5>
 								<div class="btn-group">
-									<button type="button" class="btn btn-info btn-xs" ng-model="options.orderDir" btn-radio="'ASC'">Ascendente</button>
-									<button type="button" class="btn btn-info btn-xs" ng-model="options.orderDir" btn-radio="'DESC'">Descendente</button>
+									<button type="button" class="btn btn-info btn-xs" ng-model="options.dir" btn-radio="'ASC'">Ascendente</button>
+									<button type="button" class="btn btn-info btn-xs" ng-model="options.dir" btn-radio="'DESC'">Descendente</button>
 								</div>
 							</div>
 							<div class="form-inline">
 								<label>
-									Ir directamente a la página número <input type="number" class="form-control" min="1" max="{{numPages}}" style="width:3em" ng-model="options.currentPage">.
+									Ir directamente a la página número <input type="number" class="form-control" min="1" ng-max="options.maxPages" style="width:3em" ng-model="options.page">.
 								</label>
 							</div>
 							<div class="form-inline">
 								<label>
 									Mostrar
-									<select class="form-control" ng-model="options.maxResults">
+									<select class="form-control" ng-model="options.max">
 										<option value="10">10</option>
 										<option value="25">25</option>
 										<option value="50">50</option>

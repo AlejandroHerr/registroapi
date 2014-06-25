@@ -1,36 +1,16 @@
-angular.module('libroApp.nuevo', [])
+angular.module('libroApp.socios.nuevo', [])
     .config(['$stateProvider',
         function ($stateProvider) {
             $stateProvider
-                .state('logged.socio.nuevo', {
+                .state('logged.socios.nuevo', {
                     url: '/nuevo',
-                    templateUrl: 'nuevo/nuevo.tpl.html',
-                    controller: 'NuevoSocioCtrl'
-                       
+                    templateUrl: 'socios/nuevo/nuevo.tpl.html',
+                    controller: 'SociosNuevoCtrl'
                 });
         }
     ])
-    .controller('NuevoSocioCtrl', ['loader', 'ApiCall', '$modal', 'credenciales', '$http', '$scope', '$state', 'countries',
-        function (loader, ApiCall, $modal, credenciales, $http, $scope, $state, countries) {
-            if (!credenciales.isLogged()) {
-                $state.go('logout', {}, {
-                    location: true
-                });
-                return;
-            }
-            loader.setLoading();
-            $scope.countries = countries.get()
-                .countries;
-            $scope.languages = [{
-                value: 'English'
-            }, {
-                value: 'Espanyol'
-            }];
-            $scope.socio = {
-                'created_at': new Date()
-                    .toJSON()
-                    .slice(0, 10)
-            };
+    .controller('SociosNuevoCtrl', ['loader', 'ApiCaller', '$modal', 'credentials', '$http', '$scope', '$state', 'countries',
+        function (loader, ApiCaller, $modal, credentials, $http, $scope, $state, countries) {
             $scope.registrar = function () {
                 if (this.nuevoSocio.$invalid) {
                     return;
@@ -51,19 +31,30 @@ angular.module('libroApp.nuevo', [])
                 modalInstance.result.then(function () {
                     $scope.nuevoSocio.$setPristine();
                     $scope.socio = {
-                        'nombre': '',
-                        'apellido': '',
+                        'name': '',
+                        'surname': '',
                         'esncard': '',
                         'created_at': new Date()
                             .toJSON()
                             .slice(0, 10),
                         'passport': '',
-                        'pais': '',
+                        'country': '',
                         'email': '',
                         'language': ''
                     };
                 });
             };
-            loader.unsetLoading();
+            $scope.countries = countries.get()
+                .countries;
+            $scope.languages = [{
+                value: 'English'
+            }, {
+                value: 'Espanyol'
+            }];
+            $scope.socio = {
+                'created_at': new Date()
+                    .toJSON()
+                    .slice(0, 10)
+            };
         }
     ]);

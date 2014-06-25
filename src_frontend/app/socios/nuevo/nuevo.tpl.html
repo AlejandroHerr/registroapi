@@ -17,22 +17,22 @@
                 <input type="date" class="form-control" id="created_at" name='created_at' placeholder="Fecha de Alta" ng-model="socio.created_at" ui-date-format required>
             </div>
         </div>
-        <div class="form-group" ng-class="{'ng-invalid': nuevoSocio.nombre.$invalid===true,'ng-valid': nuevoSocio.nombre.$valid===true,'ng-pristine': nuevoSocio.nombre.$dirty===false}">
+        <div class="form-group" ng-class="{'ng-invalid': nuevoSocio.name.$invalid===true,'ng-valid': nuevoSocio.name.$valid===true,'ng-pristine': nuevoSocio.name.$dirty===false}">
             <label for="nombre" class="col-xs-10 col-xs-offset-1 col-sm-3 col-sm-offset-1 col-md-2 col-md-offset-2 control-label">Nombre</label>
             <div class="col-xs-10 col-xs-offset-1 col-sm-7 col-sm-offset-0 col-md-4">
-                <input type="text" class="form-control" id="nombre" name='nombre' placeholder="Nombre" ng-model="socio.nombre" ng-minlength="2" ng-maxlength="50" required>
+                <input type="text" class="form-control" id="nombre" name='nombre' placeholder="Nombre" ng-model="socio.name" ng-minlength="2" ng-maxlength="50" required>
             </div>
             <div class="col-xs-10 col-xs-offset-1 col-sm-7 col-sm-offset-0 col-md-4">
-                <p class="error" ng-show="nuevoSocio.nombre.$invalid&&nuevoSocio.nombre.$dirty">¡Entre 2 y 50 caracteres!</small>
+                <p class="error" ng-show="nuevoSocio.name.$invalid&&nuevoSocio.name.$dirty">¡Entre 2 y 50 caracteres!</small>
             </div>
         </div>
-        <div class="form-group" ng-class="{'ng-invalid': nuevoSocio.apellido.$invalid===true,'ng-valid': nuevoSocio.apellido.$valid===true,'ng-pristine': nuevoSocio.apellido.$dirty===false}">
-            <label for="apellido" class="col-xs-10 col-xs-offset-1 col-sm-3 col-sm-offset-1 col-md-2 col-md-offset-2 control-label">Apellido</label>
+        <div class="form-group" ng-class="{'ng-invalid': nuevoSocio.surname.$invalid===true,'ng-valid': nuevoSocio.surname.$valid===true,'ng-pristine': nuevoSocio.surname.$dirty===false}">
+            <label for="surname" class="col-xs-10 col-xs-offset-1 col-sm-3 col-sm-offset-1 col-md-2 col-md-offset-2 control-label">Apellido</label>
             <div class="col-xs-10 col-xs-offset-1 col-sm-7 col-sm-offset-0 col-md-4">
-                <input type="text" class="form-control" id="apellido" name="apellido" placeholder="Apellido" ng-model="socio.apellido" ng-minlength="2" ng-maxlength="50" required>
+                <input type="text" class="form-control" id="surname" name="surname" placeholder="Apellido" ng-model="socio.surname" ng-minlength="2" ng-maxlength="50" required>
             </div>
             <div class="col-xs-10 col-xs-offset-1 col-sm-7 col-sm-offset-0 col-md-4">
-                <p class="error" ng-show="nuevoSocio.apellido.$invalid&&nuevoSocio.apellido.$dirty">¡Entre 2 y 50 caracteres!</small>
+                <p class="error" ng-show="nuevoSocio.surname.$invalid&&nuevoSocio.surname.$dirty">¡Entre 2 y 50 caracteres!</small>
             </div>
         </div>
         <div class="form-group" ng-class="{'ng-invalid': nuevoSocio.email.$invalid===true,'ng-valid': nuevoSocio.email.$valid===true,'ng-pristine': nuevoSocio.email.$dirty===false}">
@@ -53,10 +53,10 @@
                 <p class="error" ng-show="nuevoSocio.passport.$invalid&&nuevoSocio.passport.$dirty">¡Introduce un pasaporte válido!</small>
             </div>
         </div>
-        <div class="form-group" ng-class="{'ng-invalid': nuevoSocio.pais.$invalid===true,'ng-valid': nuevoSocio.pais.$valid===true,'ng-pristine': nuevoSocio.pais.$dirty===false}">
-            <label for="pais" class="col-xs-10 col-xs-offset-1 col-sm-3 col-sm-offset-1 col-md-2 col-md-offset-2 control-label">Pais</label>
+        <div class="form-group" ng-class="{'ng-invalid': nuevoSocio.country.$invalid===true,'ng-valid': nuevoSocio.country.$valid===true,'ng-pristine': nuevoSocio.country.$dirty===false}">
+            <label for="country" class="col-xs-10 col-xs-offset-1 col-sm-3 col-sm-offset-1 col-md-2 col-md-offset-2 control-label">Pais</label>
             <div class="col-xs-10 col-xs-offset-1 col-sm-7 col-sm-offset-0 col-md-4">
-                <select ng-model="socio.pais" class='form-control' name='pais' required>
+                <select ng-model="socio.country" class='form-control' name='country' required>
                     <option ng-repeat="country in countries" value="{{country.alpha2}}">{{country.name}}</option>
                 </select>
             </div>
