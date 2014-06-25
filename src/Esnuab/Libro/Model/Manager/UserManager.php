@@ -2,16 +2,31 @@
 
 namespace Esnuab\Libro\Model\Manager;
 
+use AlejandroHerr\ApiApplication\Model\Manager\AbstractDbalManager;
 use Esnuab\Libro\Model\Entity\User;
 use Silex\Application;
 
-class UserManager
+class UserManager extends AbstractDbalManager
 {
     protected $conn;
+    protected $entity = 'Esnuab\Libro\Model\Entity\User';
+    protected $collection = 'Esnuab\Libro\Model\Entity\UserCollection';
+    protected $table = 'users';
     public function __construct($conn)
     {
         $this->conn=$conn;
     }
+
+    public function beforeGetCollection(Application $app, $queryParameters)
+    {
+        $queryParameters = array_map(array($app,'escape'), $queryParameters);
+
+        $offset=($queryParameters['page']-1)*$queryParameters['max'];
+
+        return 'ORDER BY '.$queryParameters['by'].' '.$queryParameters['dir'].
+            ' LIMIT '.$offset.','.$queryParameters['max'];
+    }
+
     public function createUser(User $user)
     {
         $user->setActivo(1);
@@ -32,26 +47,17 @@ class UserManager
 
         return false;
     }
-    public function getCount($queryParams)
-    {
-        $query = 'SELECT COUNT(id) AS total FROM users';
-        if ($queryParams['active']==1) {
-            $query .= ' WHERE activo=1';
-        }
-        $count=$this->conn->fetchAssoc($query);
 
-        return $count['total'];
-    }
     public function getUser($id)
     {
-        $user = $this->conn->fetchAssoc('SELECT id,username,roles,activo,blocked,nombre,apellidos,email FROM users WHERE id = ?', array($id));
+        $user = $this->conn->fetchAssoc('SELECT * FROM users WHERE id = ?', array($id));
 
         return new User($user);
     }
     public function getUsers($queryParams)
     {
         $offset = ($queryParams['page']-1)*$queryParams['maxResults'];
-        $query = 'SELECT id,username,roles,activo,blocked,nombre,apellidos,email from users';
+        $query = 'SELECT * from users';
         if ($queryParams['active']==1) {
             $query .= ' WHERE activo=1';
         }
