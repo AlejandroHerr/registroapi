@@ -77,7 +77,7 @@ class SocioController extends ApiController
         $this->socioManager->postResource($app, $socio);
         $this->socioManager->afterPostResource($app, $socio);
 
-        $this->transactionLogger->addNotice('Socio creado',array('datos'=>$socio->toArray()));
+        $this->transactionLogger->addNotice('Socio creado',$socio->toArray());
 
         return $app->json('', 201);
     }
@@ -91,7 +91,7 @@ class SocioController extends ApiController
 
     public function putSocio(Application $app, $id, Request $request)
     {
-        $socio = $this->socioManager->getResource($app, $id);
+        $socio = $this->socioManager->getResourceById($app, $id);
 
         $app->register(new FormServiceProvider());
         $app->register(new ValidatorServiceProvider());
@@ -106,7 +106,7 @@ class SocioController extends ApiController
         $this->socioManager->beforePutResource($app, $socio);
         $this->socioManager->putResource($app, $socio);
 
-        $this->transactionLogger->addNotice('Socio actualizado',array('datos'=>$socio->toArray()));
+        $this->transactionLogger->addNotice('Socio actualizado',$socio->toArray());
 
         return $app->json('', 204);
     }
@@ -115,7 +115,7 @@ class SocioController extends ApiController
     {
         $this->socioManager->deleteResource($app, $id);
 
-        $this->transactionLogger->addNotice('Socio eliminado',array('datos'=>$id));
+        $this->transactionLogger->addNotice('Socio eliminado',array('id'=>$id));
 
         return $app->json(null, 204);
     }

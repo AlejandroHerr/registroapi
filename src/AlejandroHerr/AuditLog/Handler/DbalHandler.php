@@ -25,7 +25,10 @@ class DbalHandler extends AbstractProcessingHandler
         $this->conn->insert('monolog', array(
             'channel' => $record['channel'],
             'level' => $record['level'],
-            'message' => $record['formatted'],
+            'user' => $record['extra']['user'],
+            'message' => $record['message'],
+            'context' => $record['formatted']['context'],
+            'extra' => $record['formatted']['extra'],
             'time' => $record['datetime']->format('U')
         ));
     }
