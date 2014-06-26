@@ -7,6 +7,8 @@ use AlejandroHerr\AuditLog\Processor\RequestProcessor;
 use AlejandroHerr\AuditLog\Processor\UserProcessor;
 use Esnuab\Libro\Model\Manager\SocioManager;
 use Esnuab\Libro\Model\Manager\UserManager;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Silex\Application;
 use Silex\Provider\DoctrineServiceProvider;
 use Silex\Provider\MonologServiceProvider;
@@ -33,6 +35,9 @@ $app->error(function (\RuntimeException $e, $code) {
 $app['db.config'] = require_once ROOT . '/config/db.php';
 $app->register(new DoctrineServiceProvider(),$app['db.config']);
 
+###################
+# loggers         #
+###################
 $app->register(new MonologServiceProvider());
 $app['monolog.logfile']=function () {
     $date = \DateTime::createFromFormat('U',time());
@@ -45,34 +50,29 @@ $app['monolog.factory'] = $app->protect(function ($name) use ($app) {
 
     return $log;
 });
-foreach (array('access','transaction') as $channel) {
-    $app['monolog.'.$channel] = $app->share(function () use ($app,$channel) {
-            $log = new $app['monolog.logger.class']($channel);
-            $handler = new DbalHandler($app['db']);
-            $handler->setFormatter(new AuditFormatter());
-            $handler->pushProcessor(new RequestProcessor($app));
-            $handler->pushProcessor(new UserProcessor($app));
-            $log->pushHandler($handler);
+$app['monolog.access'] = $app->share(function () use ($app) {
+    $log = new $app['monolog.logger.class']('acces');
 
-            return $log;
-        });
-}
-/*foreach (array('access','transaction') as $channel) {
-    $app['monolog.'.$channel] = $app->share(function () use ($app,$channel) {
-            $log = new $app['monolog.logger.class']($channel);
-            //$handler = new DbalHandler($app['db']);
-            $date = \DateTime::createFromFormat('U',time());
-            $file = ROOT.'/var/logs/acces_'.$date->format('Y-m-d').'.log';
+    $date = \DateTime::createFromFormat('U',time());
+    $file = ROOT.'/var/logs/acces_'.$date->format('Y-m-d').'.log';
 
-            $handler = new StreamHandler($file);
-            //$handler->setFormatter(new AuditFormatter());
-            $handler->pushProcessor(new RequestProcessor($app));
-            $handler->pushProcessor(new UserProcessor($app));
-            $log->pushHandler($handler);
+    $handler = new StreamHandler($file);
+    $handler->pushProcessor(new RequestProcessor($app));
+    $handler->pushProcessor(new UserProcessor($app));
+    $log->pushHandler($handler);
 
-            return $log;
-        });
-}*/
+    return $log;
+});
+$app['monolog.transaction'] = $app->share(function () use ($app) {
+    $log = new $app['monolog.logger.class']('transaction');
+    $handler = new DbalHandler($app['db'],Logger::NOTICE);
+    $handler->setFormatter(new AuditFormatter());
+    $handler->pushProcessor(new RequestProcessor($app));
+    $handler->pushProcessor(new UserProcessor($app));
+    $log->pushHandler($handler);
+
+    return $log;
+});
 
 ###################
 # model managers  #

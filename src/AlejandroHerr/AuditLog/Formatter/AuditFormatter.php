@@ -8,23 +8,18 @@ class AuditFormatter implements FormatterInterface
 {
     public function format(array $record)
     {
-        $base = array(
-            'channel' => $record['channel'],
-            'level' => $record['level'],
-            'level_name' => $record['level_name']
+        $record['extra'] = array_merge(
+            array('channel' => $record['channel']),
+            array('level' => $record['level']),
+            array('level_name' => $record['level_name']),
+            $record['extra']
         );
-        $event = array(
-            'message' => $record['message'],
-            'context' => $record['context']
+        $formatted = array(
+            'context' => json_encode($record['context']),
+            'extra' => json_encode($record['extra'])
         );
-        foreach ($record['extra'] as $key => $value) {
-            $extra[$key] = $value;
-        }
-        $formatted = array_merge($base, array(
-            'event' => $event
-        ), $extra);
 
-        return json_encode($formatted);
+        return $formatted;
     }
 
     public function formatBatch(array $records)
