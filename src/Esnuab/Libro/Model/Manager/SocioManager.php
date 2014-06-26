@@ -13,6 +13,23 @@ class SocioManager extends AbstractDbalManager
     protected $collection = 'Esnuab\Libro\Model\Entity\SocioCollection';
     protected $table = 'socio';
 
+    public function afterPostResource(Application $app, $resource)
+    {
+        $confirmation = array(
+            'userId' => $resource->getId(),
+            'name' => $resource->getName().' '.$resource->getSurname(),
+            'email' => $resource->getEmail(),
+            'esncard' => $resource->getEsncard(),
+            'language' => $resource->getLanguage(),
+            'expires_at' => $resource->getExpiresAt()
+        );
+
+        $app['db']->insert(
+            'socio_confirmation',
+            $confirmation
+        );
+    }
+
     public function beforeGetCollection(Application $app, $queryParameters)
     {
         $queryParameters = array_map(array($app,'escape'), $queryParameters);

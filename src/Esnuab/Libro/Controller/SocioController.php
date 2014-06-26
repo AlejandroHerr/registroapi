@@ -75,6 +75,7 @@ class SocioController extends ApiController
 
         $this->socioManager->beforePostResource($app, $socio);
         $this->socioManager->postResource($app, $socio);
+        $this->socioManager->afterPostResource($app, $socio);
 
         $this->transactionLogger->addNotice('Socio creado',array('datos'=>$socio->toArray()));
 
