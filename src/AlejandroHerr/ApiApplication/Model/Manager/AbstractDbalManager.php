@@ -49,6 +49,7 @@ abstract class AbstractDbalManager
             $this->table,
             $resource->toArray()
         );
+        $resource->setId($app['db']->lastInsertId());
     }
 
     public function putResource(Application $app, $resource)
