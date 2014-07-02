@@ -1,0 +1,25 @@
+<div class="row">
+	<div class="col-lg-10 col-lg-offset-1 col-xs-12">
+		<div class="row v-center">
+			<div class="col-md-9 col-xs-12">
+				<h1>{{date}}</h1>
+			</div>
+			<div class="col-md-3 col-xs-12">
+				<div selector selected="selectedChannel" elements="channels" title='Canales' after='displayResults()'></div>
+				<div selector selected="selectedLevel" elements="levels" title='Nivel' after='displayResults()'></div>
+			</div>
+		</div>
+		<div class="row v-center entry" ng-repeat="entry in entries">
+			<div class="col-xs-2 text-right">{{entry.datetime.date}}</div>
+			<div class="col-xs-1">{{entry.channel}}</div>
+			<div class="col-xs-2">
+				<button type="button" class="btn btn-sm ng-binding btn-danger" style="width:100%"s><abbr title="{{entry.level_name}}">{{entry.level}}</abbr></button>
+			</div>
+			<div class="col-xs-7">{{entry.message}}</div>
+		</div>
+		<div class="row">
+			<pagination boundary-links="true" total-items="pagination.totalItems" ng-model="pagination.currentPage" ng-change="pageChanged()" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+		</div>
+		
+	</div>
+</div>
