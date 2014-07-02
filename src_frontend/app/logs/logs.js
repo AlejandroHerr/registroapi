@@ -1,4 +1,4 @@
-angular.module('libroApp.logs', ['libroApp.logs.lista','libroApp.logs.log'])
+angular.module('libroApp.logs', ['libroApp.logs.collection','libroApp.logs.log'])
     .config(['$stateProvider',
         function ($stateProvider) {
             $stateProvider
@@ -7,16 +7,11 @@ angular.module('libroApp.logs', ['libroApp.logs.lista','libroApp.logs.log'])
                     url: '^/logs',
                     template: '<ui-view/>'
                 })
-                .state('logged.logs.lista', {
+                .state('logged.logs.collection', {
                     url: '/',
-                    templateUrl: 'logs/lista/lista.tpl.html',
-                    controller: 'LogsListaCtrl'
+                    templateUrl: 'logs/collection/collection.tpl.html',
+                    controller: 'LogsCollectionCtrl'
                 })
-                /*.state('logged.logs.nuevo', {
-                    url: '/nuevo',
-                    templateUrl: 'logs/nuevo/nuevo.tpl.html',
-                    controller: 'LogsNuevoCtrl'
-                })*/
                 .state('logged.logs.log', {
                     url: '/:logDate',
                     templateUrl: 'logs/log/log.tpl.html',
