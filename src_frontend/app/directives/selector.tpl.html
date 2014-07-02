@@ -1,0 +1,19 @@
+<div class="btn-group" dropdown is-open="status.isopen">
+  <button type="button" class="btn btn-primary dropdown-toggle" ng-disabled="disabled">
+    {{title}} <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li data-ng-repeat="element in elements">
+      <a data-ng-click="setSelectedElement()">
+        {{element.name}}<span data-ng-class="isChecked(element.name)"></span>
+      </a>
+    </li>                        
+    <li class="divider"></li>
+    <li>
+      <a data-ng-click="selected=[];"><i class="glyphicon glyphicon-remove"></i>  Uncheck All</a>
+    </li>
+    <li>
+      <a data-ng-click="checkAllElements()"><i class="glyphicon glyphicon-ok"></i>  Check All</a>
+    </li>
+  </ul>
+</div>
