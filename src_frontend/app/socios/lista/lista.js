@@ -1,32 +1,16 @@
 angular.module('libroApp.socios.lista', [])
-    .controller('SociosListaCtrl', ['ApiCaller', '$modal', 'queryParams', 'credentials', '$scope', '$state',
-        function (ApiCaller, $modal, queryParams, credentials, $scope, $state) {
-            $scope.changePage = function (page) {
-                $scope.options.page = page;
-                $scope.loadSocios($scope.options.page);
-            };
-            $scope.edit = function (socio) {
-                $state.go('logged.socios.socio', {
-                    socioId: socio,
-                    mode: 'edit'
-                }, {
-                    location: true
-                });
-            };
-            $scope.loadSocios = function (page) {
-                var path = '/api/socios?max=' + $scope.options.max + '&page=' + page + '&dir=' + $scope.options.dir + '&by=' + $scope.options.by;
+    .controller('SociosListaCtrl', ['$modal', '$scope', 'ApiCaller', 'credentials', 'queryParams',
+        function ($modal, $scope, ApiCaller, credentials, queryParams) {
+            $scope.pagination = [];
+            $scope.loadSocios = function () {
+                var path = '/api/socios?max=' + $scope.pagination.maxItems + '&page=' + $scope.pagination.currentPage + '&dir=' + $scope.pagination.dir + '&by=' + $scope.pagination.by;
                 var data = ApiCaller.modalCall(credentials.getXWSSE(), 'GET', path, null, function (d) {
-                        $scope.socios = d.data.socios;
-                        $scope.total = d.data.pagination.total;
-                        $scope.options.page = parseInt(d.data.pagination.page,10);
-                        $scope.page = d.data.pagination.page;
-                        $scope.max = d.data.pagination.max;
-                        $scope.options.maxPages=parseInt($scope.numPages,10);
-                    }
-                );
-            };
-            $scope.refresh = function () {
-                $scope.loadSocios($scope.options.page);
+                    $scope.socios = d.data.socios;
+                    $scope.pagination.totalItems = d.data.pagination.total;
+                    $scope.pagination.page = parseInt(d.data.pagination.page, 10);
+                    $scope.pagination.currentPage = d.data.pagination.page;
+                    $scope.pagination.maxItems = d.data.pagination.max;
+                });
             };
             $scope.remove = function (socio) {
                 var modalInstance = $modal.open({
@@ -39,22 +23,13 @@ angular.module('libroApp.socios.lista', [])
                     }
                 });
                 modalInstance.result.then(function () {
-                    $scope.loadSocios($scope.options.page);
+                    $scope.loadSocios();
                 });
             };
-            
             $scope.reset = function () {
-                $scope.options = queryParams.reset();
-                $scope.loadSocios($scope.options.page);
+                $scope.pagination = queryParams.reset();
+                $scope.loadSocios();
             };
-            $scope.toCollapse = function () {
-                $scope.isCollapsed = !$scope.isCollapsed;
-            };
-            
-            $scope.options = queryParams.get();
-            $scope.maxSize = 100;
-            $scope.isCollapsed = true;
-            
-            $scope.loadSocios($scope.options.page);
-        }
-    ]);
+            $scope.pagination = queryParams.get();
+            $scope.loadSocios();
+        }]);
