@@ -17,8 +17,10 @@ angular.module('libroApp.directives', [])
                         scope.selected = _.without(scope.selected, name);
                     } else {
                         scope.selected.push(name);
+                        //watch does not see the push...
+                        scope.after();
                     }
-                       return false;
+                    return false;
                 };
                 scope.isChecked = function (name) {
                     if (_.contains(scope.selected, name)) {
