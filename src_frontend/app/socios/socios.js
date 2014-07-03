@@ -1,4 +1,4 @@
-angular.module('libroApp.socios', [])
+angular.module('libroApp.socios', ['libroApp.socios.collection', 'libroApp.socios.nuevo', 'libroApp.socios.socio'])
     .config(['$stateProvider',
         function ($stateProvider) {
             $stateProvider
@@ -7,10 +7,10 @@ angular.module('libroApp.socios', [])
                     url: '^/socios',
                     template: '<ui-view/>'
                 })
-                .state('logged.socios.lista', {
+                .state('logged.socios.collection', {
                     url: '/',
-                    templateUrl: 'socios/lista/lista.tpl.html',
-                    controller: 'SociosListaCtrl'
+                    templateUrl: 'socios/collection/collection.tpl.html',
+                    controller: 'SociosCollectionCtrl'
                 })
                 .state('logged.socios.nuevo', {
                     url: '/nuevo',
@@ -21,7 +21,5 @@ angular.module('libroApp.socios', [])
                     url: '/:socioId/{mode:.*}',
                     templateUrl: 'socios/socio/socio.tpl.html',
                     controller: 'SociosSocioCtrl'
-
                 });
-        }
-    ]);
+        }]);

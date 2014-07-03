@@ -1,5 +1,5 @@
-angular.module('libroApp.socios.lista', [])
-    .controller('SociosListaCtrl', ['$modal', '$scope', 'ApiCaller', 'credentials', 'queryParams',
+angular.module('libroApp.socios.collection', [])
+    .controller('SociosCollectionCtrl', ['$modal', '$scope', 'ApiCaller', 'credentials', 'queryParams',
         function ($modal, $scope, ApiCaller, credentials, queryParams) {
             $scope.pagination = [];
             $scope.loadSocios = function () {
