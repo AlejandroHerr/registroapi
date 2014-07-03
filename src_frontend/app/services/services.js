@@ -1,77 +1,39 @@
 angular.module('libroApp.services', [ /*'ngResource'*/ ])
-    .service('queryOptions', function() {
+    .service('queryParams', function () {
         var config;
         config = {
-            orderBy: 'created_at',
-            orderDir: 'DESC',
+            totalItems: '',
             currentPage: 1,
-            maxResults: 25
-        };
-        return {
-            get: function() {
-                if (this.config) {
-                    return this.config;
-                }
-                return this.reset();
-            },
-            getValue: function(value) {
-                return this.config[value];
-            },
-            set: function(values) {
-                this.config = values;
-                return this;
-            },
-            reset: function() {
-                return {
-                    orderBy: 'created_at',
-                    orderDir: 'DESC',
-                    currentPage: 1,
-                    maxResults: 25
-                };
-            }
-        };
-    })
-    .service('queryParams', function() {
-        var config;
-        config = {
+            maxItems: "25",
             by: 'id',
-            dir: 'DESC',
-            page: '1',
-            max: 25
+            dir: 'DESC'
         };
         return {
-            get: function() {
+            get: function () {
                 return config;
             },
-            getValue: function(value) {
-                return this.config[value];
-            },
-            set: function(values) {
-                this.config = values;
-                return this;
-            },
-            reset: function() {
-                return {
+            reset: function () {
+                this.config = {
+                    totalItems: '',
+                    currentPage: 1,
+                    maxItems: "25",
                     by: 'id',
-                    dir: 'DESC',
-                    page: 1,
-                    max: 25
+                    dir: 'DESC'
                 };
+                return this.config;
             }
         };
     })
     .service('loader', [
-
-        function() {
-            var loadingState = false;
+        function () {
             return {
-                isLoading: function() {
+                isLoading: function () {
                     return this.loadingState;
                 },
-                setLoading: function() {
+                setLoading: function () {
                     this.loadingState = true;
                 },
-                unsetLoading: function() {
+                unsetLoading: function () {
                     this.loadingState = false;
                 }
             };
