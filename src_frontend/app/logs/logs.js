@@ -1,4 +1,4 @@
-angular.module('libroApp.logs', ['libroApp.logs.collection','libroApp.logs.log'])
+angular.module('libroApp.logs', ['libroApp.logs.collection', 'libroApp.logs.log'])
     .config(['$stateProvider',
         function ($stateProvider) {
             $stateProvider
@@ -16,7 +16,5 @@ angular.module('libroApp.logs', ['libroApp.logs.collection','libroApp.logs.log']
                     url: '/:logDate',
                     templateUrl: 'logs/log/log.tpl.html',
                     controller: 'LogsLogCtrl'
-
                 });
-        }
-    ]);
+        }]);
