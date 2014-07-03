@@ -18,6 +18,7 @@ var libroApp = angular.module('libroApp', [
         'libroApp.logged',
         'libroApp.login',
         'libroApp.logout',
+        'libroApp.logs',
         'libroApp.modals',
         'libroApp.countries'
     ])
