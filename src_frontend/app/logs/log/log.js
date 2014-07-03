@@ -1,12 +1,13 @@
-angular.module('libroApp.logs.log', ['libroApp.directives','libroApp.filters'])
-    .controller('LogsLogCtrl', ['$modal', '$stateParams', '$filter', 'ApiCaller', '$scope', 'credentials', '$state', '$filter', 'countries',
-        function ($modal, $stateParams, $filter, ApiCaller, $scope, credentials, $state, $filter, countries) {
+angular.module('libroApp.logs.log', ['libroApp.directives', 'libroApp.filters'])
+    .controller('LogsLogCtrl', ['$stateParams', '$filter', '$scope', 'ApiCaller', 'credentials',
+        function ($stateParams, $filter, $scope, ApiCaller, credentials) {
             var log = [];
             $scope.date = $stateParams.logDate;
             $scope.pagination = {
+                'order': false,
                 'totalItems': '',
                 'currentPage': 1
-            }
+            };
             $scope.selectedChannel = [];
             $scope.selectedLevel = [];
             $scope.channels = [{
@@ -17,56 +18,47 @@ angular.module('libroApp.logs.log', ['libroApp.directives','libroApp.filters'])
                 name: 'transaction'
             }];
             $scope.levels = [
-                {name: 100},
-                {name: 200},
-                {name: 250},
-                {name: 300},
-                {name: 400},
-                {name: 500},
-                {name: 550}
+                {name: 100, level_class: 'primary'},
+                {name: 200, level_class: 'success'},
+                {name: 250, level_class: 'success'},
+                {name: 300, level_class: 'warning'},
+                {name: 400, level_class: 'warning'},
+                {name: 500, level_class: 'danger'},
+                {name: 550, level_class: 'danger'}
             ];
             $scope.loadLog = function () {
                 var path = '/api/logs/' + $scope.date;
                 var data = ApiCaller.modalCall(credentials.getXWSSE(), 'GET', path, null, function (d) {
                     log = d.data.log;
-                    $scope.pagination.totalItems = log.length;
                     $scope.displayResults();
                 });
-            }
+            };
             $scope.loadPage = function () {
-                if(log.length >0){
-                    min = 10 * ($scope.pagination.currentPage - 1);
-                    max = min + 10;
+                if (log.length > 0) {
+                    var min = 10 * ($scope.pagination.currentPage - 1), max = min + 10;
                     $scope.entries = $scope.entries.slice(min, max);
                 }
-            }
+            };
             $scope.displayResults = function () {
                 $scope.entries = $filter('selectorFilter')(log, 'channel', $scope.selectedChannel, 'name');
                 $scope.entries = $filter('selectorFilter')($scope.entries, 'level', $scope.selectedLevel, 'name');
-                $scope.entries = $filter('orderBy')($scope.entries, 'datetime.date',false);
+                $scope.entries = $filter('orderBy')($scope.entries, 'datetime.date', $scope.pagination.order);
                 $scope.pagination.totalItems = $scope.entries.length;
                 $scope.loadPage();
-            }
-            //*** INIT
-            $scope.loadLog();
-        }
-    ])
-    .filter('logFilter', [
-        function () {
-            return function (entries, key1, selectedChannel, key2) {
-                if (!angular.isUndefined(entries) && !angular.isUndefined(selectedChannel) && selectedChannel.length > 0) {
-                    var tempEntries = [];
-                    angular.forEach(selectedChannel, function (key2) {
-                        angular.forEach(entries, function (entry) {
-                            if (angular.equals(entry[key1], key2)) {
-                                tempEntries.push(entry);
-                            }
-                        });
-                    });
-                    return tempEntries;
-                } else {
-                    return entries;
-                }
             };
-        }
-    ]);
+            $scope.changeOrder = function () {
+                $scope.pagination.order = !$scope.pagination.order;
+                $scope.displayResults();
+            };
+            $scope.orderClass = function () {
+                if ($scope.pagination.order) {
+                    return 'glyphicon glyphicon-sort-by-alphabet';
+                }
+                return 'glyphicon glyphicon-sort-by-alphabet-alt';  
+            };
+            $scope.getLevelClass = function (level) {
+                var theLevel = $filter('filter')($scope.levels, level)[0];
+                return 'btn-' + theLevel.level_class;
+            };
+            $scope.loadLog();
+        }]);
