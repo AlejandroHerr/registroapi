@@ -132,7 +132,7 @@ gulp.task('deploy-assets', function () {
   return gulp.src(config.vendor.assets.concat(config.app.assets))
     .pipe(gulp.dest(config.deploy_assets_dir))
 });
-gulp.task('post-deploy', ['deplaoy-index', 'deploy-assets'], function () {});
+gulp.task('post-deploy', ['deploy-index', 'deploy-assets'], function () {});
 gulp.task('deploy', ['deploy-app'], function () {
   return gulp.start('post-deploy');
 });
