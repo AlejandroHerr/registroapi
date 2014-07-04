@@ -23,7 +23,7 @@
                                 <td>
                                     <a ui-sref="logged.user.user({userId: user.id})">{{user.username}}</a>
                                 </td>
-                                <td>{{user.nombre}} {{user.apellidos}}</td>
+                                <td>{{user.name}} {{user.surname}}</td>
                                 <td>
                                     <button type="button" class="btn btn-sm" style="width:100%" ng-class="roleClass(user.roles)">
                                     {{user.roles}}</button>
@@ -31,15 +31,15 @@
                                 <td>{{user.email}}</td>
                                 <td>
                                     <div class="btn-group btn-group-sm">
-                                    <button type="button" class="btn" ng-class="activeClass(user.activo)">
-                                    {{activeText(user.activo)}}</button>
+                                    <button type="button" class="btn" ng-class="activeClass(user.active)">
+                                    {{activeText(user.active)}}</button>
                                
-                                    <button type="button" class="btn btn-default" ng-if="user.blocked"><i class="fa fa-lock"></i></button>
+                                    <button type="button" class="btn btn-default" ng-if="user.protected"><i class="fa fa-lock"></i></button>
                                 </div></td>
                             </tr>
                         </table>
                         <div class="text-center">
-                            <pagination boundary-links="true" total-items="totalItems" page="currentPage" items-per-page="maxResults" class="pagination-sm" on-select-page="loadUsers(page)" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" num-pages="numPages"></pagination>
+                            <pagination boundary-links="true" total-items="pagination.totalItems" ng-model="pagination.currentPage" items-per-page="pagination.maxItems" ng-change="loadSocios()" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
                         </div>
                     </div>
                 </div>

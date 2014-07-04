@@ -1,49 +1,16 @@
-angular.module('libroApp.users', [])
+angular.module('libroApp.users', ['libroApp.users.collection'])
     .config(['$stateProvider',
         function ($stateProvider) {
-            $stateProvider.state('logged.user.lista', {
+            $stateProvider
+                .state('logged.user', {
+                    abstract: true,
+                    url: '^/users',
+                    template: '<ui-view/>'
+                })
+                .state('logged.user.collection', {
                 url: '/lista',
-                templateUrl: 'users/users.tpl.html',
-                controller: 'UsersCtrl'
+                templateUrl: 'users/collection/collection.tpl.html',
+                controller: 'UsersCollectionCtrl'
             });
-        }
-    ])
-    .controller('UsersCtrl', ['ApiCaller', '$scope', 'credentials',
-        function (ApiCaller, $scope, credentials) {
-            $scope.activeClass = function (state) {
-                if (state == 1) {
-                    return 'btn-success';
-                }
-                return 'btn-warning';
-            }
-            $scope.activeText = function (state) {
-                if (state == 1) {
-                    return 'ACTIVO';
-                }
-                return 'INACTIVO';
-            }
-            $scope.roleClass = function (role) {
-                if (role == 'ROLE_PRESIDENTE' || role == 'ROLE_SECRETARIO' || role == 'ROLE_SUPERADMIN') {
-                    return 'btn-danger';
-                }
-                if (role == 'ROLE_JUNTA' || role == 'ROLE_ADMIN') {
-                    return 'btn-primary';
-                }
-                if (role == 'ROLE_COLABORADOR' || role == 'ROLE_USER') {
-                    return 'btn-primary';
-                }
-                return 'btn-default';
-            }
-            $scope.loadUsers = function (page) {
-                var path = '/api/admin/users?page=' + page;
-                ApiCaller.modalCall(credentials.getXWSSE(), 'GET', path, null, succesCb);
-            };
-            succesCb = function (d) {
-                $scope.users = d.data.users;
-                $scope.totalItems = d.data.pagination.totalResults;
-                $scope.currentPage = d.data.pagination.currentPage;
-                $scope.maxResults = d.data.pagination.maxResults;
-            };
-            $scope.loadUsers(1);
         }
     ]);
