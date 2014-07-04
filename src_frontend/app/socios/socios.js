@@ -1,4 +1,4 @@
-angular.module('libroApp.socios', ['libroApp.socios.collection', 'libroApp.socios.nuevo', 'libroApp.socios.socio'])
+angular.module('libroApp.socios', ['libroApp.socios.collection', 'libroApp.socios.nuevo', 'libroApp.socios.socio', 'maha.countries'])
     .config(['$stateProvider',
         function ($stateProvider) {
             $stateProvider

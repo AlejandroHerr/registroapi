@@ -1,6 +1,6 @@
 angular.module('libroApp.socios.nuevo', [])
-    .controller('SociosNuevoCtrl', ['$modal', '$scope', 'countries',
-        function ($modal, $scope, countries) {
+    .controller('SociosNuevoCtrl', ['$modal', '$scope', 'Countries',
+        function ($modal, $scope, Countries) {
             $scope.registrar = function () {
                 if (this.nuevoSocio.$invalid) {
                     return;
@@ -34,8 +34,9 @@ angular.module('libroApp.socios.nuevo', [])
                     };
                 });
             };
-            $scope.countries = countries.get()
-                .countries;
+            $scope.countries = Countries.getCountries();
+            console.log($scope.countries);
+            console.log();
             $scope.languages = [{
                 value: 'English'
             }, {

@@ -42,13 +42,13 @@
 					<div class="form-group">
 						<label class="col-xs-10 col-xs-offset-1 col-sm-5 col-sm-offset-0 col-md-4 col-md-offset-1 control-label">Pa&iacute;s</label>
 						<div class="col-xs-10 col-xs-offset-1 col-sm-7 col-sm-offset-0 col-md-7 col-md-offset-0">
-							<p class="form-control-static" editable-select="socio.country" e-name="country" e-ng-options="p.alpha2 as p.name for p in countries">{{ country }}</p>
+							<p class="form-control-static" editable-select="socio.country" e-name="country" e-ng-options="p[0] as p[1] for p in countries">{{ country }}</p>
 						</div>
 					</div>
 					<div class="form-group">
 						<label class="col-xs-10 col-xs-offset-1 col-sm-5 col-sm-offset-0 col-md-4 col-md-offset-1 control-label">Idioma</label>
 						<div class="col-xs-10 col-xs-offset-1 col-sm-7 col-sm-offset-0 col-md-7 col-md-offset-0">
-							<p class="form-control-static" editable-select="socio.language" e-name="language" e-ng-options="l.value as l.value for l in languages">{{ (languages | filter:{value: socio.language})[0].value || 'Not set' }}</p>
+							<p class="form-control-static" editable-select="socio.language" e-name="language" e-ng-options="l.value as l.value for l in languages">{{language}}</p>
 						</div>
 					</div>
 					<div class="form-group">

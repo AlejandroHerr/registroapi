@@ -57,7 +57,7 @@
             <label for="country" class="col-xs-10 col-xs-offset-1 col-sm-3 col-sm-offset-1 col-md-2 col-md-offset-2 control-label">Pais</label>
             <div class="col-xs-10 col-xs-offset-1 col-sm-7 col-sm-offset-0 col-md-4">
                 <select ng-model="socio.country" class='form-control' name='country' required>
-                    <option ng-repeat="country in countries" value="{{country.alpha2}}">{{country.name}}</option>
+                    <option ng-repeat="country in countries" value="{{country[0]}}">{{country[1]}}</option>
                 </select>
             </div>
         </div>
