@@ -2,6 +2,12 @@ angular.module('libroApp.socios.collection', [])
     .controller('SociosCollectionCtrl', ['$modal', '$scope', 'ApiCaller', 'credentials', 'queryParams',
         function ($modal, $scope, ApiCaller, credentials, queryParams) {
             $scope.pagination = [];
+            $scope.isChecked = function (value,key) {
+                if ($scope.pagination[key] == value) {
+                    return 'glyphicon glyphicon-ok pull-right';
+                }
+                return false;
+            }
             $scope.loadSocios = function () {
                 var path = '/api/socios?max=' + $scope.pagination.maxItems + '&page=' + $scope.pagination.currentPage + '&dir=' + $scope.pagination.dir + '&by=' + $scope.pagination.by;
                 var data = ApiCaller.modalCall(credentials.getXWSSE(), 'GET', path, null, function (d) {
