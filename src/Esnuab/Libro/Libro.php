@@ -9,6 +9,7 @@ use Esnuab\Libro\Model\Manager\SocioManager;
 use Esnuab\Libro\Model\Manager\UserManager;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Monolog\Formatter\JsonFormatter;
 use Silex\Application;
 use Silex\Provider\DoctrineServiceProvider;
 use Silex\Provider\MonologServiceProvider;
@@ -39,32 +40,38 @@ $app->register(new DoctrineServiceProvider(),$app['db.config']);
 # loggers         #
 ###################
 $app->register(new MonologServiceProvider());
-$app['monolog.logfile']=function () {
+$app['monolog.name'] = 'main';
+$app['monolog.path'] = function () {
+    return ROOT.'/var/logs';
+};
+$app['monolog.logfile']= function () use ($app) {
     $date = \DateTime::createFromFormat('U',time());
-    $file = ROOT.'/var/logs/app_'.$date->format('Y-m-d').'.log';
+    $file = $app['monolog.path'] . '/app_'.$date->format('Y-m-d').'.log';
 
     return $file;
 };
+$app['monolog'] = $app->share($app->extend('monolog', function ($monolog, $app) {
+    $handlers = $monolog->getHandlers();
+    $handlers[0]->setFormatter(new JsonFormatter());
+
+    return $monolog;
+}));
 $app['monolog.factory'] = $app->protect(function ($name) use ($app) {
     $log = new $app['monolog.logger.class']($name);
-
-    return $log;
-});
-$app['monolog.access'] = $app->share(function () use ($app) {
-    $log = new $app['monolog.logger.class']('acces');
-
-    $date = \DateTime::createFromFormat('U',time());
-    $file = ROOT.'/var/logs/acces_'.$date->format('Y-m-d').'.log';
-
-    $handler = new StreamHandler($file);
+    $handler = new StreamHandler($app['monolog.logfile']);
+    $handler->setFormatter(new JsonFormatter());
     $handler->pushProcessor(new RequestProcessor($app));
     $handler->pushProcessor(new UserProcessor($app));
     $log->pushHandler($handler);
 
     return $log;
 });
+$app['monolog.access'] = $app->share(function ($app) {
+    return $app['monolog.factory']('access');
+});
 $app['monolog.transaction'] = $app->share(function () use ($app) {
-    $log = new $app['monolog.logger.class']('transaction');
+
+    $log =  $app['monolog.factory']('transaction');
     $handler = new DbalHandler($app['db'],Logger::NOTICE);
     $handler->setFormatter(new AuditFormatter());
     $handler->pushProcessor(new RequestProcessor($app));
