@@ -14,17 +14,25 @@
       "vendor" : {
             "js" : [
                   "vendorjs/angular/angular.min.js",
-                  "vendorjs/angular-route/angular-route.min.js",
+                  "vendorjs/angular-ui-router/release/angular-ui-router.min.js",
                   "vendorjs/angular-bootstrap/ui-bootstrap-tpls.min.js",
                   "vendorjs/angular-xeditable/dist/js/xeditable.min.js",
-                  "vendorjs/jsSHA/src/sha512.js"
+                  "vendorjs/angular-maha-countries/countries.js",
+                  "vendorjs/angular-maha-countries/lists/es.js",
+                  "vendorjs/jsSHA/src/sha512.js",
+                  "vendorjs/underscore/underscore.js"
 
             ],
             "assets": [
                   "vendorjs/bootstrap/fonts/glyphicons-halflings-regular.eot",
                   "vendorjs/bootstrap/fonts/glyphicons-halflings-regular.svg",
                   "vendorjs/bootstrap/fonts/glyphicons-halflings-regular.ttf",
-                  "vendorjs/bootstrap/fonts/glyphicons-halflings-regular.woff"
+                  "vendorjs/bootstrap/fonts/glyphicons-halflings-regular.woff",
+                  "vendorjs/fontawesome/fonts/FontAwesome.otf",
+                  "vendorjs/fontawesome/fonts/fontawesome-webfont.eot",
+                  "vendorjs/fontawesome/fonts/fontawesome-webfont.svg",
+                  "vendorjs/fontawesome/fonts/fontawesome-webfont.ttf",
+                  "vendorjs/fontawesome/fonts/fontawesome-webfont.woff"
             ]
       },
       "build_dir" : "./build",
