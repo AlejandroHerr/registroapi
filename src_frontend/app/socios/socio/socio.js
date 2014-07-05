@@ -47,7 +47,7 @@ angular.module('libroApp.socios.socio', [])
                     return 'El tamano máximo son ' + max + ' caracteres!';
                 }
             };
-            $scope.saveUser = function (data, created_at) {
+            $scope.saveSocio = function (data, created_at) {
                 var putData = {
                     'name': data.name,
                     'surname': data.surname,
