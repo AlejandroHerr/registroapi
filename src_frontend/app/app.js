@@ -10,7 +10,6 @@ var libroApp = angular.module('libroApp', [
         'libroApp.services',
         'libroApp.nuevo_user',
         'libroApp.socios',
-        'libroApp.user',
         'libroApp.users',
         'libroApp.logged',
         'libroApp.login',
