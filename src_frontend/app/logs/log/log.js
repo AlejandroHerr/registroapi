@@ -2,22 +2,7 @@ angular.module('libroApp.logs.log', ['libroApp.directives', 'libroApp.filters'])
     .controller('LogsLogCtrl', ['$stateParams', '$filter', '$scope', 'ApiCaller', 'credentials',
         function ($stateParams, $filter, $scope, ApiCaller, credentials) {
             var log = [];
-            $scope.date = $stateParams.logDate;
-            $scope.pagination = {
-                'order': false,
-                'totalItems': '',
-                'currentPage': 1
-            };
-            $scope.selectedChannel = [];
-            $scope.selectedLevel = [];
-            $scope.channels = [{
-                name: 'main'
-            }, {
-                name: 'access'
-            }, {
-                name: 'transaction'
-            }];
-            $scope.levels = [
+            var cosas = [
                 {name: 100, level_class: 'primary'},
                 {name: 200, level_class: 'success'},
                 {name: 250, level_class: 'success'},
@@ -26,10 +11,32 @@ angular.module('libroApp.logs.log', ['libroApp.directives', 'libroApp.filters'])
                 {name: 500, level_class: 'danger'},
                 {name: 550, level_class: 'danger'}
             ];
+
+            $scope.date = $stateParams.logDate;
+            $scope.pagination = {
+                'order': false,
+                'totalItems': '',
+                'currentPage': 1
+            };
+            $scope.selectedChannel = [];
+            $scope.selectedLevel = [];
+    
             $scope.loadLog = function () {
                 var path = '/api/logs/' + $scope.date;
                 var data = ApiCaller.modalCall(credentials.getXWSSE(), 'GET', path, null, function (d) {
                     log = d.data.log;
+
+                    var levels = _.uniq(_.map(log,function(item,key){return item.level;}));
+                    $scope.levels = _.map(levels,function(item,key){
+                        var row = $filter('filter')(cosas,item,true);
+                        return row[0];
+                    });
+                    
+                    var channels = _.uniq(_.map(log,function(item,key){return item.channel;}));
+                    $scope.channels = _.map(channels,function(item,key){
+                        return _.object(['name'],[item]);
+                    });
+                   
                     $scope.displayResults();
                 });
             };
