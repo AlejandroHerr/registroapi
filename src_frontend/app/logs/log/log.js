@@ -40,18 +40,14 @@ angular.module('libroApp.logs.log', ['libroApp.directives', 'libroApp.filters'])
                     $scope.displayResults();
                 });
             };
-            $scope.loadPage = function () {
-                if (log.length > 0) {
-                    var min = 10 * ($scope.pagination.currentPage - 1), max = min + 10;
-                    $scope.entries = $scope.entries.slice(min, max);
-                }
-            };
             $scope.displayResults = function () {
+                var min = 10 * ($scope.pagination.currentPage - 1)
+                var max = min + 10;
                 $scope.entries = $filter('selectorFilter')(log, 'channel', $scope.selectedChannel, 'name');
                 $scope.entries = $filter('selectorFilter')($scope.entries, 'level', $scope.selectedLevel, 'name');
                 $scope.entries = $filter('orderBy')($scope.entries, 'datetime.date', $scope.pagination.order);
                 $scope.pagination.totalItems = $scope.entries.length;
-                $scope.loadPage();
+                $scope.entries = $scope.entries.slice(min, max);
             };
             $scope.changeOrder = function () {
                 $scope.pagination.order = !$scope.pagination.order;
