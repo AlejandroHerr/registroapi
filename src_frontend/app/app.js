@@ -8,7 +8,6 @@ var libroApp = angular.module('libroApp', [
         'libroApp.outercontroller',
         'libroApp.security',
         'libroApp.services',
-        'libroApp.nuevo_user',
         'libroApp.socios',
         'libroApp.users',
         'libroApp.logged',

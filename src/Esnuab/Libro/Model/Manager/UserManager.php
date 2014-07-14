@@ -27,6 +27,18 @@ class UserManager extends AbstractDbalManager
             ' LIMIT '.$offset.','.$queryParameters['max'];
     }
 
+    public function beforePutResource(Application $app, $resource)
+    {
+        if ($this->existsResource($app,$resource->getEsncard(),'esncard',$resource->getId())) {
+            throw new DuplicatedValueException('esncard');
+        }
+        if ($this->existsResource($app,$resource->getEmail(),'email',$resource->getId())) {
+            throw new DuplicatedValueException('email');
+        }
+        $resource->setModAt();
+        $resource->setExpiresAt();
+    }
+
     public function createUser(User $user)
     {
         $user->setActivo(1);

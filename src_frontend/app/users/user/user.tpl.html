@@ -1,1 +1,46 @@
-{{user | json}}
+<div class="col-lg-12">
+	<h1 class="page-header">Usuario {{user.username}} (#{{ user.id }})</h1>
+</div>
+<div class="col-sm-12 col-md-10 col-md-offset1 col-lg-8 col-lg-offset-2">
+	<div class="panel panel-default">
+		<div class="panel-heading v-centered">
+			<i class="fa fa-cog fa-fw"></i> Datos
+			<div class="btn-group pull-right">
+			<button type="button" class="btn btn-sm btn-default active">&nbsp;</button>
+			<button type="button" class="btn btn-sm" ng-class="isProtected(user.protected,'btn')"><span class="glyphicon" ng-class="isProtected(user.protected,'span')"></span></button></div>
+		</div>
+		<div class="panel-body">
+			<div class='content'>
+				
+				<form editable-form name="editableForm" onbeforesave="saveSocio($data,user.created_at)" class="form-horizontal">  
+					<div class="form-group">
+						<label class="col-xs-10 col-xs-offset-1 col-sm-5 col-sm-offset-0 col-md-4 col-md-offset-1 control-label">Username</label>
+						<div class="col-xs-10 col-xs-offset-1 col-sm-7 col-sm-offset-0 col-md-7 col-md-offset-0">
+							<p class="form-control-static" editable-text="user.username" e-name="username" onbeforesave="checkLength($data,2,50)" e-required>{{ user.username || 'empty' }}</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-10 col-xs-offset-1 col-sm-5 col-sm-offset-0 col-md-4 col-md-offset-1 control-label">Nombre</label>
+						<div class="col-xs-10 col-xs-offset-1 col-sm-7 col-sm-offset-0 col-md-7 col-md-offset-0">
+							<p class="form-control-static" editable-text="user.name" e-name="name" onbeforesave="checkLength($data,2,50)" e-required>{{ user.name || 'empty' }}</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-10 col-xs-offset-1 col-sm-5 col-sm-offset-0 col-md-4 col-md-offset-1 control-label">Apellido</label>
+						<div class="col-xs-10 col-xs-offset-1 col-sm-7 col-sm-offset-0 col-md-7 col-md-offset-0">
+							<p class="form-control-static" editable-text="user.surname" e-name="surname" onbeforesave="checkLength($data,2,50)" e-required>{{ user.surname || 'empty' }}</p>
+						</div>
+					</div>
+					
+					<div class="col-xs-10 col-xs-offset-1 col-sm-7 col-sm-offset-5 col-md-7 col-md-offset-5">
+						<button type="button" id="toEditBtn" class="btn btn-default" ng-click="editableForm.$show()" ng-disabled="user.protected" ng-show="!editableForm.$visible">Edit</button>
+						<span ng-show="editableForm.$visible">
+							<button type="submit" class="btn btn-primary" ng-disabled="editableForm.$waiting">Save</button>
+							<button type="button" class="btn btn-default" ng-disabled="editableForm.$waiting" ng-click="editableForm.$cancel()">Cancel</button>
+						</span>
+					</div>
+				</form>                            
+			</div>
+		</div>
+	</div>
+</div>

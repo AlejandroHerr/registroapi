@@ -14,6 +14,19 @@ class User extends AbstractEntity
     protected $name;
     protected $surname;
     protected $email;
+    protected $password;
+
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    public function setPassword($password)
+    {
+        $this->password = $password;
+
+        return $this;
+    }
 
     public function getId()
     {

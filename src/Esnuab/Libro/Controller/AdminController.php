@@ -14,6 +14,7 @@ class AdminController extends ApiController
 {
     protected $transactionLogger;
     protected $userManager;
+    protected $queryParams;
     public function __construct($userManager,$transactionLogger=null)
     {
         $this->userManager=$userManager;
@@ -29,7 +30,7 @@ class AdminController extends ApiController
         ->before(array($this,"getFormHeaders"));
         $controllers->get('/users/{id}', array($this,"getUser"))
         ->assert('id', '\d+');
-        $controllers->put('/users/{id}', array($this,"editUser"))
+        $controllers->put('/users/{id}', array($this,"putUser"))
         ->assert('id', '\d+')
         ->before($app['filter.only_superadmin'])
         ->before(array($this,"getFormHeaders"));
@@ -43,26 +44,24 @@ class AdminController extends ApiController
 
     public function getUsers(Application $app)
     {
-        $totalResults = $this->userManager->getCount($this->queryParams);
-        $users = $this->userManager->getUsers($this->queryParams);
+        $totalResults = $this->userManager->getCount($app);
+        $users = $this->userManager->getCollection($app, $this->userManager->beforeGetCollection($app, $this->queryParams));
+        $users->invoke('setPassword',array(''));
         $response = array(
             'pagination' => array(
-                'totalResults' => $totalResults,
-                'maxResults' => $this->queryParams['maxResults'],
-                'currentPage' => $this->queryParams['page'],
-                'active' => $this->queryParams['active']
+                'total' => $totalResults,
+                'max' => $this->queryParams['max'],
+                'page' => $this->queryParams['page']
             ),
-            'users' => $users
+            'users' => $users->toArray()
         );
 
         return $app->json($response, 200);
     }
     public function getUser(Application $app,$id)
     {
-        if (!$this->userManager->existsUser($app, $id)) {
-            return $app->json(array('message' => 'El user con id ' . $id . ' no existe.'), 404);
-        }
-        $user = $this->userManager->getUser($id);
+        $user = $this->userManager->getResourceById($app, $id);
+        $user->setPassword('');
 
         return $app->json($user->toArray(), 200);
     }
@@ -100,43 +99,26 @@ class AdminController extends ApiController
 
         return $app->json(array('errores' => $this->getArray($this->form)), 400);
     }
-    public function editUser(Application $app,$id)
+    public function putUser(Application $app,$id)
     {
-        if (!$this->userManager->existsUser($app, $id)) {
-            return $app->json(array('message' => 'El user con id ' . $id . ' no existe.'), 404);
-        }
-        if (!$this->userManager->isUserBlocked($id)) {
-            return $app->json(array('message' => 'El user con id ' . $id . ' esta bloqueado.'), 404);
-        }
+        /*$user = $this->userManager->getResourceById($app, $id);
+
         $app->register(new FormServiceProvider());
         $app->register(new ValidatorServiceProvider());
-        $user = new User();
-        $this->form = $app['form.factory']->create(new UserForm(), $user);
-        $this->form->submit($this->data, true);
-        if ($this->form->isValid()) {
-            if ($this->userManager->existsUser($app, $user->getEmail(), 'email')) {
-                return $app->json(array(
-                    'errores' => array(
-                        "email" => "El e-mail ya existe"
-                    )
-                ), 400);
-            }
-            if ($this->userManager->existsUser($app, $user->getUsername(), 'username')) {
-                return $app->json(array(
-                    'errores' => array(
-                        "username" => "El username ya existe"
-                    )
-                ), 400);
-            }
-            $user = $this->userManager->updateUser($user,$id);
-            if (null !== $this->transactionLogger) {
-                $this->transactionLogger->addNotice('User Actualizado',array('datos'=>$user->toArray()));
-            }
 
-            return $app->json(array('user' => $user->toArray()), 200);
+        $this->form = $app['form.factory']->create(new SocioForm(), $socio);
+        $this->form->submit($this->data, true);
+
+        if (!$this->form->isValid()) {
+            return $app->json(array('errores' => $this->getFormErrorsAsArray($this->form)), 400);
         }
 
-        return $app->json(array('errores' => $this->getArray($this->form)), 400);
+        $this->socioManager->beforePutResource($app, $socio);
+        $this->socioManager->putResource($app, $socio);
+
+        $this->transactionLogger->addNotice('Socio actualizado',$socio->toArray());
+
+        return $app->json('', 204);*/
     }
     public function blockUser(Application $app,$action,$id)
     {
@@ -158,8 +140,37 @@ class AdminController extends ApiController
     public function getQueryHeaders(Request $request)
     {
         $this->queryParams = $request->query->all();
-        $this->queryParams['page'] = !isset($this->queryParams['page']) ? 1 : $this->queryParams['page'];
-        $this->queryParams['maxResults'] = !isset($this->queryParams['maxResults']) ? 10 : $this->queryParams['maxResults'];
-        $this->queryParams['active'] = !isset($this->queryParams['active']) ? 0 : $this->queryParams['active'];
+        if (!array_key_exists('max', $this->queryParams)) {
+            $this->queryParams['max'] = 25;
+        }
+        if (!is_numeric($this->queryParams['max'])) {
+            $this->queryParams['max'] = 25;
+        }
+        if (!array_key_exists('page', $this->queryParams)) {
+            $this->queryParams['page'] = 1;
+        }
+        if (!is_numeric($this->queryParams['page'])) {
+            $this->queryParams['page'] = 1;
+        }
+        if (array_key_exists('dir', $this->queryParams)) {
+            $this->queryParams['dir'] = $this->queryParams['dir'] == 'ASC' ? 'ASC' : 'DESC';
+        } else {
+            $this->queryParams['dir'] = 'DESC';
+        }
+        if (array_key_exists('by', $this->queryParams)) {
+            $fields = array(
+                'id',
+                'nombre',
+                'apellido',
+                'email',
+                'esncard',
+                'passport',
+                'pais',
+                'id'
+            );
+            $this->queryParams['by'] = in_array($this->queryParams['by'], $fields) ? $this->queryParams['by'] : 'id';
+        } else {
+            $this->queryParams['by'] = 'id';
+        }
     }
 }

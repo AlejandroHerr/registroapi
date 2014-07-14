@@ -1,16 +1,5 @@
-angular.module('libroApp.nuevo_user', [])
-    .config(['$stateProvider',
-        function ($stateProvider) {
-            $stateProvider
-                .state('logged.user.nuevo', {
-                    url: '/nuevo',
-                    templateUrl: 'nuevo_user/nuevo_user.tpl.html',
-                    controller: 'NuevoUserCtrl'
-                       
-                });
-        }
-    ])
-    .controller('NuevoUserCtrl', ['loader', 'ApiCaller', '$modal', 'credentials', '$http', '$scope', '$state',
+angular.module('libroApp.users.nuevo', ['libroApp.modal.nuevo'])
+    .controller('UsersNuevoCtrl', ['loader', 'ApiCaller', '$modal', 'credentials', '$http', '$scope', '$state',
         function (loader, ApiCaller, $modal, credentials, $http, $scope, $state) {
             if (!credentials.isLogged()) {
                 $state.go('logout', {}, {
@@ -31,8 +20,8 @@ angular.module('libroApp.nuevo_user', [])
                 }
                 var user = this.user;
                 var modalInstance = $modal.open({
-                    templateUrl: 'modal/registrar.tpl.html',
-                    controller: 'RegistrarModalInstanceCtrl',
+                    templateUrl: 'modal/nuevo/nuevo.tpl.html',
+                    controller: 'ModalNuevoCtrl',
                     resolve: {
                         item: function () {
                             return user;
@@ -47,8 +36,8 @@ angular.module('libroApp.nuevo_user', [])
                     $scope.user = {
                         'username':'',
                         'password':'',
-                        'nombre': '',
-                        'apellidos': '',
+                        'name': '',
+                        'surname': '',
                         'email': '',
                         'roles': ''
                     };

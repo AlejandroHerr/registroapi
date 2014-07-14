@@ -1,4 +1,4 @@
-angular.module('libroApp.users', ['libroApp.users.collection', 'libroApp.users.user'])
+angular.module('libroApp.users', ['libroApp.users.collection', 'libroApp.users.nuevo', 'libroApp.users.user'])
     .config(['$stateProvider',
         function ($stateProvider) {
             $stateProvider
@@ -12,8 +12,13 @@ angular.module('libroApp.users', ['libroApp.users.collection', 'libroApp.users.u
                     templateUrl: 'users/collection/collection.tpl.html',
                     controller: 'UsersCollectionCtrl'
                 })
+                .state('logged.user.nuevo', {
+                    url: '/nuevo',
+                    templateUrl: 'users/nuevo/nuevo.tpl.html',
+                    controller: 'UsersNuevoCtrl'
+                })
                 .state('logged.user.user', {
-                    url: '/lista',
+                    url: '/:userId',
                     templateUrl: 'users/user/user.tpl.html',
                     controller: 'UsersUserCtrl'
                 });

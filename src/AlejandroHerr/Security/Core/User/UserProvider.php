@@ -18,7 +18,7 @@ class UserProvider implements UserProviderInterface
 
     public function loadUserByUsername($username)
     {
-        $stmt = $this->conn->executeQuery('SELECT * FROM users WHERE username = ? AND activo = 1', array(strtolower($username)));
+        $stmt = $this->conn->executeQuery('SELECT * FROM users WHERE username = ? AND active = 1', array(strtolower($username)));
 
         if (!$user = $stmt->fetch()) {
             throw new WsseAuthenticationException(sprintf('Username "%s" does not exist.', $username));

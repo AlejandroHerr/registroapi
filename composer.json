@@ -14,7 +14,8 @@
         "stack/url-map": "1.0.*@dev",
         "stack/lazy-http-kernel": "1.0.*@dev",
         "mpdf/mpdf": "dev-master",
-        "twig/twig": ">=1.8,<2.0-dev"
+        "twig/twig": ">=1.8,<2.0-dev",
+        "lstrojny/functional-php": "1.0.*@dev"
     },
     "autoload": {
         "psr-0": {

@@ -2,18 +2,26 @@
 
 namespace AlejandroHerr\ApiApplication\Model\Collection;
 
+use Functional as F;
+
 abstract class SimpleCollection
 {
     protected $objects;
 
     public function __construct($objects = array())
     {
-        $this->objects = array_map(array($this,'initMapper'), $objects);
+        $this->objects = F\map($objects,function ($object) {return $this->initMapper($object);});
     }
 
     public function toArray()
     {
-        return array_map(array($this,'arrayer'), $this->objects);
+        return F\map($this->objects,function ($object) {return $this->arrayer($object);});
+    }
+
+    public function invoke($methodName, $methodArguments = array())
+    {
+        F\invoke($this->objects, $methodName, $methodArguments);
+        return $this;
     }
 
     private function arrayer($object)

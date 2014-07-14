@@ -19,6 +19,7 @@
     "gulp-concat": "^2.2.0",
     "gulp-cssmin": "^0.1.4",
     "gulp-ftp": "^0.2.1",
+    "gulp-gzip": "0.0.8",
     "gulp-html2js": "^0.1.0",
     "gulp-htmlmin": "^0.1.2",
     "gulp-inject": "^0.4.1",
