@@ -21,6 +21,7 @@ abstract class SimpleCollection
     public function invoke($methodName, $methodArguments = array())
     {
         F\invoke($this->objects, $methodName, $methodArguments);
+
         return $this;
     }
 
