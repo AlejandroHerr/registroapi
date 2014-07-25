@@ -7,14 +7,26 @@ use Symfony\Component\Form\Form;
 
 abstract class ApiController implements ControllerProviderInterface
 {
+    protected $entityManager;
+    protected $logger;
+    protected $queryParams;
+
+    public function __construct($entityManager, $logger = null)
+    {
+        $this->entityManager = $entityManager;
+        $this->logger = $logger;
+    }
+
     public function getFormHeaders(Request $request)
     {
         $this->data = json_decode($request->getContent(), true);
     }
+
     public function getQueryHeaders(Request $request)
     {
         $this->queryParams = $request->query->all();
     }
+
     protected function getFormErrorsAsArray(Form $form)
     {
         $errors = array();
