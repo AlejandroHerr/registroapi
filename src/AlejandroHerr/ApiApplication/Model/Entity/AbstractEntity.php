@@ -30,7 +30,7 @@ abstract class AbstractEntity
             $this->$name = $value;
         endif;
     }
-     function __toString()
+     public function __toString()
      {
         ob_start();
         var_dump($this);
