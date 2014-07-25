@@ -3,7 +3,7 @@
 namespace AlejandroHerr\ApiApplication\Model\Manager;
 
 use AlejandroHerr\ApiApplication\Model\Exception\ResourceDoesNotExistException;
-use Silex\Application;
+use Doctrine\DBAL\Connection;
 
 abstract class AbstractDbalManager
 {
@@ -11,62 +11,76 @@ abstract class AbstractDbalManager
     protected $table;
     protected $collection;
 
-    public function deleteResource(Application $app, $id)
+    public function __construct(Connection $conn)
     {
-        if (!$app['db']->delete($this->table,array('id' => $app->escape($id)))) {
+        $this->conn = $conn;
+    }
+
+    public function deleteResource($id)
+    {
+        if (!$this->conn->delete($this->table,array('id' => $this->escape($id)))) {
             throw new ResourceDoesNotExistException($id);
         }
     }
 
-    public function getCount(Application $app, $condition = '')
+    public function getCount($condition = '')
     {
         $query = 'SELECT COUNT(id) AS total FROM '.$this->table.' '.$condition;
-        $count = $app['db']->fetchAssoc($query);
+        $count = $this->conn->fetchAssoc($query);
 
         return $count['total'];
     }
 
-    public function getResourceById(Application $app, $id)
+    public function getResourceById($id)
     {
-        if (!($resource = $app['db']->fetchAssoc('SELECT * FROM '.$this->table.' WHERE id = ?', array($app->escape($id))))) {
+        if (!($resource = $this->conn->fetchAssoc('SELECT * FROM '.$this->table.' WHERE id = ?', array($this->escape($id))))) {
             throw new ResourceDoesNotExistException($id);
         }
 
         return new $this->entity($resource);
     }
 
-    public function getCollection(Application $app, $query)
+    public function getCollection($query)
     {
         $query = 'SELECT * from '.$this->table.' '.$query;
-        $collection = new $this->collection($app['db']->fetchAll($query));
+        $collection = new $this->collection($this->conn->fetchAll($query));
 
         return $collection;
     }
 
-    public function postResource(Application $app, $resource)
+    public function postResource($resource)
     {
-        $app['db']->insert(
+        $this->conn->insert(
             $this->table,
             $resource->toArray()
         );
-        $resource->setId($app['db']->lastInsertId());
+        $resource->setId($this->conn->lastInsertId());
+
+        return $resource;
     }
 
-    public function putResource(Application $app, $resource)
+    public function putResource($resource)
     {
-        $app['db']->update(
+        $this->conn->update(
             $this->table,
             $resource->toArray(),
             array('id' => $resource->getId())
         );
+
+        return $resource;
     }
 
-    protected function existsResource(Application $app, $value, $field='id', $excludedId=null)
+    protected function escape($text)
+    {
+        return htmlspecialchars($text, ENT_COMPAT, null, true);
+    }
+
+    protected function existsResource($value, $field='id', $excludedId=null)
     {
         $query = 'SELECT * FROM '.$this->table;
-        $query .= ' WHERE '.$field.' = "'.$app->escape($value).'"';
-        $query .= ($excludedId === null) ? '' : ' AND id != '.$app->escape($excludedId);
+        $query .= ' WHERE '.$field.' = "'.$this->escape($value).'"';
+        $query .= ($excludedId === null) ? '' : ' AND id != '.$this->escape($excludedId);
 
-        return $app['db']->fetchAssoc($query) ? true : false;
+        return $this->conn->fetchAssoc($query) ? true : false;
     }
 }
