@@ -10,11 +10,13 @@ abstract class ApiController implements ControllerProviderInterface
     protected $entityManager;
     protected $logger;
     protected $queryParams;
+    protected $taskScheduler;
 
-    public function __construct($entityManager, $logger = null)
+    public function __construct($entityManager, $logger = null, $taskScheduler = null)
     {
         $this->entityManager = $entityManager;
         $this->logger = $logger;
+        $this->taskScheduler = $taskScheduler;
     }
 
     public function getFormHeaders(Request $request)
