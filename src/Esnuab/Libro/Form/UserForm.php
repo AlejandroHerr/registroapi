@@ -12,25 +12,29 @@ class UserForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nombre','text',array(
+            ->add('username','text',array(
                 'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 2, 'max' => 50))),
-                'invalid_message' => 'La dsf está mal'
+                'invalid_message' => 'El nombre de usuario està mal'
             ))
-            ->add('apellidos', 'text',array(
+            ->add('name','text',array(
                 'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 2, 'max' => 50))),
-                'invalid_message' => 'La dsf está mal'
+                'invalid_message' => 'El nombre està mal'
+            ))
+            ->add('surname', 'text',array(
+                'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 2, 'max' => 50))),
+                'invalid_message' => 'El apellido està mal'
             ))
             ->add('email', 'text',array(
                 'constraints' => array(new Assert\NotBlank(),new Assert\Email()),
-                'invalid_message' => 'La dsf está mal'
-            ))
-            ->add('username', 'text',array(
-                'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 2, 'max' => 50))),
-                'invalid_message' => 'La dsf está mal'
+                'invalid_message' => 'El e-mail está mal'
             ))
             ->add('roles','text',array(
                 'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 5, 'max' => 22))),
-                'invalid_message' => 'La dsf está mal'
+                'invalid_message' => 'El rol està mal'
+            ))
+            ->add('password','text',array(
+                'constraints' => array(new Assert\NotBlank()),
+                'invalid_message' => 'El password està mal'
             ))
         ;
     }
