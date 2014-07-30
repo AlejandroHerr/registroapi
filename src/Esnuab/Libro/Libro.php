@@ -7,6 +7,7 @@ use AlejandroHerr\AuditLog\Processor\RequestProcessor;
 use AlejandroHerr\AuditLog\Processor\UserProcessor;
 use Esnuab\Libro\Model\Manager\SocioManager;
 use Esnuab\Libro\Model\Manager\UserManager;
+use Esnuab\Libro\Services\CronTaskScheduler\CronTaskScheduler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Monolog\Formatter\JsonFormatter;
@@ -18,10 +19,15 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 $app = new Application();
 
+$app['debug'] = true;
+
+######################
+# exception handlers #
+######################
+
 $app['exception_handler'] = $app->share(function () use ($app) {
     return new JsonExceptionHandler($app['debug']);
 });
-$app['debug'] = true;
 
 $app->error(function (\RuntimeException $e, $code) {
     if ($e->getCode() >= 500 || $e->getCode() < 400) {
@@ -32,6 +38,10 @@ $app->error(function (\RuntimeException $e, $code) {
 
     return new JsonResponse($message,$e->getCode());
 });
+
+###################
+# services        #
+###################
 
 $app['db.config'] = require_once ROOT . '/config/db.php';
 $app->register(new DoctrineServiceProvider(),$app['db.config']);
@@ -66,6 +76,11 @@ $app['monolog.factory'] = $app->protect(function ($name) use ($app) {
 
     return $log;
 });
+
+###################
+# model managers  #
+###################
+
 $app['monolog.access'] = $app->share(function ($app) {
     return $app['monolog.factory']('access');
 });
@@ -85,10 +100,13 @@ $app['monolog.transaction'] = $app->share(function () use ($app) {
 # model managers  #
 ###################
 $app['socio_manager'] = $app->share(function ($app) {
-    return new SocioManager($app['db']);
+    return new SocioManager($app['db'],$app['monolog.transaction']);
 });
 $app['user_manager'] = $app->share(function ($app) {
-    return new UserManager($app['db']);
+    return new UserManager($app['db'],$app['monolog.transaction']);
+});
+$app['task_scheduler'] = $app->share(function ($app) {
+    return new CronTaskScheduler($app['db']);
 });
 
 ###################
