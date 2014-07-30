@@ -7,19 +7,28 @@ use Doctrine\DBAL\Connection;
 
 abstract class AbstractDbalManager
 {
-    protected $entity;
-    protected $table;
     protected $collection;
+    protected $conn;
+    protected $entity;
+    protected $logger;
+    protected $table;
 
-    public function __construct(Connection $conn)
+    public function __construct(Connection $conn, $logger = null)
     {
         $this->conn = $conn;
+        $this->logger = $logger;
     }
 
     public function deleteResource($id)
     {
         if (!$this->conn->delete($this->table,array('id' => $this->escape($id)))) {
             throw new ResourceDoesNotExistException($id);
+        }
+        if (!$this->logger === null) {
+            $this->logger->addWarning(
+                sprintf('%s deleted',$this->table),
+                array('id' => $id)
+            );
         }
     }
 
@@ -56,6 +65,13 @@ abstract class AbstractDbalManager
         );
         $resource->setId($this->conn->lastInsertId());
 
+        if (!$this->logger === null) {
+            $this->logger->addInfo(
+                sprintf('%s created',$this->table),
+                $resource->toArray()
+            );
+        }
+
         return $resource;
     }
 
@@ -66,6 +82,13 @@ abstract class AbstractDbalManager
             $resource->toArray(),
             array('id' => $resource->getId())
         );
+
+        if (!$this->logger === null) {
+            $this->logger->addWarning(
+                sprintf('%s updated',$this->table),
+                $resource->toArray()
+            );
+        }
 
         return $resource;
     }
