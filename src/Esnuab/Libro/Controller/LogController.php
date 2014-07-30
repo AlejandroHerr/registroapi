@@ -37,6 +37,7 @@ class LogController implements ControllerProviderInterface
     {
         $logs = $this->loadLogs();
         $logs = F\map($logs,function ($log) {return $this->setSize($log);});
+
         return $app->json(array('logs' => $logs));
     }
 
@@ -138,9 +139,8 @@ class LogController implements ControllerProviderInterface
         $array['date']=$array['date'][0];
 
         return $array;
-
-
     }
+
     /*********** TO FILE
     /****
     /**
@@ -150,5 +150,4 @@ class LogController implements ControllerProviderInterface
     /**
     /****
     /*******************/
-
 }
