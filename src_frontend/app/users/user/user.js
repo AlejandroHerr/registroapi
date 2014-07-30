@@ -3,7 +3,7 @@ angular.module('libroApp.users.user', [])
         function ($modal, $stateParams, ApiCaller, $scope, credentials, $state) {
             var id = $stateParams.userId;
             $scope.loadUser = function () {
-                var path = '/api/admin/users/' + id;
+                var path = '/api/user/' + id;
                 var data = ApiCaller.modalCall(credentials.getXWSSE(), 'GET', path, null, function (d) {
                     $scope.user = d.data;
                 });
@@ -26,6 +26,9 @@ angular.module('libroApp.users.user', [])
                 }
                 return pClass[element];
             };
+            $scope.switchProtection = function () {
+                
+            }
             $scope.saveUser = function (data, created_at) {
                 var putData = {
                     'name': data.name,
@@ -37,7 +40,7 @@ angular.module('libroApp.users.user', [])
                     'created_at': created_at,
                     'language': data.language
                 };
-                var path = '/api/users/' + id;
+                var path = '/api/user/' + id;
                 var data = ApiCaller.rawCall(credentials.getXWSSE(), 'PUT', path, putData)
                     .then(function () {
                         $scope.loadSocio();

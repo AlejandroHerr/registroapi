@@ -9,31 +9,31 @@ angular.module('libroApp.users.collection', [])
                 dir: 'DESC'
             };
             $scope.activeClass = function (state) {
-                if (state === 1) {
-                    return 'btn-success';
+                if (state == 1) {
+                    return 'btn-warning';
                 }
-                return 'btn-warning';
+                return 'btn-danger';
             };
             $scope.activeText = function (state) {
-                if (state === 1) {
+                if (state == 1) {
                     return 'ACTIVO';
                 }
                 return 'INACTIVO';
             };
             $scope.roleClass = function (role) {
                 if (role === 'ROLE_PRESIDENTE' || role === 'ROLE_SECRETARIO' || role === 'ROLE_SUPERADMIN') {
-                    return 'btn-danger';
+                    return 'btn-success';
                 }
                 if (role === 'ROLE_JUNTA' || role === 'ROLE_ADMIN') {
                     return 'btn-primary';
                 }
                 if (role === 'ROLE_COLABORADOR' || role === 'ROLE_USER') {
-                    return 'btn-primary';
+                    return 'btn-info';
                 }
                 return 'btn-default';
             };
             $scope.loadUsers = function () {
-                var path = '/api/admin/users?page=' + $scope.pagination.currentPage;
+                var path = '/api/user/?page=' + $scope.pagination.currentPage;
                 ApiCaller.modalCall(credentials.getXWSSE(), 'GET', path, null, function (d) {
                     $scope.users = d.data.users;
                     $scope.totalItems = d.data.pagination.total;

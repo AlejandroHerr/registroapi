@@ -19,6 +19,9 @@ angular.module('libroApp.users.nuevo', ['libroApp.modal.nuevo'])
                     return;
                 }
                 var user = this.user;
+                user.password = new jsSHA(user.password, "TEXT").getHash("SHA-512", "B64");
+                console.log(user.password);
+
                 var modalInstance = $modal.open({
                     templateUrl: 'modal/nuevo/nuevo.tpl.html',
                     controller: 'ModalNuevoCtrl',
@@ -27,7 +30,7 @@ angular.module('libroApp.users.nuevo', ['libroApp.modal.nuevo'])
                             return user;
                         },
                         url: function () {
-                            return '/api/admin/users';
+                            return '/api/user/';
                         }
                     }
                 });
