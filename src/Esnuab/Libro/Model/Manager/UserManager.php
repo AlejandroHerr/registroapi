@@ -2,94 +2,57 @@
 
 namespace Esnuab\Libro\Model\Manager;
 
+use AlejandroHerr\ApiApplication\Model\Exception\DuplicatedValueException;
 use AlejandroHerr\ApiApplication\Model\Manager\AbstractDbalManager;
 use Esnuab\Libro\Model\Entity\User;
-use Silex\Application;
 
 class UserManager extends AbstractDbalManager
 {
-    protected $conn;
     protected $entity = 'Esnuab\Libro\Model\Entity\User';
     protected $collection = 'Esnuab\Libro\Model\Entity\UserCollection';
     protected $table = 'users';
-    public function __construct($conn)
+
+    public function getCollection($queryParameters)
     {
-        $this->conn=$conn;
-    }
-
-    public function beforeGetCollection(Application $app, $queryParameters)
-    {
-        $queryParameters = array_map(array($app,'escape'), $queryParameters);
-
-        $offset=($queryParameters['page']-1)*$queryParameters['max'];
-
-        return 'ORDER BY '.$queryParameters['by'].' '.$queryParameters['dir'].
+        $queryParameters = array_map(array($this,'escape'), $queryParameters);
+        $offset= ($queryParameters['page']-1)*$queryParameters['max'];
+        $query = 'ORDER BY '.$queryParameters['by'].' '.$queryParameters['dir'].
             ' LIMIT '.$offset.','.$queryParameters['max'];
+
+        $collection = parent::getCollection($query);
+
+        return $collection->invoke('setPassword', array(''));
     }
 
-    public function beforePutResource(Application $app, $resource)
+    public function getResourceById($id)
     {
-        if ($this->existsResource($app,$resource->getEsncard(),'esncard',$resource->getId())) {
-            throw new DuplicatedValueException('esncard');
+        $resource = parent::getResourceById($id);
+
+        return $resource->setPassword('');
+    }   
+
+    public function postResource($resource)
+    {
+        if ($this->existsResource($resource->getUsername(),'username')) {
+            throw new DuplicatedValueException('username');
         }
-        if ($this->existsResource($app,$resource->getEmail(),'email',$resource->getId())) {
+        if ($this->existsResource($resource->getEmail(),'email')) {
             throw new DuplicatedValueException('email');
         }
-        $resource->setModAt();
-        $resource->setExpiresAt();
+        $resource->setProtected(0)->setActive(1);
+
+        return parent::postResource($resource);
     }
 
-    public function createUser(User $user)
+    public function putResource($resource)
     {
-        $user->setActivo(1);
-        $user->setBlocked(0);
-        $this->conn->insert('users',$user->toArray());
-
-        return $user;
-    }
-    public function existsUser(Application $app,$value,$field='id',$excludeId=true,$id=null)
-    {
-        $query= 'SELECT id FROM users WHERE '.$field.' = "'.$app->escape($value).'"';
-        if (!$excludeId) {
-            $query = $query . " AND id != ".$app->escape($id);
+        if ($this->existsResource($resource->getUsername(),'username', $resource->getId())) {
+            throw new DuplicatedValueException('username');
         }
-        if ($this->conn->fetchAssoc($query)) {
-            return true;
+        if ($this->existsResource($resource->getEmail(),'email', $resource->getId())) {
+            throw new DuplicatedValueException('email');
         }
 
-        return false;
-    }
-
-    public function getUser($id)
-    {
-        $user = $this->conn->fetchAssoc('SELECT * FROM users WHERE id = ?', array($id));
-
-        return new User($user);
-    }
-    public function getUsers($queryParams)
-    {
-        $offset = ($queryParams['page']-1)*$queryParams['maxResults'];
-        $query = 'SELECT * from users';
-        if ($queryParams['active']==1) {
-            $query .= ' WHERE activo=1';
-        }
-        $query .= '  ORDER BY username ASC';
-        $query .= ' LIMIT '.$offset.','.$queryParams['maxResults'];
-        $users=$this->conn->fetchAll($query);
-
-        return $users;
-    }
-    public function isUserBlocked($id)
-    {
-        $user=$this->getUser($id);
-
-        return $user->getBlocked();
-    }
-    public function updateUser($user,$id)
-    {
-        $this->conn->update('users',$user->toArray(),array('id' => $id));
-        $user->setId($id);
-
-        return $user;
+        return parent::putResource($resource);
     }
 }

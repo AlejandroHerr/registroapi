@@ -5,38 +5,33 @@ use AlejandroHerr\ApiApplication\ApiController;
 use Silex\Application;
 use Esnuab\Libro\Model\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
-use Esnuab\Libro\Form\NewUserForm;
 use Esnuab\Libro\Form\UserForm;
+use Esnuab\Libro\Services\CronTaskScheduler\CronTaskScheduler;
 use Silex\Provider\FormServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
 
-class AdminController extends ApiController
+class UserController extends ApiController
 {
-    protected $transactionLogger;
-    protected $userManager;
-    protected $queryParams;
-    public function __construct($userManager,$transactionLogger=null)
-    {
-        $this->userManager=$userManager;
-        $this->transactionLogger = $transactionLogger;
-    }
     public function connect(Application $app)
     {
         $controllers = $app['controllers_factory'];
-        $controllers->get('/users', array($this,"getUsers"))
-        ->before(array($this,"getQueryHeaders"));
-        $controllers->post('/users', array($this,"postUser"))
-        ->before($app['filter.only_superadmin'])
-        ->before(array($this,"getFormHeaders"));
-        $controllers->get('/users/{id}', array($this,"getUser"))
-        ->assert('id', '\d+');
-        $controllers->put('/users/{id}', array($this,"putUser"))
-        ->assert('id', '\d+')
-        ->before($app['filter.only_superadmin'])
-        ->before(array($this,"getFormHeaders"));
-        $controllers->get('/users/{action}/{id}', array($this,"blockUser"))
-        ->assert('id', '\d+')
-        ->before($app['filter.only_superadmin']);
+
+        $controllers->get('/', array($this,"getUsers"))
+            ->before(array($this,"getQueryHeaders"));
+        $controllers->post('', array($this,"postUser"))
+            ->before($app['filter.only_superadmin'])
+            ->before(array($this,"getFormHeaders"));
+        $controllers->delete('/{id}', array($this,"deleteUser"))
+            ->assert('id', '\d+')
+            ->before($app['filter.only_superadmin']);
+        $controllers->get('/{id}', array($this,"getUser"))
+            ->assert('id', '\d+');
+        $controllers->match('/{id}', array($this,"editUser"))
+            ->assert('id', '\d+')
+            ->before($app['filter.only_superadmin'])
+            ->before(array($this,"getFormHeaders"))
+            ->method('PUT|PATCH');
+
         $controllers->before($app['filter.only_admin']);
 
         return $controllers;
@@ -44,9 +39,8 @@ class AdminController extends ApiController
 
     public function getUsers(Application $app)
     {
-        $totalResults = $this->userManager->getCount($app);
-        $users = $this->userManager->getCollection($app, $this->userManager->beforeGetCollection($app, $this->queryParams));
-        $users->invoke('setPassword',array(''));
+        $totalResults = $this->entityManager->getCount();
+        $users = $this->entityManager->getCollection($this->queryParams);
         $response = array(
             'pagination' => array(
                 'total' => $totalResults,
@@ -58,84 +52,56 @@ class AdminController extends ApiController
 
         return $app->json($response, 200);
     }
-    public function getUser(Application $app,$id)
+    public function getUser(Application $app, $id)
     {
-        $user = $this->userManager->getResourceById($app, $id);
-        $user->setPassword('');
+        $user = $this->entityManager->getResourceById($id);
 
         return $app->json($user->toArray(), 200);
     }
     public function postUser(Application $app)
     {
-        $app->register(new FormServiceProvider());
-        $app->register(new ValidatorServiceProvider());
         $user = new User();
-        $this->form = $app['form.factory']->create(new NewUserForm(), $user);
-        $this->form->submit($this->data, true);
-        if ($this->form->isValid()) {
-            if ($this->userManager->existsUser($app, $user->getEmail(), 'email')) {
-                return $app->json(array(
-                    'errores' => array(
-                        "email" => "El e-mail ya existe"
-                    )
-                ), 400);
-            }
-            if ($this->userManager->existsUser($app, $user->getUsername(), 'username')) {
-                return $app->json(array(
-                    'errores' => array(
-                        "username" => "El username ya existe"
-                    )
-                ), 400);
-            }
-
-            $user = $this->userManager->createUser($user);
-
-            if (null !== $this->transactionLogger) {
-                $this->transactionLogger->addNotice('User creado',array('datos'=>$user->toArray()));
-            }
-
-            return $app->json(array('user' => $user->toArray()), 200);
-        }
-
-        return $app->json(array('errores' => $this->getArray($this->form)), 400);
-    }
-    public function putUser(Application $app,$id)
-    {
-        /*$user = $this->userManager->getResourceById($app, $id);
 
         $app->register(new FormServiceProvider());
         $app->register(new ValidatorServiceProvider());
 
-        $this->form = $app['form.factory']->create(new SocioForm(), $socio);
+        $this->form = $app['form.factory']->create(new UserForm(), $user);
         $this->form->submit($this->data, true);
 
         if (!$this->form->isValid()) {
             return $app->json(array('errores' => $this->getFormErrorsAsArray($this->form)), 400);
         }
 
-        $this->socioManager->beforePutResource($app, $socio);
-        $this->socioManager->putResource($app, $socio);
+        $this->entityManager->postResource($user);
+        $this->taskScheduler->addUserTask(CronTaskScheduler::ACTION_CREATED,$user->getId());
 
-        $this->transactionLogger->addNotice('Socio actualizado',$socio->toArray());
+        return $app->json('', 201);
 
-        return $app->json('', 204);*/
     }
-    public function blockUser(Application $app,$action,$id)
+    public function deleteUser(Application $app, $id)
     {
-        if (!$this->userManager->existsUser($app, $id)) {
-            return $app->json(array('message' => 'El user con id ' . $id . ' no existe.'), 404);
-        }
-        $user = new User();
-        if ($action == 'block') {
-            $user->setBlocked(1);
-        } elseif ($action == 'unblock') {
-            $user->setBlocked(0);
-        } else {
-            return $app->json(array('message' => 'Accion no permitida.'), 404);
-        }
-        $this->userManager->updateUser($user,$id);
+        $this->entityManager->deleteResource($app, $id);
 
-        return $app->json(array(''),204);
+        return $app->json(null, 204);
+    }
+    public function editUser(Application $app,$id)
+    {
+        $user = $this->entityManager->getResourceById($id);
+
+        $app->register(new FormServiceProvider());
+        $app->register(new ValidatorServiceProvider());
+
+        $this->form = $app['form.factory']->create(new UserForm(), $user);
+        $this->form->submit($this->data, true);
+
+        if (!$this->form->isValid()) {
+            return $app->json(array('errores' => $this->getFormErrorsAsArray($this->form)), 400);
+        }
+
+        $this->entityManager->putResource($user);
+        $this->taskScheduler->addUserTask(CronTaskScheduler::ACTION_UPDATED,$user->getId());
+
+        return $app->json('', 201);
     }
     public function getQueryHeaders(Request $request)
     {
