@@ -35,8 +35,6 @@ angular.module('libroApp.socios.nuevo', ['libroApp.modal.nuevo'])
                 });
             };
             $scope.countries = Countries.getCountries();
-            console.log($scope.countries);
-            console.log();
             $scope.languages = [{
                 value: 'English'
             }, {
