@@ -13,6 +13,8 @@ use Monolog\Logger;
 use Monolog\Formatter\JsonFormatter;
 use Silex\Application;
 use Silex\Provider\DoctrineServiceProvider;
+use Silex\Provider\FormServiceProvider;
+use Silex\Provider\ValidatorServiceProvider;
 use Silex\Provider\MonologServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -45,6 +47,9 @@ $app->error(function (\RuntimeException $e, $code) {
 
 $app['db.config'] = require_once ROOT . '/config/db.php';
 $app->register(new DoctrineServiceProvider(),$app['db.config']);
+
+$app->register(new FormServiceProvider());
+$app->register(new ValidatorServiceProvider());
 
 ###################
 # loggers         #
