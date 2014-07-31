@@ -6,4 +6,4 @@ use Esnuab\Libro\Controller\SocioController;
 
 $app->mount('/user', new UserController($app['user_manager'],null,$app['task_scheduler']));
 $app->mount('/logs', new LogController($app['monolog.path']));
-$app->mount('/', new SocioController($app['socio_manager'],null,$app['task_scheduler']));
+$app->mount('/socio', new SocioController($app['socio_manager'],null,$app['task_scheduler']));
