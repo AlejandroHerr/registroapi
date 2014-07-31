@@ -24,7 +24,7 @@ angular.module('libroApp.modals', [])
             $scope.ok = function (str) {
                 if (str == 'ELIMINAR ' + $scope.socio.esncard) {
                     $scope.addAlert('success', 'Nuestros monos lo están borrando... Espera y no toques nada.');
-                    var path = '/api/socios/' + $scope.socio.id;
+                    var path = '/api/socio/' + $scope.socio.id;
                     var data = ApiCaller.rawCall(credentials.getXWSSE(), 'DELETE', path, null)
                         .then(function (d) {
                             $modalInstance.close();
