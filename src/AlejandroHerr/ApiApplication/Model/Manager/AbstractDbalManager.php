@@ -75,7 +75,7 @@ abstract class AbstractDbalManager
         return $resource;
     }
 
-    public function putResource($resource)
+    public function updateResource($resource)
     {
         $this->conn->update(
             $this->table,
