@@ -73,6 +73,7 @@ $app['monolog'] = $app->share($app->extend('monolog', function ($monolog, $app) 
 }));
 $app['monolog.factory'] = $app->protect(function ($name) use ($app) {
     $log = new $app['monolog.logger.class']($name);
+
     $handler = new StreamHandler($app['monolog.logfile']);
     $handler->setFormatter(new JsonFormatter());
     $handler->pushProcessor(new RequestProcessor($app));
@@ -81,17 +82,15 @@ $app['monolog.factory'] = $app->protect(function ($name) use ($app) {
 
     return $log;
 });
+$app['monolog.transaction_factory'] = $app->protect(function ($name) use ($app) {
+    $log = new $app['monolog.logger.class']($name);
 
-###################
-# model managers  #
-###################
+    $handler = new StreamHandler($app['monolog.logfile']);
+    $handler->setFormatter(new JsonFormatter());
+    $handler->pushProcessor(new RequestProcessor($app));
+    $handler->pushProcessor(new UserProcessor($app));
+    $log->pushHandler($handler);
 
-$app['monolog.access'] = $app->share(function ($app) {
-    return $app['monolog.factory']('access');
-});
-$app['monolog.transaction'] = $app->share(function () use ($app) {
-
-    $log =  $app['monolog.factory']('transaction');
     $handler = new DbalHandler($app['db'],Logger::NOTICE);
     $handler->setFormatter(new AuditFormatter());
     $handler->pushProcessor(new RequestProcessor($app));
@@ -101,14 +100,24 @@ $app['monolog.transaction'] = $app->share(function () use ($app) {
     return $log;
 });
 
+$app['monolog.access'] = $app->share(function ($app) {
+    return $app['monolog.factory']('access');
+});
+$app['monolog.user_transaction'] = $app->share(function ($app) {
+    return $app['monolog.transaction_factory']('user_transaction');
+});
+$app['monolog.socio_transaction'] = $app->share(function ($app) {
+    return $app['monolog.transaction_factory']('socio_transaction');
+});
+
 ###################
 # model managers  #
 ###################
 $app['socio_manager'] = $app->share(function ($app) {
-    return new SocioManager($app['db'],$app['monolog.transaction']);
+    return new SocioManager($app['db'],$app['monolog.socio_transaction']);
 });
 $app['user_manager'] = $app->share(function ($app) {
-    return new UserManager($app['db'],$app['monolog.transaction']);
+    return new UserManager($app['db'],$app['monolog.user_transaction']);
 });
 $app['task_scheduler'] = $app->share(function ($app) {
     return new CronTaskScheduler($app['db']);
