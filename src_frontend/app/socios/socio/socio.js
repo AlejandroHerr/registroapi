@@ -23,7 +23,7 @@ angular.module('libroApp.socios.socio', [])
                 return selected.length ? selected[0].value : 'Not set';
             };
             $scope.loadSocio = function () {
-                var path = '/api/socios/' + id;
+                var path = '/api/socio/' + id;
                 var data = ApiCaller.modalCall(credentials.getXWSSE(), 'GET', path, null, function (d) {
                     $scope.socio = d.data;
                     $scope.country = setCountry();
@@ -58,7 +58,7 @@ angular.module('libroApp.socios.socio', [])
                     'created_at': created_at,
                     'language': data.language
                 };
-                var path = '/api/socios/' + id;
+                var path = '/api/socio/' + id;
                 var data = ApiCaller.rawCall(credentials.getXWSSE(), 'PUT', path, putData)
                     .then(function () {
                         $scope.loadSocio();

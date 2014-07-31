@@ -14,7 +14,7 @@ angular.module('libroApp.socios.nuevo', ['libroApp.modal.nuevo'])
                             return socio;
                         },
                         url: function () {
-                            return '/api/socios';
+                            return '/api/socio/';
                         }
                     }
                 });

@@ -9,7 +9,7 @@ angular.module('libroApp.socios.collection', [])
                 return false;
             };
             $scope.loadSocios = function () {
-                var path = '/api/socios?max=' + $scope.pagination.maxItems + '&page=' + $scope.pagination.currentPage + '&dir=' + $scope.pagination.dir + '&by=' + $scope.pagination.by;
+                var path = '/api/socio/?max=' + $scope.pagination.maxItems + '&page=' + $scope.pagination.currentPage + '&dir=' + $scope.pagination.dir + '&by=' + $scope.pagination.by;
                 var data = ApiCaller.modalCall(credentials.getXWSSE(), 'GET', path, null, function (d) {
                     $scope.socios = d.data.socios;
                     $scope.pagination.totalItems = d.data.pagination.total;
