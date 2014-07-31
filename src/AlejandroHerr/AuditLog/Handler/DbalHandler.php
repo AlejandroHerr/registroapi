@@ -26,6 +26,7 @@ class DbalHandler extends AbstractProcessingHandler
             'channel' => $record['channel'],
             'level' => $record['level'],
             'user' => $record['extra']['user'],
+            'entity' => $record['context']['id'],
             'message' => $record['message'],
             'context' => $record['formatted']['context'],
             'extra' => $record['formatted']['extra'],
