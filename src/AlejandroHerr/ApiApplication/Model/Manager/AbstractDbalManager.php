@@ -24,7 +24,7 @@ abstract class AbstractDbalManager
         if (!$this->conn->delete($this->table,array('id' => $this->escape($id)))) {
             throw new ResourceDoesNotExistException($id);
         }
-        if (!$this->logger === null) {
+        if (null !== $this->logger) {
             $this->logger->addWarning(
                 sprintf('%s deleted',$this->table),
                 array('id' => $id)
@@ -65,8 +65,8 @@ abstract class AbstractDbalManager
         );
         $resource->setId($this->conn->lastInsertId());
 
-        if (!$this->logger === null) {
-            $this->logger->addInfo(
+        if (null !== $this->logger) {
+            $this->logger->addNotice(
                 sprintf('%s created',$this->table),
                 $resource->toArray()
             );
@@ -83,7 +83,7 @@ abstract class AbstractDbalManager
             array('id' => $resource->getId())
         );
 
-        if (!$this->logger === null) {
+        if (null !== $this->logger) {
             $this->logger->addWarning(
                 sprintf('%s updated',$this->table),
                 $resource->toArray()
