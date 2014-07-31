@@ -7,8 +7,6 @@ use Esnuab\Libro\Model\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Esnuab\Libro\Form\UserForm;
 use Esnuab\Libro\Services\CronTaskScheduler\CronTaskScheduler;
-use Silex\Provider\FormServiceProvider;
-use Silex\Provider\ValidatorServiceProvider;
 
 class UserController extends ApiController
 {
@@ -16,7 +14,7 @@ class UserController extends ApiController
     {
         $controllers = $app['controllers_factory'];
 
-        $controllers->get('/', array($this,"getUsers"))
+        $controllers->get('', array($this,"getUsers"))
             ->before(array($this,"getQueryHeaders"));
         $controllers->post('', array($this,"postUser"))
             ->before($app['filter.only_superadmin'])
@@ -26,12 +24,15 @@ class UserController extends ApiController
             ->before($app['filter.only_superadmin']);
         $controllers->get('/{id}', array($this,"getUser"))
             ->assert('id', '\d+');
-        $controllers->match('/{id}', array($this,"editUser"))
+        $controllers->match('/{id}', array($this,"patchUser"))
             ->assert('id', '\d+')
             ->before($app['filter.only_superadmin'])
             ->before(array($this,"getFormHeaders"))
-            ->method('PUT|PATCH');
-
+            ->method('PATCH');
+        $controllers->put('/{id}', array($this,"putUser"))
+            ->assert('id', '\d+')
+            ->before($app['filter.only_superadmin'])
+            ->before(array($this,"getFormHeaders"));
         $controllers->before($app['filter.only_admin']);
 
         return $controllers;
@@ -52,18 +53,10 @@ class UserController extends ApiController
 
         return $app->json($response, 200);
     }
-    public function getUser(Application $app, $id)
-    {
-        $user = $this->entityManager->getResourceById($id);
 
-        return $app->json($user->toArray(), 200);
-    }
     public function postUser(Application $app)
     {
         $user = new User();
-
-        $app->register(new FormServiceProvider());
-        $app->register(new ValidatorServiceProvider());
 
         $this->form = $app['form.factory']->create(new UserForm(), $user);
         $this->form->submit($this->data, true);
@@ -78,27 +71,43 @@ class UserController extends ApiController
         return $app->json('', 201);
 
     }
+
     public function deleteUser(Application $app, $id)
     {
-        $this->entityManager->deleteResource($app, $id);
+        $this->entityManager->deleteResource($id);
 
         return $app->json(null, 204);
     }
-    public function editUser(Application $app,$id)
+
+    public function getUser(Application $app, $id)
     {
         $user = $this->entityManager->getResourceById($id);
 
-        $app->register(new FormServiceProvider());
-        $app->register(new ValidatorServiceProvider());
+        return $app->json($user->toArray(), 200);
+    }
+
+    public function patchUser(Application $app,$id)
+    {
+        return $this->updateUser($app, $id, false);
+    }
+
+    public function putUser(Application $app,$id)
+    {
+        return $this->updateUser($app, $id, true);
+    }
+
+    protected function updateUser(Application $app, $id, $clearMissing)
+    {
+        $user = $this->entityManager->getResourceById($id);
 
         $this->form = $app['form.factory']->create(new UserForm(), $user);
-        $this->form->submit($this->data, true);
+        $this->form->submit($this->data, $clearMissing);
 
         if (!$this->form->isValid()) {
             return $app->json(array('errores' => $this->getFormErrorsAsArray($this->form)), 400);
         }
 
-        $this->entityManager->putResource($user);
+        $this->entityManager->updateResource($user);
         $this->taskScheduler->addUserTask(CronTaskScheduler::ACTION_UPDATED,$user->getId());
 
         return $app->json('', 201);

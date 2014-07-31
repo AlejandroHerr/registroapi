@@ -36,6 +36,12 @@ class UserForm extends AbstractType
                 'constraints' => array(new Assert\NotBlank()),
                 'invalid_message' => 'El password està mal'
             ))
+            ->add('protected','text',array(
+                'constraints' => array(new Assert\Length(array('min' => 1, 'max' => 1)))
+            ))
+            ->add('active','text',array(
+                'constraints' => array(new Assert\Length(array('min' => 1, 'max' => 1)))
+            ))
         ;
     }
 

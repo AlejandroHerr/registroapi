@@ -29,7 +29,7 @@ class UserManager extends AbstractDbalManager
         $resource = parent::getResourceById($id);
 
         return $resource->setPassword('');
-    }   
+    }
 
     public function postResource($resource)
     {
@@ -44,7 +44,7 @@ class UserManager extends AbstractDbalManager
         return parent::postResource($resource);
     }
 
-    public function putResource($resource)
+    public function updateResource($resource)
     {
         if ($this->existsResource($resource->getUsername(),'username', $resource->getId())) {
             throw new DuplicatedValueException('username');

@@ -4,49 +4,45 @@ namespace Esnuab\Libro\Controller;
 use AlejandroHerr\ApiApplication\ApiController;
 use Silex\Application;
 use Esnuab\Libro\Model\Entity\Socio;
-use Esnuab\Libro\Model\Manager\SocioManager;
+use Esnuab\Libro\Model\Manager\entityManager;
 use Esnuab\Libro\Form\SocioForm;
-use Silex\Provider\FormServiceProvider;
-use Silex\Provider\ValidatorServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 
 class SocioController extends ApiController
 {
-    protected $socioManager;
-    protected $transactionLogger;
-    public function __construct($socioManager,$transactionLogger=null)
-    {
-        $this->transactionLogger = $transactionLogger;
-        $this->socioManager = $socioManager;
-    }
     public function connect(Application $app)
     {
         $controllers = $app['controllers_factory'];
 
-        $controllers->get('/socios', array($this,"getSocios"))
-        ->before($app['filter.only_admin'])
-        ->before(array($this,"getQueryHeaders"));
-        $controllers->post('/socios', array($this,"postSocio"))
-        ->before($app['filter.only_user'])
-        ->before(array($this,"getFormHeaders"));
-        $controllers->get('/socios/{id}', array($this,"getSocio"))
-        ->assert('id', '\d+')
-        ->before($app['filter.only_admin']);
-        $controllers->put('/socios/{id}', array($this,"putSocio"))
-        ->assert('id', '\d+')
-        ->before($app['filter.only_superadmin'])
-        ->before(array($this,"getFormHeaders"));
-        $controllers->delete('/socios/{id}', array($this,"deleteSocio"))
-        ->assert('id', '\d+')
-        ->before($app['filter.only_superadmin']);
+        $controllers->get('', array($this,"getSocios"))
+            ->before($app['filter.only_admin'])
+            ->before(array($this,"getQueryHeaders"));
+        $controllers->post('', array($this,"postSocio"))
+            ->before($app['filter.only_user'])
+            ->before(array($this,"getFormHeaders"));
+        $controllers->delete('/{id}', array($this,"deleteSocio"))
+            ->assert('id', '\d+')
+            ->before($app['filter.only_superadmin']);
+        $controllers->get('/{id}', array($this,"getSocio"))
+            ->assert('id', '\d+')
+            ->before($app['filter.only_admin']);
+        $controllers->match('/{id}', array($this,"patchSocio"))
+            ->assert('id', '\d+')
+            ->before($app['filter.only_superadmin'])
+            ->before(array($this,"getFormHeaders"))
+            ->method('PATCH');
+        $controllers->put('/{id}', array($this,"putSocio"))
+            ->assert('id', '\d+')
+            ->before($app['filter.only_superadmin'])
+            ->before(array($this,"getFormHeaders"));
 
         return $controllers;
     }
 
     public function getSocios(Application $app)
     {
-        $totalResults = $this->socioManager->getCount($app);
-        $socios = $this->socioManager->getCollection($app, $this->socioManager->beforeGetCollection($app, $this->queryParams));
+        $totalResults = $this->entityManager->getCount();
+        $socios = $this->entityManager->getCollection($this->queryParams);
         $response = array(
             'pagination' => array(
                 'total' => $totalResults,
@@ -63,9 +59,6 @@ class SocioController extends ApiController
     {
         $socio = new Socio();
 
-        $app->register(new FormServiceProvider());
-        $app->register(new ValidatorServiceProvider());
-
         $this->form = $app['form.factory']->create(new SocioForm(), $socio);
         $this->form->submit($this->data, true);
 
@@ -73,51 +66,51 @@ class SocioController extends ApiController
             return $app->json(array('errores' => $this->getFormErrorsAsArray($this->form)), 400);
         }
 
-        $this->socioManager->beforePostResource($app, $socio);
-        $this->socioManager->postResource($app, $socio);
-        $this->socioManager->afterPostResource($app, $socio);
-
-        $this->transactionLogger->addNotice('Socio creado',$socio->toArray());
+        $this->entityManager->postResource($socio);
+        $this->taskScheduler->addSocioTask(CronTaskScheduler::ACTION_CREATED,$socio->getId());
 
         return $app->json('', 201);
     }
 
+    public function deleteSocio(Application $app, $id)
+    {
+        $this->entityManager->deleteResource($id);
+
+        return $app->json(null, 204);
+    }
+
     public function getSocio(Application $app, $id)
     {
-        $socio = $this->socioManager->getResourceById($app, $id);
+        $socio = $this->entityManager->getResourceById($id);
 
         return $app->json($socio->toArray(), 200);
     }
 
-    public function putSocio(Application $app, $id, Request $request)
+    public function patchSocio(Application $app, $id)
     {
-        $socio = $this->socioManager->getResourceById($app, $id);
+        return $this->updateSocio($app, $id, $false);
+    }
 
-        $app->register(new FormServiceProvider());
-        $app->register(new ValidatorServiceProvider());
+    public function putSocio(Application $app, $id)
+    {
+        return $this->updateSocio($app, $id, $true);
+    }
+
+    protected function updateSocio(Application $app, $id, $clearMissing)
+    {
+        $socio = $this->entityManager->getResourceById($id);
 
         $this->form = $app['form.factory']->create(new SocioForm(), $socio);
-        $this->form->submit($this->data, true);
+        $this->form->submit($this->data, $clearMissing);
 
         if (!$this->form->isValid()) {
             return $app->json(array('errores' => $this->getFormErrorsAsArray($this->form)), 400);
         }
 
-        $this->socioManager->beforePutResource($app, $socio);
-        $this->socioManager->putResource($app, $socio);
-
-        $this->transactionLogger->addNotice('Socio actualizado',$socio->toArray());
+        $this->entityManager->updateResource($socio);
+        $this->taskScheduler->addSocioTask(CronTaskScheduler::ACTION_UPDATED,$socio->getId());
 
         return $app->json('', 204);
-    }
-
-    public function deleteSocio(Application $app, $id)
-    {
-        $this->socioManager->deleteResource($app, $id);
-
-        $this->transactionLogger->addNotice('Socio eliminado',array('id'=>$id));
-
-        return $app->json(null, 204);
     }
 
     public function getQueryHeaders(Request $request)
