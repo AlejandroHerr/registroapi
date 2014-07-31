@@ -4,9 +4,9 @@ namespace Esnuab\Libro\Controller;
 use AlejandroHerr\ApiApplication\ApiController;
 use Silex\Application;
 use Esnuab\Libro\Model\Entity\User;
-use Symfony\Component\HttpFoundation\Request;
 use Esnuab\Libro\Form\UserForm;
 use Esnuab\Libro\Services\CronTaskScheduler\CronTaskScheduler;
+use Symfony\Component\HttpFoundation\Request;
 
 class UserController extends ApiController
 {

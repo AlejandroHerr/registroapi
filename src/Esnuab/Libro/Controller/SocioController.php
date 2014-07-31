@@ -4,8 +4,8 @@ namespace Esnuab\Libro\Controller;
 use AlejandroHerr\ApiApplication\ApiController;
 use Silex\Application;
 use Esnuab\Libro\Model\Entity\Socio;
-use Esnuab\Libro\Model\Manager\entityManager;
 use Esnuab\Libro\Form\SocioForm;
+use Esnuab\Libro\Services\CronTaskScheduler\CronTaskScheduler;
 use Symfony\Component\HttpFoundation\Request;
 
 class SocioController extends ApiController
