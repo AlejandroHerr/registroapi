@@ -1,23 +1,13 @@
 <?php
-namespace AlejandroHerr\ApiApplication;
+namespace AlejandroHerr\JsonApi;
 
-use Silex\ControllerProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 
-abstract class ApiController implements ControllerProviderInterface
+abstract class JsonController
 {
-    protected $entityManager;
-    protected $logger;
+    protected $data;
     protected $queryParams;
-    protected $taskScheduler;
-
-    public function __construct($entityManager, $logger = null, $taskScheduler = null)
-    {
-        $this->entityManager = $entityManager;
-        $this->logger = $logger;
-        $this->taskScheduler = $taskScheduler;
-    }
 
     public function getFormHeaders(Request $request)
     {
