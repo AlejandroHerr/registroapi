@@ -1,5 +1,5 @@
 <?php
-namespace AlejandroHerr\JsonApi;
+namespace AlejandroHerr\JsonApi\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;

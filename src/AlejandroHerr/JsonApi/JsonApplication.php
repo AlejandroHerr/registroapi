@@ -1,10 +1,10 @@
 <?php
 
-namespace AlejandroHerr\ApiApplication;
+namespace AlejandroHerr\JsonApi;
 
-use Silex\Application as App;
+use Silex\Application;
 
-class Application extends App
+class JsonApplication extends Application
 {
     public function __construct(array $values = array())
     {

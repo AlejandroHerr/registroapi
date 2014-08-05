@@ -1,6 +1,6 @@
 <?php
 
-namespace AlejandroHerr\ApiApplication\Debug;
+namespace AlejandroHerr\JsonApi\Debug;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Debug\ExceptionHandler;

@@ -1,6 +1,6 @@
 <?php
 
-namespace AlejandroHerr\ApiApplication;
+namespace AlejandroHerr\JsonApi;
 
 use Silex\ExceptionHandler;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
