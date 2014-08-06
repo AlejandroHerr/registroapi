@@ -1,9 +1,10 @@
 <?php
 
-namespace AlejandroHerr\ApiApplication\Model\Manager;
+namespace AlejandroHerr\BaseModel\Manager;
 
-use AlejandroHerr\ApiApplication\Model\Exception\ResourceDoesNotExistException;
+use AlejandroHerr\BaseModel\Exception\ResourceDoesNotExistException;
 use Doctrine\DBAL\Connection;
+use Psr\Log\LoggerInterface;
 
 abstract class AbstractDbalManager
 {
@@ -13,7 +14,7 @@ abstract class AbstractDbalManager
     protected $logger;
     protected $table;
 
-    public function __construct(Connection $conn, $logger = null)
+    public function __construct(Connection $conn, LoggerInterface $logger = null)
     {
         $this->conn = $conn;
         $this->logger = $logger;

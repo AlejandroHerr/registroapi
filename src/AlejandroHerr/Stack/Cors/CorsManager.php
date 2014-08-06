@@ -1,6 +1,6 @@
 <?php
 
-namespace AlejandroHerr\Stack;
+namespace AlejandroHerr\Stack\Cors;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

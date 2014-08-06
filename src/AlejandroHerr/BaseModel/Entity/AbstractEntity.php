@@ -1,6 +1,6 @@
 <?php
 
-namespace AlejandroHerr\ApiApplication\Model\Entity;
+namespace AlejandroHerr\BaseModel\Entity;
 
 abstract class AbstractEntity
 {

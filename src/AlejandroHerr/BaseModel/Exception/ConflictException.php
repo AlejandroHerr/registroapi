@@ -1,6 +1,6 @@
 <?php
 
-namespace AlejandroHerr\ApiApplication\Model\Exception;
+namespace AlejandroHerr\BaseModel\Exception;
 
 abstract class ConflictException extends \RuntimeException
 {
