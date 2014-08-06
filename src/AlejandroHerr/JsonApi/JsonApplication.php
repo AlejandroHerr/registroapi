@@ -8,7 +8,7 @@ class JsonApplication extends Application
 {
     public function __construct(array $values = array())
     {
-        parent::__construct();
+        parent::__construct($values);
 
         $app = $this;
 
