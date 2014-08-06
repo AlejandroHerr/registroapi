@@ -2,7 +2,7 @@
 
 namespace Esnuab\Libro\Model\Entity;
 
-use AlejandroHerr\ApiApplication\Model\Entity\AbstractEntity;
+use AlejandroHerr\BaseModel\Entity\AbstractEntity;
 
 class Socio extends AbstractEntity
 {

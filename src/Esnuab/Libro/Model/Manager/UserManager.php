@@ -2,15 +2,22 @@
 
 namespace Esnuab\Libro\Model\Manager;
 
-use AlejandroHerr\ApiApplication\Model\Exception\DuplicatedValueException;
-use AlejandroHerr\ApiApplication\Model\Manager\AbstractDbalManager;
-use Esnuab\Libro\Model\Entity\User;
+use AlejandroHerr\BaseModel\Exception\DuplicatedValueException;
+use AlejandroHerr\BaseModel\Manager\AbstractDbalManager;
+use Doctrine\DBAL\Connection;
+use Psr\Log\LoggerInterface;
 
 class UserManager extends AbstractDbalManager
 {
-    protected $entity = 'Esnuab\Libro\Model\Entity\User';
-    protected $collection = 'Esnuab\Libro\Model\Entity\UserCollection';
-    protected $table = 'users';
+    public function __construct(Connection $conn, LoggerInterface $logger = null)
+    {
+        $model = array(
+            'entity' => 'Esnuab\Libro\Model\Entity\User',
+            'collection' => 'Esnuab\Libro\Model\Collection\UserCollection',
+            'table' => 'users'
+        );
+        parent::__construct($conn, $model, $logger);
+    }
 
     public function getCollection($queryParameters)
     {

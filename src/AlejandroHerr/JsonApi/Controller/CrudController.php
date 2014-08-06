@@ -1,9 +1,9 @@
 <?php
 namespace AlejandroHerr\JsonApi\Controller;
 
-use AlejandroHerr\JsonApi\Model\Manager\AbstractDbalManager;
+use AlejandroHerr\BaseModel\Manager\AbstractManagerInterface;
 use Psr\Log\LoggerInterface;
-use Silex\Application
+use Silex\Application;
 use Symfony\Component\Form\Form;
 
 class CrudController extends JsonController
@@ -14,7 +14,7 @@ class CrudController extends JsonController
     protected $logger;
     protected $taskScheduler;
 
-    public function __construct(AbstractDbalManager $entityManager, $entity, $form, LoggerInterface $logger = null, $taskScheduler = null)
+    public function __construct(AbstractManagerInterface $entityManager, $entity, $form, LoggerInterface $logger = null, $taskScheduler = null)
     {
         $this->entity = $entity;
         $this->entityManager = $entityManager;
@@ -102,5 +102,4 @@ class CrudController extends JsonController
 
         return $app->json('', 204);
     }
-
 }

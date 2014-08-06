@@ -2,22 +2,28 @@
 
 namespace Esnuab\Libro\Model\Manager;
 
-use AlejandroHerr\ApiApplication\Model\Exception\DuplicatedValueException;
-use AlejandroHerr\ApiApplication\Model\Manager\AbstractDbalManager;
+use AlejandroHerr\BaseModel\Exception\DuplicatedValueException;
+use AlejandroHerr\BaseModel\Manager\AbstractDbalManager;
+use Doctrine\DBAL\Connection;
 use Esnuab\Libro\Model\Entity\Socio;
+use Psr\Log\LoggerInterface;
 
 class SocioManager extends AbstractDbalManager
 {
-    protected $entity = 'Esnuab\Libro\Model\Entity\Socio';
-    protected $collection = 'Esnuab\Libro\Model\Entity\SocioCollection';
-    protected $table = 'socio';
+    public function __construct(Connection $conn, LoggerInterface $logger = null)
+    {
+        $model = array(
+            'entity' => 'Esnuab\Libro\Model\Entity\Socio',
+            'collection' => 'Esnuab\Libro\Model\Collection\SocioCollection',
+            'table' => 'socio'
+        );
+        parent::__construct($conn, $model, $logger);
+    }
 
     public function getCollection($queryParameters)
     {
-
         $queryParameters = array_map(array($this,'escape'), $queryParameters);
         $offset=($queryParameters['page']-1)*$queryParameters['max'];
-
         $query =  'ORDER BY '.$queryParameters['by'].' '.$queryParameters['dir'].
             ' LIMIT '.$offset.','.$queryParameters['max'];
 
