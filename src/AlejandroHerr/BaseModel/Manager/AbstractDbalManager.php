@@ -2,11 +2,12 @@
 
 namespace AlejandroHerr\BaseModel\Manager;
 
+use AlejandroHerr\BaseModel\Collection\SimpleCollection;
 use AlejandroHerr\BaseModel\Exception\ResourceDoesNotExistException;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
 
-abstract class AbstractDbalManager
+abstract class AbstractDbalManager implements AbstractManagerInterface
 {
     protected $collection;
     protected $conn;
@@ -14,10 +15,13 @@ abstract class AbstractDbalManager
     protected $logger;
     protected $table;
 
-    public function __construct(Connection $conn, LoggerInterface $logger = null)
+    public function __construct(Connection $conn, $model, LoggerInterface $logger = null)
     {
+        $this->collection = $model['collection'];
         $this->conn = $conn;
+        $this->entity = $model['entity'];
         $this->logger = $logger;
+        $this->table = $model['table'];
     }
 
     public function deleteResource($id)
@@ -53,7 +57,7 @@ abstract class AbstractDbalManager
     public function getCollection($query)
     {
         $query = 'SELECT * from '.$this->table.' '.$query;
-        $collection = new $this->collection($this->conn->fetchAll($query));
+        $collection = new SimpleCollection($this->entity, $this->conn->fetchAll($query));
 
         return $collection;
     }
