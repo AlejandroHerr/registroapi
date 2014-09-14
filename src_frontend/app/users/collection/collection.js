@@ -35,7 +35,7 @@ angular.module('libroApp.users.collection', [])
             $scope.loadUsers = function () {
                 var path = '/api/user/?page=' + $scope.pagination.currentPage;
                 ApiCaller.modalCall(credentials.getXWSSE(), 'GET', path, null, function (d) {
-                    $scope.users = d.data.users;
+                    $scope.users = d.data.collection;
                     $scope.totalItems = d.data.pagination.total;
                     $scope.currentPage = d.data.pagination.currentPage;
                     $scope.maxItems = d.data.pagination.maxResults;

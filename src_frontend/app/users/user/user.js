@@ -69,5 +69,42 @@ angular.module('libroApp.users.user', [])
                     });
                 return data;
             };
+            $scope.saveUser = function (data) {
+                console.log(data);
+                console.log($scope.user);
+            };
+            $scope.block = function () {
+                var putData = {
+                    'protected': ($scope.user.protected === '1') ? 0 : 1
+                };
+                var path = '/api/user/' + id;
+                var data = ApiCaller.rawCall(credentials.getXWSSE(), 'PUT', path, putData)
+                    .then(function () {
+                        $scope.loadSocio();
+                    }, function (d) {
+                        var modalInstance = $modal.open({
+                            templateUrl: 'modal/40x.tpl.html',
+                            controller: 'ErrorModalInstanceCtrl',
+                            resolve: {
+                                error: function () {
+                                    return d;
+                                }
+                            }
+                        });
+                        modalInstance.result.then(null, function () {
+                            if (d.status === 401) {
+                                $state.go('logout', {}, {
+                                    location: true
+                                });
+                            } else if (d.status === 403 || d.status === 404) {
+                                $state.go('logged', {}, {
+                                    location: true
+                                });
+                            }
+                        });
+                        return 'error';
+                    });
+                return data;
+            };
             $scope.loadUser();
         }]);

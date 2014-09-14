@@ -11,7 +11,7 @@ angular.module('libroApp.socios.collection', [])
             $scope.loadSocios = function () {
                 var path = '/api/socio/?max=' + $scope.pagination.maxItems + '&page=' + $scope.pagination.currentPage + '&dir=' + $scope.pagination.dir + '&by=' + $scope.pagination.by;
                 var data = ApiCaller.modalCall(credentials.getXWSSE(), 'GET', path, null, function (d) {
-                    $scope.socios = d.data.socios;
+                    $scope.socios = d.data.collection;
                     $scope.pagination.totalItems = d.data.pagination.total;
                     $scope.pagination.page = parseInt(d.data.pagination.page, 10);
                     $scope.pagination.currentPage = d.data.pagination.page;
