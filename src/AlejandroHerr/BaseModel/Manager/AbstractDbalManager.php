@@ -15,7 +15,7 @@ abstract class AbstractDbalManager implements AbstractManagerInterface
     protected $logger;
     protected $table;
 
-    public function __construct(Connection $conn, $model, LoggerInterface $logger = null)
+    public function __construct(Connection $conn, $model = array(), LoggerInterface $logger = null)
     {
         $this->collection = $model['collection'];
         $this->conn = $conn;

@@ -75,12 +75,12 @@ class CrudController extends JsonController
 
     public function patchResource(Application $app, $id)
     {
-        return $this->updateResource($app, $id, $false);
+        return $this->updateResource($app, $id, false);
     }
 
     public function putResource(Application $app, $id)
     {
-        return $this->updateResource($app, $id, $true);
+        return $this->updateResource($app, $id, true);
     }
 
     protected function updateResource(Application $app, $id, $clearMissing)

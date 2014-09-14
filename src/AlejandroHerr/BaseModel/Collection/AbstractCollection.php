@@ -12,7 +12,7 @@ abstract class AbstractCollection
     public function __construct($entity, $objects = array())
     {
         $this->entity = $entity;
-        $this->objects = array();
+        $this->objects = $objects;
         if (count($objects > 0)) {
             $this->objects = F\map($objects,function ($object) {return $this->initMapper($object);});
         }
