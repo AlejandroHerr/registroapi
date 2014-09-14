@@ -11,7 +11,7 @@ angular.module('libroApp.login', [])
     ])
     .controller('LoginCtrl', ['credentials', '$scope', '$state', 'loader',
         function (credentials, $scope, $state, loader) {
-            $scope.logIn = function () {
+            $scope.logIn = function (event) {
                 event.preventDefault();
                 credentials.setUser($scope.username);
                 credentials.setPass($scope.password);
