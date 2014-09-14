@@ -2,41 +2,47 @@
 namespace Esnuab\Libro\Controller;
 
 use Functional as F;
-use Silex\ControllerProviderInterface;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Psr\Log\LoggerInterface;
 
-class LogController implements ControllerProviderInterface
+use Esnuab\Libro\Model\Manager\LogManager;
+
+class LogController
 {
-    protected $logPath;
-    const ASSERT_DATE = '[2][0-9]{3}-[0-1][0-9]-[0-3][0-9]';
-    const DATE_REGEX = '/[2][0-9]{3}-[0-1][0-9]-[0-3][0-9]/';
-    const LOG_EXTENSION = '.log';
-    const LOG_PREFIX = 'app_';
+    protected $entityManager;
+    protected $logger;
 
-    public function __construct($logPath)
+    public function __construct(LogManager $entityManager, LoggerInterface $logger = null)
     {
-        $this->logPath = $logPath;
+        $this->entityManager = $entityManager;
+        $this->logger = $logger;
     }
 
-    public function connect(Application $app)
+    public function getResource(Application $app, $date, $type, $ext = 'json')
     {
-        $controllers = $app['controllers_factory'];
-        $controllers->get('/', array($this,"getLogs"));
-        $controllers->get('/{date}', array($this,"getLog"))
-        ->assert('date',self::ASSERT_DATE);
-        $controllers->get('/{date1}/{date2}/', array($this,"getRange"))
-        ->assert('date1',self::ASSERT_DATE)
-        ->assert('date2',self::ASSERT_DATE);
+        $log = $this->entityManager->getResource($date . '_' . $type);
 
-        return $controllers;
+        return $app->json($log);
+
+    }
+
+    public function getLogByDate(Application $app, $date)
+    {
+        //$logs = $this->entityManager->getCollection(true, $date);
+
+        $logs = $this->entityManager->getLogsJoined(false, $date);
+
+        dumpArray($logs);
     }
 
     public function getLogs(Application $app)
     {
         $logs = $this->loadLogs();
-        $logs = F\map($logs,function ($log) {return $this->setSize($log);});
+        $logs = F\map($logs,function ($log) {return $this->setMetadata($log);});
+        $dates = F\pluck($logs,'date');
+        array_multisort($dates, SORT_DESC, SORT_STRING, $logs);
 
         return $app->json(array('logs' => $logs));
     }
@@ -88,9 +94,9 @@ class LogController implements ControllerProviderInterface
 
     protected function openLogFile($logName)
     {
-        if (!preg_match('/^app_/', $logName)) {
+        /*if (!preg_match('/^app_/', $logName)) {
             $logName = self::LOG_PREFIX . $logName . self::LOG_EXTENSION;
-        }
+        }*/
         $logs = scandir($this->logPath);
 
         if (!F\contains($logs,$logName)) {
@@ -130,13 +136,19 @@ class LogController implements ControllerProviderInterface
         return false;
     }
 
-    private function setSize($log)
+    private function setMetadata($log)
     {
         $array = array();
-        $array['filename']=$log;
+
+        $array['filename']= $log;
+
         $array['size'] = filesize($this->logPath . '/' . $log)/1000 ."kB";
+
         preg_match(self::DATE_REGEX, $log, $array['date']);
-        $array['date']=$array['date'][0];
+        $array['date'] = $array['date'][0];
+
+        preg_match(self::TYPE_REGEX, $log, $array['type']);
+        $array['type'] = $array['type'][0];
 
         return $array;
     }
