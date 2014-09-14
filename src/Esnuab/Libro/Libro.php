@@ -1,17 +1,17 @@
 <?php
 
-use AlejandroHerr\ApiApplication\JsonExceptionHandler;
+use AlejandroHerr\ApiApplication\TaskScheduler\DbalTaskScheduler as TaskScheduler;
 use AlejandroHerr\AuditLog\Formatter\AuditFormatter;
 use AlejandroHerr\AuditLog\Handler\DbalHandler;
 use AlejandroHerr\AuditLog\Processor\RequestProcessor;
 use AlejandroHerr\AuditLog\Processor\UserProcessor;
+use AlejandroHerr\JsonApi\JsonApplication;
+use Esnuab\Libro\Model\Manager\LogManager;
 use Esnuab\Libro\Model\Manager\SocioManager;
 use Esnuab\Libro\Model\Manager\UserManager;
-use Esnuab\Libro\Services\CronTaskScheduler\CronTaskScheduler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Monolog\Formatter\JsonFormatter;
-use Silex\Application;
 use Silex\Provider\DoctrineServiceProvider;
 use Silex\Provider\FormServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
@@ -19,17 +19,13 @@ use Silex\Provider\MonologServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-$app = new Application();
+$app = new JsonApplication();
 
 $app['debug'] = true;
 
 ######################
 # exception handlers #
 ######################
-
-$app['exception_handler'] = $app->share(function () use ($app) {
-    return new JsonExceptionHandler($app['debug']);
-});
 
 $app->error(function (\RuntimeException $e, $code) {
     if ($e->getCode() >= 500 || $e->getCode() < 400) {
@@ -61,7 +57,7 @@ $app['monolog.path'] = function () {
 };
 $app['monolog.logfile']= function () use ($app) {
     $date = \DateTime::createFromFormat('U',time());
-    $file = $app['monolog.path'] . '/app_'.$date->format('Y-m-d').'.log';
+    $file = $app['monolog.path'] . '/'.$date->format('Y-m-d').'_app.log';
 
     return $file;
 };
@@ -113,14 +109,17 @@ $app['monolog.socio_transaction'] = $app->share(function ($app) {
 ###################
 # model managers  #
 ###################
-$app['socio_manager'] = $app->share(function ($app) {
+$app['libro.log_controller.manager'] = $app->share(function ($app) {
+    return new LogManager($app['monolog.path']);
+});
+$app['libro.socio_controller.manager'] = $app->share(function ($app) {
     return new SocioManager($app['db'],$app['monolog.socio_transaction']);
 });
-$app['user_manager'] = $app->share(function ($app) {
+$app['libro.user_controller.manager'] = $app->share(function ($app) {
     return new UserManager($app['db'],$app['monolog.user_transaction']);
 });
-$app['task_scheduler'] = $app->share(function ($app) {
-    return new CronTaskScheduler($app['db']);
+$app['libro.task_scheduler'] = $app->share(function ($app) {
+    return new TaskScheduler($app['db']);
 });
 
 ###################
